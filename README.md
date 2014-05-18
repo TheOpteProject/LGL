@@ -1,4 +1,0 @@
-LGL
-===
-
-Large Graph Layout

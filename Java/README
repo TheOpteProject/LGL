@@ -1,0 +1,43 @@
+######################################
+
+All files distributed with LGL
+fall under the terms of the
+GNU General Public License, and
+are copyright (c) 2002,2003 Alex Adai.
+
+LGL on the web at
+http://bioinformatics.icmb.utexas.edu/lgl
+
+Much thanks to the Marcotte lab for testing.
+
+######################################
+# Table of contents
+
+  0 Before compiling!!
+  I Setup and Installation
+
+######################################
+# 0
+
+You must have javac and jar in your path
+to compile JAVA programs. If you don't the
+compiles will fail. Run 'which javac' and
+'which jar' to confirm this.
+
+######################################
+# I
+
+Change in to the same directory that this README
+is in and run ./build.sh
+This should produce 2 .jar files
+
+lglview.jar - The 2D viewer to look at layouts
+
+imageMaker.jar - Generates high resolution images
+of layouts. Run without arguments to get the
+usage. This program is very crude, and will
+probably be expanded as soon as time permits.
+The source code is there so feel free to dive
+in!
+
+######################################

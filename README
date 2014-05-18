@@ -1,0 +1,164 @@
+######################################
+
+All files distributed with LGL
+fall under the terms of the
+GNU General Public License, and
+are copyright (c) 2002,2003 Alex Adai.
+
+LGL on the web at
+http://bioinformatics.icmb.utexas.edu/lgl
+
+Much thanks to the Marcotte lab for testing.
+
+######################################
+# Table of contents
+
+  0 Before compiling!!
+  I Setup and Installation
+ II Other files that come with LGL
+III Expanding LGL
+IV  What's new for 1.1
+
+######################################
+# 0
+
+Firstly, LGL will probably only compile with 
+the GNU compilers. It was tested on Red Hat 
+Linux 7.X and 8.0, but it should compile OK on 
+other Linux distributions. For other operating 
+systems you are on your own. Good Luck :-)
+
+You must have the following Perl modules
+in your @INC path to run LGL:
+
+ParseConfigFile.pm
+LGLFormatHandler.pm
+
+These files are in the ./perls directory.
+You don't have to know anything about these
+modules, and you won't have to use them directly
+but lgl.pl will call them.
+
+######################################
+# I
+
+To compile LGL change to the same directory
+as setup.pl and type
+
+prompt$ ./setup.pl -i
+
+This will compile 2D and 3D versions of LGL
+and put the resulting binaries in the ./bin
+directory. Afterwards you can move them whereever
+you want.
+
+After all is compiled and done you can run LGL
+by the driver script lgl.pl as:
+
+prompt$ ./bin/lgl.pl edges_file
+
+but you have to modify the 'tmpdir' variable in
+lgl.pl. That directory will hold all the files that
+LGL outputs, and it must be changed for EACH run. 
+However, The best way to run LGL is to have 
+setup.pl generate a sample config file for lgl.pl 
+by running it as
+
+prompt$ ./setup.pl -c conf_file_name
+
+That file (after modification of course) can just
+be given to lgl.pl for execution as follows:
+
+prompt$ ./bin/lgl.pl -c conf_file_name
+
+The config file itself is documented further,
+and explains each of the variables to be used.
+It also provides defaults, so the minimum that
+MUST be changed are the variables:
+
+tmpdir
+inputfile
+
+where tmpdir is the output directory of the LGL
+run and inputfile is the edge file. inputfile
+must be a file parsable by LGLFormatHandler.pm
+This can be just a simple 2 column space
+delimited file with one edge per line (the 2 vertex
+ids represent the two columns).
+
+One last change is to ./bin/lgl.pl. A Perl
+variable $LGLDIR must be set to the root bin
+directory of all the lgl executables (This might
+be /where/lgl/was/unpacked/bin ). This var is
+empty by default, and the program won't run
+until it is set correctly.
+
+######################################
+# II
+
+A list of important files in the perls dir:
+
+genVrml.pl - This generates the VRML code from 3D
+	     layout results. Run genVrml.pl with no
+	     args to get the usage.
+
+colorEdgesBasedOnLevel.pl - This generates a simple
+	color file to be given to lglview, that will
+	color your edges based on the level in the
+	heirarchy in layout.
+
+Other files might be included as well, but they are 
+not necessary for LGL. Their documentation will be 
+added here in the near future, or they may not be 
+carried in the future.
+
+Other Files:
+
+lglview.jar - A JAVA 2D viewer for looking
+at the output of lgl.pl. The output of the
+layout programs is just a set of coordinates.
+For looking at 2D coordinates use lglview.jar
+See the web page http://bioinformatics.icmb.utexas.edu/lgl
+for usage and other info.
+
+Java - Directory and source code of all JAVA programs.
+See README in the JAVA dir.
+
+######################################
+# III
+
+The most obvious way to expand LGL is to add support
+for your type of edge file to LGLFormatHandler.pm.
+Just add a method to read in your file type, update the
+'loadFromFile' method to recognize your file
+suffix, and that should be it.
+
+Let me know of any source code contributions
+that would make LGL more suitable and usable so I can
+add the code in!
+
+######################################
+# IV
+
+There is not anything new with functionality or
+features, but LGL should compile with newer
+GNU compilers, eg GNU 3.4. LGL still requires
+the boost libraries, but they are now included
+in the archive (boost-1.30.2). You will get
+several warnings when compiling LGL because that
+version of boost was probably not tested
+with the newer GNU compilers. You can ignore
+those warnings.
+
+For example if you see:
+
+../boost-1.30.2/boost/config/compiler/gcc.hpp:81:7: warning: #warning "Unknown compiler version - please run the configure tests and report the results"
+
+That is from the boost libraries and not LGL. Use
+at your own risk.
+
+######################################
+
+cheers,
+alex (aadai at itsa dot ucsf dot edu)
+
