@@ -13,7 +13,7 @@
 #include <boost/graph/kruskal_min_spanning_tree.hpp>
 #include <boost/graph/visitors.hpp>
 #include <boost/graph/breadth_first_search.hpp>
-#include <boost/property_map.hpp>
+#include <boost/property_map/property_map.hpp>
 #include <cstdlib>
 #include <cstdio>
 #include <vector>

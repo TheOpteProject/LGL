@@ -43,7 +43,7 @@ using namespace std;
 ///////////////////////////////////////////////////////////
 
 prec_t defaultradius = 1.0;
-char * defaultoutfile = "results.coords";
+const char * defaultoutfile = "results.coords";
 prec_t defaultstepsize = .49;
 
 ///////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ int main( int argc , char ** argv )
     displayUsage( argv );
   } 
 
-  char * outfile = defaultoutfile;
+  const char * outfile = defaultoutfile;
   char * fileList = 0;
   prec_t radius = defaultradius;
   prec_t stepSize = defaultstepsize;
@@ -157,7 +157,8 @@ int main( int argc , char ** argv )
 
       // Initialize the diffusing particles on the see sphere.
     INITIALIZE_MOLECULE:
-      Mol::vec_type point = randomPointOnSurface( seed );
+      Mol::vec_type point;
+      randomPointOnSurface( seed , point );
       moveMolecule( *diff_mol , point );
 
       // Start diffusing
@@ -167,7 +168,7 @@ int main( int argc , char ** argv )
 	  // Determine next step for molecule
 	  vec_type next_step(0);
 	  if ( integrateType == DLA )
-	    next_step = randomPointOnSurface( step_sphere );
+	    randomPointOnSurface( step_sphere , next_step );
 	  else {
 	    next_step = origin;
 	    vec_type mpoint( point );

@@ -1,0 +1,378 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CALCFUNCS_H_	include/calcFuncs.h	5;"	d
+DLA	src/lglrebuild.C	/^const int DLA           = 1;$/;"	v
+EDTable	src/lglrebuild.C	/^typedef EDLookupTable<particle,prec_t> EDTable;$/;"	t	file:
+Edge	include/graph.hpp	/^  typedef typename std::pair<unsigned int,unsigned int> Edge;$/;"	t	class:Graph
+G	include/graph.hpp	/^  boost_graph G;$/;"	m	class:Graph
+GRAVITATIONAL	src/lglrebuild.C	/^const int GRAVITATIONAL = 0;$/;"	v
+Graph	include/graph.hpp	/^  Graph( const Graph<Weight>& g ) { Graph<Weight>::operator=(g); }$/;"	f	class:Graph
+Graph	include/graph.hpp	/^  Graph() : weight(false) { }$/;"	f	class:Graph
+Graph	include/graph.hpp	/^class Graph$/;"	c
+GraphDetail	include/graph.hpp	/^namespace GraphDetail$/;"	n
+Grid	include/grid.hpp	/^  Grid( ) : voxels_(0) { }$/;"	f	class:Grid
+Grid	include/grid.hpp	/^  Grid( const vec_type& minsXYZ, const vec_type& maxsXYZ, precision l ) : $/;"	f	class:Grid
+Grid	include/grid.hpp	/^class Grid : public Amutex {$/;"	c
+GridIter	include/grid.hpp	/^  GridIter( Grid& g ) {$/;"	f	class:GridIter
+GridIter	include/grid.hpp	/^  GridIter( const iterator& g ) {$/;"	f	class:GridIter
+GridIter	include/grid.hpp	/^  GridIter() { }$/;"	f	class:GridIter
+GridIter	include/grid.hpp	/^class GridIter {$/;"	c
+Grid_	include/grid.hpp	/^  typedef Grid< Occupant > Grid_;$/;"	t	class:Grid
+Mol	src/lglrebuild.C	/^typedef Molecule< particle > Mol;$/;"	t	file:
+Molecules	src/lglrebuild.C	/^typedef std::vector< Mol > Molecules;$/;"	t	file:
+NbhrVoxelPositions	include/grid.hpp	/^namespace NbhrVoxelPositions {$/;"	n
+PARTICLEINTERACTIONHANDLER_HPP_	include/particleInteractionHandler.hpp	22;"	d
+PARTICLE_CONTAINER_CHAPERONE_HPP_	include/particleContainerChaperone.hpp	20;"	d
+PCC_	include/particleContainerChaperone.hpp	/^  typedef ParticleContainerChaperone< Particle > PCC_;$/;"	t	class:ParticleContainerChaperone
+PC_	include/particleContainerChaperone.hpp	/^  typedef ParticleContainer< Particle > PC_;$/;"	t	class:ParticleContainerChaperone
+PIH_	include/particleInteractionHandler.hpp	/^  typedef ParticleInteractionHandler< Particle > PIH_;$/;"	t	class:ParticleInteractionHandler
+ParticleContainerChaperone	include/particleContainerChaperone.hpp	/^  ParticleContainerChaperone( PC_& pc__ ) : pc_(pc__) { PCC_::initVals(); }$/;"	f	class:ParticleContainerChaperone
+ParticleContainerChaperone	include/particleContainerChaperone.hpp	/^  ParticleContainerChaperone() { }$/;"	f	class:ParticleContainerChaperone
+ParticleContainerChaperone	include/particleContainerChaperone.hpp	/^class ParticleContainerChaperone {$/;"	c
+ParticleInteractionHandler	include/particleInteractionHandler.hpp	/^  ParticleInteractionHandler( const PIH_& p ) {  $/;"	f	class:ParticleInteractionHandler
+ParticleInteractionHandler	include/particleInteractionHandler.hpp	/^  ParticleInteractionHandler() {  PIH_::initVars(); }  $/;"	f	class:ParticleInteractionHandler
+ParticleInteractionHandler	include/particleInteractionHandler.hpp	/^class ParticleInteractionHandler {$/;"	c
+ProcessList	src/lglbreakup.C	/^typedef std::set< Graph_t::vertex_descriptor > ProcessList;$/;"	t	file:
+ThreadArgs	include/calcFuncs.h	/^struct ThreadArgs$/;"	s
+Vec_l	include/grid.hpp	/^  typedef FixedVec< long , dimension > Vec_l;$/;"	t	class:Grid
+Vec_l	include/grid.hpp	/^  typedef FixedVec<long,dimension> Vec_l;$/;"	t	class:GridIter
+WriteList	src/lglbreakup.C	/^typedef std::vector< vector<int> > WriteList;$/;"	t	file:
+_GRAPH_HPP_	include/graph.hpp	22;"	d
+_GRID_HPP_	include/grid.hpp	22;"	d
+_M_FILE__	include/particleContainerChaperone.hpp	/^const unsigned int _M_FILE__ = 2;  \/\/ Mass file$/;"	v
+_T_FILE__	include/particleContainerChaperone.hpp	/^const unsigned int _T_FILE__ = 2;  \/\/ Temprature file$/;"	v
+_V_FILE__	include/particleContainerChaperone.hpp	/^const unsigned int _V_FILE__ = 1;  \/\/ Velocity file$/;"	v
+_X_FILE__	include/particleContainerChaperone.hpp	/^const unsigned int _X_FILE__ = 0;  \/\/ Position file$/;"	v
+_place_particle	include/grid.hpp	/^void _place_particle( Particle& p , Grid& g )$/;"	f
+_placement_error	include/grid.hpp	/^void _placement_error( Particle& p , Grid& g , char * message )$/;"	f
+_placement_error	include/grid.hpp	/^void _placement_error( Particle& p , Grid& g , const char * message )$/;"	f
+_remove_particle	include/grid.hpp	/^void _remove_particle( Particle& p , Grid& g )$/;"	f
+actualWeight	include/graph.hpp	/^actualWeight( const Graph& g , const typename Graph::Edge& e )$/;"	f
+addAllEdgesFromVertices	src/lglbreakup.C	/^void addAllEdgesFromVertices( const Graph_t& g , vector<int>& components, $/;"	f
+addEdge	include/graph.hpp	/^  void addEdge( edge_descriptor e )$/;"	f	class:Graph
+addEdge	include/graph.hpp	/^  void addEdge( edge_descriptor e , weight_type w )$/;"	f	class:Graph
+addEdge	include/graph.hpp	/^  void addEdge( vertex_descriptor v1 , vertex_descriptor v2 )$/;"	f	class:Graph
+addEdge	include/graph.hpp	/^  void addEdge( vertex_descriptor v1 , vertex_descriptor v2 , weight_type w )$/;"	f	class:Graph
+addMoleculeToTable	src/lglrebuild.C	/^void addMoleculeToTable( Mol& m , EDTable& table )$/;"	f
+addNextLevelFromMap	include/graph.hpp	/^void addNextLevelFromMap( Graph& g , const Graph& model , const LevelMap& lm ,$/;"	f
+addNoise	include/particleInteractionHandler.hpp	/^  void addNoise( Particle& p1 ) const {$/;"	f	class:ParticleInteractionHandler
+allocate	include/grid.hpp	/^  void allocate() {$/;"	f	class:Grid
+areParents	src/calcFuncs.C	/^static std::set<long> areParents;$/;"	v	file:
+beginSimulation	src/calcFuncs.C	/^void beginSimulation( ThreadContainer& threads , $/;"	f
+begin_	include/grid.hpp	/^  voxel_type * begin_;        \/\/ THE beginning of the grid$/;"	m	class:GridIter
+boostGraph	include/graph.hpp	/^  boost_graph& boostGraph() { return G; }$/;"	f	class:Graph
+boostGraph	include/graph.hpp	/^  const boost_graph& boostGraph() const { return G; }$/;"	f	class:Graph
+boostGraph	include/graph.hpp	/^  void boostGraph( const boost_graph& g ) { G=g; }$/;"	f	class:Graph
+boost_graph	include/graph.hpp	/^					   boost::property< boost::edge_weight_t , Weight > > boost_graph;$/;"	t	class:Graph
+calcCenterOfMass	src/calcFuncs.C	/^FixedVec_p calcCenterOfMass( Graph_t& g , NodeContainer& nodes , LevelMap& levels ,$/;"	f
+calcInteractions	src/calcFuncs.C	/^void * calcInteractions ( void * arg_ )$/;"	f
+casualSpringConstant	include/calcFuncs.h	/^  prec_t casualSpringConstant;$/;"	m	struct:ThreadArgs
+checkInclusion	include/grid.hpp	/^  bool checkInclusion( const vec_type& p ) const {$/;"	f	class:Grid
+checkMoleculeAgainstTable	src/lglrebuild.C	/^bool checkMoleculeAgainstTable( const Mol& m , EDTable& table )$/;"	f
+clear	include/graph.hpp	/^  void clear() { G.clear(); mutmap.clear(); }$/;"	f	class:Graph
+closeInFiles	include/particleContainerChaperone.hpp	/^  void closeInFiles() {$/;"	f	class:ParticleContainerChaperone
+closeOutFiles	include/particleContainerChaperone.hpp	/^  void closeOutFiles() {$/;"	f	class:ParticleContainerChaperone
+collectEdgeStats	src/calcFuncs.C	/^void * collectEdgeStats( void * arg_ )$/;"	f
+collectOutput	src/calcFuncs.C	/^prec_t collectOutput ( ThreadArgs * args , PCChaperone& chaperone )$/;"	f
+connected_sets	src/lglbreakup.C	/^int connected_sets( const Graph_t& g , WriteList& writelist )$/;"	f
+convertToLGL	/home/gev/lyonlabs/LGL-2.0/bin/lgl.pl	/^sub convertToLGL$/;"	s
+copy	include/grid.hpp	/^  void copy( const iterator& g ) {$/;"	f	class:GridIter
+copy	include/particleInteractionHandler.hpp	/^  void copy ( const PIH_& pi ) {$/;"	f	class:ParticleInteractionHandler
+current	include/grid.hpp	/^  const Vec_l& current() const { return currentVoxel; }$/;"	f	class:GridIter
+current	include/grid.hpp	/^  void current( const Vec_l& c ) { $/;"	f	class:GridIter
+currentLevel	include/calcFuncs.h	/^  unsigned int currentLevel;$/;"	m	struct:ThreadArgs
+currentNbhr	include/grid.hpp	/^  Vec_l currentNbhr;      \/\/ Current location of the nbhr in the grid$/;"	m	class:GridIter
+currentVox	include/grid.hpp	/^  const voxel_type& currentVox() const { return *current_; }$/;"	f	class:GridIter
+currentVox	include/grid.hpp	/^  voxel_type& currentVox()  { return *current_; }$/;"	f	class:GridIter
+currentVoxel	include/grid.hpp	/^  Vec_l currentVoxel;     \/\/ Current location of the itr in the grid$/;"	m	class:GridIter
+current_	include/grid.hpp	/^  voxel_type * current_;      $/;"	m	class:GridIter
+cutoff	src/lglbreakup.C	/^const prec_t cutoff = 1e30;$/;"	v
+d	include/graph.hpp	/^  LevelMap& d;$/;"	m	class:level_recorder
+d	include/graph.hpp	/^  LevelMap& d;$/;"	m	class:level_recorder2
+dec	include/grid.hpp	/^  bool dec( long jj ) {$/;"	f	class:GridIter
+dec	include/grid.hpp	/^  bool dec() {$/;"	f	class:GridIter
+defaultDoesWriteLgl	src/lglbreakup.C	/^const bool defaultDoesWriteLgl = true;$/;"	v
+defaultWrite	src/lglbreakup.C	/^const bool defaultWrite = true;$/;"	v
+defaultoutfile	src/lglrebuild.C	/^const char * defaultoutfile = "results.coords";$/;"	v
+defaultstepsize	src/lglrebuild.C	/^prec_t defaultstepsize = .49;$/;"	v
+degreesOfSeparation	include/graph.hpp	/^int degreesOfSeparation( const Graph& g , typename Graph::vertex_descriptor u ,$/;"	f
+dimension	include/grid.hpp	/^  enum { dimension = Grid::dimension };$/;"	e	enum:GridIter::__anon2
+dimension	include/grid.hpp	/^  enum { dimension = Occupant::dimension };$/;"	e	enum:Grid::__anon1
+dimension	include/particleContainerChaperone.hpp	/^  enum { dimension = Particle::dimension };$/;"	e	enum:ParticleContainerChaperone::__anon1
+dimension	include/particleInteractionHandler.hpp	/^  enum { dimension = Particle::dimension };$/;"	e	enum:ParticleInteractionHandler::__anon1
+dimensions	include/grid.hpp	/^  Vec_l dimensions;       \/\/ Dimensions of the grid$/;"	m	class:GridIter
+displayUsage	src/lglayout.C	/^void displayUsage(char ** argv)$/;"	f
+displayUsage	src/lglbreakup.C	/^void displayUsage( char ** argv )$/;"	f
+displayUsage	src/lglrebuild.C	/^void displayUsage( char ** args )$/;"	f
+doesEdgeExist	include/graph.hpp	/^  bool doesEdgeExist( vertex_descriptor u , vertex_descriptor v ) const$/;"	f	class:Graph
+doesVertexHaveAnyChildren	src/calcFuncs.C	/^bool doesVertexHaveAnyChildren( Graph_t& G, Graph_t::vertex_descriptor v ,$/;"	f
+dos_recorder	include/graph.hpp	/^  dos_recorder( LevelMap& mm , vertex vv ) :$/;"	f	class:dos_recorder
+dos_recorder	include/graph.hpp	/^class dos_recorder : public boost::default_bfs_visitor$/;"	c
+doutputdir	src/lglbreakup.C	/^const char * doutputdir = "\/tmp\/lgl_temp";$/;"	v
+edgeCount	include/graph.hpp	/^  typename boost_graph::edges_size_type edgeCount() const { return num_edges(G); }$/;"	f	class:Graph
+edge_descriptor	include/graph.hpp	/^  typedef typename boost_graph::edge_descriptor edge_descriptor;$/;"	t	class:Graph
+edge_iterator	include/graph.hpp	/^  typedef typename boost_graph::edge_iterator edge_iterator;$/;"	t	class:Graph
+edges_size_type	include/graph.hpp	/^  typedef typename boost_graph::edges_size_type edges_size_type;$/;"	t	class:Graph
+endVox	include/grid.hpp	/^  const voxel_type& endVox() const { return *end_; }$/;"	f	class:GridIter
+endVox	include/grid.hpp	/^  voxel_type& endVox()  { return *end_; }$/;"	f	class:GridIter
+end_	include/grid.hpp	/^  voxel_type * end_;          \/\/ THE end of the grid$/;"	m	class:GridIter
+enforceFLimit	include/particleInteractionHandler.hpp	/^  void enforceFLimit( Particle& p1 ) const {$/;"	f	class:ParticleInteractionHandler
+eqDistance	include/calcFuncs.h	/^  prec_t eqDistance;$/;"	m	struct:ThreadArgs
+eqDistance	include/particleInteractionHandler.hpp	/^  precision eqDistance() const { return eqDistance_; }$/;"	f	class:ParticleInteractionHandler
+eqDistance	include/particleInteractionHandler.hpp	/^  void  eqDistance( precision e )  { eqDistance_=e; }$/;"	f	class:ParticleInteractionHandler
+eqDistance_	include/particleInteractionHandler.hpp	/^  precision eqDistance_;$/;"	m	class:ParticleInteractionHandler
+eraseEdge	include/graph.hpp	/^  void eraseEdge(  const edge_descriptor& e )$/;"	f	class:Graph
+file_in	include/particleContainerChaperone.hpp	/^  char * file_in[3];     \/\/  X V M$/;"	m	class:ParticleContainerChaperone
+file_out	include/particleContainerChaperone.hpp	/^  char * file_out[3];       \/\/ X V Temprature ( These are output files )$/;"	m	class:ParticleContainerChaperone
+file_out_flag	include/particleContainerChaperone.hpp	/^  bool file_out_flag[3];$/;"	m	class:ParticleContainerChaperone
+fillMissingEdgesFromModel	include/graph.hpp	/^void fillMissingEdgesFromModel( Graph& g , const Graph& model , const LevelMap& lm ,$/;"	f
+firstVox	include/grid.hpp	/^  const voxel_type& firstVox() const { return *begin_; }$/;"	f	class:GridIter
+firstVox	include/grid.hpp	/^  voxel_type& firstVox() { return *begin_; }$/;"	f	class:GridIter
+forceConstraint_	include/particleInteractionHandler.hpp	/^  precision forceConstraint_;$/;"	m	class:ParticleInteractionHandler
+forceLimit	include/particleInteractionHandler.hpp	/^  precision forceLimit() const { return forceConstraint_; }$/;"	f	class:ParticleInteractionHandler
+forceLimit	include/particleInteractionHandler.hpp	/^  void forceLimit( precision v ) { forceConstraint_=v; }$/;"	f	class:ParticleInteractionHandler
+found	include/graph.hpp	/^  bool found;$/;"	m	class:dos_recorder
+full_graph	include/calcFuncs.h	/^  Graph_t * full_graph;$/;"	m	struct:ThreadArgs
+g	include/graph.hpp	/^  const Graph& g;$/;"	m	struct:vertex_id_compare
+generateLevelsFromGraph	include/graph.hpp	/^generateLevelsFromGraph( const Graph& g , LevelMap& levels , ParentMap& parents , $/;"	f
+generateLevelsFromGraphProper	include/graph.hpp	/^generateLevelsFromGraphProper( const Graph& g , LevelMap& levels ,$/;"	f
+generatePlacementVector	src/calcFuncs.C	/^void generatePlacementVector( FixedVec_p& d , const FixedVec_p& parentNode,$/;"	f
+generateWeightMapFromNegativeAdjacentVertexCount	include/graph.hpp	/^void generateWeightMapFromNegativeAdjacentVertexCount( Graph& g )$/;"	f
+getVertexWMostEdges	include/graph.hpp	/^getVertexWMostEdges( Graph& g )$/;"	f
+getVoxelFromPosition	include/grid.hpp	/^  voxel_type * getVoxelFromPosition( const vec_type& x ) const {$/;"	f	class:Grid
+getWeight	include/graph.hpp	/^  weight_type getWeight( edge_descriptor e ) const {$/;"	f	class:Graph
+grid	include/calcFuncs.h	/^  Grid_t * grid;$/;"	m	struct:ThreadArgs
+gridIterator	include/calcFuncs.h	/^  GridIterator * gridIterator;$/;"	m	struct:ThreadArgs
+gridPrepAndInit	src/calcFuncs.C	/^void gridPrepAndInit( NodeContainer& nc , Grid_t& nw , $/;"	f
+handleCollision	include/particleInteractionHandler.hpp	/^  void handleCollision( Particle& p1, Particle& p2 ) const {$/;"	f	class:ParticleInteractionHandler
+hasWeights	include/graph.hpp	/^  bool hasWeights() const { return weight; }$/;"	f	class:Graph
+hasWeights	include/graph.hpp	/^  void hasWeights( bool b ) { weight=b; }$/;"	f	class:Graph
+id	include/grid.hpp	/^  const int id() const { return iterID; }$/;"	f	class:GridIter
+id	include/grid.hpp	/^  void id( int i ){ iterID=i; }$/;"	f	class:GridIter
+id	include/particleInteractionHandler.hpp	/^  int id() const { return id_; }$/;"	f	class:ParticleInteractionHandler
+id	include/particleInteractionHandler.hpp	/^  void id ( int i ) { id_=i; }$/;"	f	class:ParticleInteractionHandler
+idFromIndex	include/graph.hpp	/^  std::string idFromIndex( int i ) const { return mutmap.findFormer(i); }$/;"	f	class:Graph
+id_	include/particleInteractionHandler.hpp	/^  int id_;$/;"	m	class:ParticleInteractionHandler
+inc	include/grid.hpp	/^  bool inc( size_type jj ) {$/;"	f	class:GridIter
+inc	include/grid.hpp	/^  bool inc() {$/;"	f	class:GridIter
+incNbhr	include/grid.hpp	/^  bool incNbhr() {$/;"	f	class:GridIter
+indexFromId	include/graph.hpp	/^  int indexFromId( std::string& s ) const { return mutmap.findLatter(s); }$/;"	f	class:Graph
+initAllParticles	include/particleContainerChaperone.hpp	/^void ParticleContainerChaperone<Particle>::initAllParticles() $/;"	f	class:ParticleContainerChaperone
+initFromGrid	include/grid.hpp	/^  void initFromGrid( Grid& g ) {$/;"	f	class:GridIter
+initGrid	include/grid.hpp	/^  void initGrid() {$/;"	f	class:Grid
+initMass	include/particleContainerChaperone.hpp	/^  precision initMass() { return initMass_; }$/;"	f	class:ParticleContainerChaperone
+initMass	include/particleContainerChaperone.hpp	/^  void initMass( const char * m ) { file_in[_M_FILE__]=strdup(m); }$/;"	f	class:ParticleContainerChaperone
+initMass	include/particleContainerChaperone.hpp	/^  void initMass( precision m ) { initMass_=m; }$/;"	f	class:ParticleContainerChaperone
+initMass_	include/particleContainerChaperone.hpp	/^  precision initMass_;$/;"	m	class:ParticleContainerChaperone
+initPos	include/particleContainerChaperone.hpp	/^  const vec_type& initPos() { return initPos_; }$/;"	f	class:ParticleContainerChaperone
+initPos	include/particleContainerChaperone.hpp	/^  void initPos( const char * x ) { file_in[_X_FILE__]=strdup(x); }$/;"	f	class:ParticleContainerChaperone
+initPos	include/particleContainerChaperone.hpp	/^  void initPos( const vec_type& x ) { initPos_=x; randomPos_=0; }$/;"	f	class:ParticleContainerChaperone
+initPos_	include/particleContainerChaperone.hpp	/^  vec_type initPos_;$/;"	m	class:ParticleContainerChaperone
+initRadius	include/particleContainerChaperone.hpp	/^  precision initRadius() { return radius_; }$/;"	f	class:ParticleContainerChaperone
+initRadius	include/particleContainerChaperone.hpp	/^  void initRadius( precision r ) { radius_=r; }$/;"	f	class:ParticleContainerChaperone
+initVals	include/grid.hpp	/^  void initVals() {$/;"	f	class:GridIter
+initVals	include/particleContainerChaperone.hpp	/^  void initVals() { $/;"	f	class:ParticleContainerChaperone
+initVars	include/particleInteractionHandler.hpp	/^  void initVars() {$/;"	f	class:ParticleInteractionHandler
+initVel	include/particleContainerChaperone.hpp	/^  const vec_type& initVel() { return initVel_; }$/;"	f	class:ParticleContainerChaperone
+initVel	include/particleContainerChaperone.hpp	/^  void initVel( const vec_type& v ) { initVel_=v; randomVel_=0; }$/;"	f	class:ParticleContainerChaperone
+initVel_	include/particleContainerChaperone.hpp	/^  vec_type initVel_;$/;"	m	class:ParticleContainerChaperone
+initVoxels	include/grid.hpp	/^  void initVoxels() {$/;"	f	class:Grid
+initializeCurrentLayer	src/calcFuncs.C	/^void initializeCurrentLayer( Graph_t& layout_graph , NodeContainer& nodes ,$/;"	f
+integrate	include/particleInteractionHandler.hpp	/^  void integrate(  Particle& p1 , precision t ) const {$/;"	f	class:ParticleInteractionHandler
+integrate	include/particleInteractionHandler.hpp	/^  void integrate( Particle& p1 ) const {    $/;"	f	class:ParticleInteractionHandler
+integrateFirstOrder	include/particleInteractionHandler.hpp	/^  void integrateFirstOrder(  Particle& p1 ) const {$/;"	f	class:ParticleInteractionHandler
+integrateFirstOrder	include/particleInteractionHandler.hpp	/^  void integrateFirstOrder(  Particle& p1 , precision t ) const {$/;"	f	class:ParticleInteractionHandler
+integrateParticles	src/calcFuncs.C	/^void * integrateParticles ( void * arg_ )$/;"	f
+interaction	include/particleInteractionHandler.hpp	/^  void interaction( Particle& p1 , Particle& p2 ) const {$/;"	f	class:ParticleInteractionHandler
+iterID	include/grid.hpp	/^  int iterID;$/;"	m	class:GridIter
+iterMax	include/grid.hpp	/^  size_type iterMax;$/;"	m	class:GridIter
+iterMax1D	include/grid.hpp	/^const unsigned int iterMax1D = 2;$/;"	m	namespace:NbhrVoxelPositions
+iterMax2D	include/grid.hpp	/^const unsigned int iterMax2D = 5;$/;"	m	namespace:NbhrVoxelPositions
+iterMax3D	include/grid.hpp	/^const unsigned int iterMax3D = 14;$/;"	m	namespace:NbhrVoxelPositions
+iteration__	src/calcFuncs.C	/^static int iteration__ = 0;$/;"	v	file:
+iterator	include/grid.hpp	/^  typedef GridIter< Grid > iterator;$/;"	t	class:GridIter
+iterator	include/grid.hpp	/^  typedef GridIter< Grid<Occupant> > iterator;$/;"	t	class:Grid
+layerNPlacement	src/calcFuncs.C	/^void layerNPlacement( NodeContainer& nodes , Grid_t& grid , out_graph& g , $/;"	f
+layout_graph	include/calcFuncs.h	/^  Graph_t * layout_graph;$/;"	m	struct:ThreadArgs
+level	include/graph.hpp	/^  int level;$/;"	m	class:dos_recorder
+level	include/particleContainerChaperone.hpp	/^  int level() const { return level_; }$/;"	f	class:ParticleContainerChaperone
+level	include/particleContainerChaperone.hpp	/^  void level( int l ) { level_=l; }$/;"	f	class:ParticleContainerChaperone
+level_	include/particleContainerChaperone.hpp	/^  int level_;$/;"	m	class:ParticleContainerChaperone
+level_recorder	include/graph.hpp	/^  level_recorder( LevelMap& dist, ParentMap& parents ) : d(dist), p(parents) { }$/;"	f	class:level_recorder
+level_recorder	include/graph.hpp	/^class level_recorder : public boost::default_bfs_visitor$/;"	c
+level_recorder2	include/graph.hpp	/^  level_recorder2( LevelMap& dist ) : d(dist) { }$/;"	f	class:level_recorder2
+level_recorder2	include/graph.hpp	/^class level_recorder2 : public boost::default_bfs_visitor$/;"	c
+levels	include/calcFuncs.h	/^  LevelMap * levels;$/;"	m	struct:ThreadArgs
+loadConfig	/home/gev/lyonlabs/LGL-2.0/bin/lgl.pl	/^sub loadConfig$/;"	s
+loadFilesFromList	src/lglrebuild.C	/^void loadFilesFromList( const char * file , Molecules& m , prec_t radius )$/;"	f
+m	include/graph.hpp	/^  LevelMap& m;$/;"	m	class:dos_recorder
+main	src/lglayout.C	/^int main( int argc, char ** argv )$/;"	f
+main	src/lglbreakup.C	/^int main( int argc, char ** argv ) $/;"	f
+main	src/lglrebuild.C	/^int main( int argc , char ** argv )$/;"	f
+max	include/grid.hpp	/^  const vec_type& max() const { return maxs; }$/;"	f	class:Grid
+max	include/grid.hpp	/^  void max( const vec_type& m ) { maxs=m; }$/;"	f	class:Grid
+maxs	include/grid.hpp	/^  vec_type maxs; \/\/ Xmax Ymax Zmax etc ...$/;"	m	class:Grid
+min	include/grid.hpp	/^  const vec_type& min() const { return mins; }$/;"	f	class:Grid
+min	include/grid.hpp	/^  void min( const vec_type& m ) { mins=m; }$/;"	f	class:Grid
+mins	include/grid.hpp	/^  vec_type mins; \/\/ Xmin Ymin Zmin etc ...$/;"	m	class:Grid
+mmax	include/graph.hpp	/^  inline T mmax( T x , T y )$/;"	f	namespace:GraphDetail
+mutmap	include/graph.hpp	/^  vertex_index_map mutmap;$/;"	m	class:Graph
+nbhdRadius	include/calcFuncs.h	/^  prec_t nbhdRadius;$/;"	m	struct:ThreadArgs
+neighborCtr	include/grid.hpp	/^  size_type neighborCtr;$/;"	m	class:GridIter
+neighbor_	include/grid.hpp	/^  voxel_type * neighbor_; $/;"	m	class:GridIter
+nhbrVox	include/grid.hpp	/^  const voxel_type& nhbrVox() const { return *neighbor_; }$/;"	f	class:GridIter
+nhbrVox	include/grid.hpp	/^  voxel_type& nhbrVox()  { return *neighbor_; }$/;"	f	class:GridIter
+nodeHandler	include/calcFuncs.h	/^  NodeInteractionHandler * nodeHandler;$/;"	m	struct:ThreadArgs
+nodes	include/calcFuncs.h	/^  NodeContainer * nodes;$/;"	m	struct:ThreadArgs
+noiseAmplitude	include/particleInteractionHandler.hpp	/^  precision noiseAmplitude() const { return noiseAmplitude_; }$/;"	f	class:ParticleInteractionHandler
+noiseAmplitude	include/particleInteractionHandler.hpp	/^  void noiseAmplitude( precision n ) { noiseAmplitude_=n; }$/;"	f	class:ParticleInteractionHandler
+noiseAmplitude_	include/particleInteractionHandler.hpp	/^  precision noiseAmplitude_;$/;"	m	class:ParticleInteractionHandler
+occupant_type	include/grid.hpp	/^  typedef Occupant occupant_type;$/;"	t	class:Grid
+occupant_type	include/grid.hpp	/^  typedef typename Grid::occupant_type occupant_type;$/;"	t	class:GridIter
+off_	include/grid.hpp	/^const int off_[3][14] = {{0,  1,  1,  0, -1,  0,  1,  1,  0, -1, -1, -1,  0,  1},$/;"	m	namespace:NbhrVoxelPositions
+onlyEdgeInteractions	src/calcFuncs.C	/^void * onlyEdgeInteractions( void * arg_ )$/;"	f
+openInFiles	include/particleContainerChaperone.hpp	/^  void openInFiles() {$/;"	f	class:ParticleContainerChaperone
+openOutFiles	include/particleContainerChaperone.hpp	/^  void openOutFiles() {$/;"	f	class:ParticleContainerChaperone
+operator ()	include/graph.hpp	/^  bool operator()( const typename Graph::vertex_descriptor v1,$/;"	f	struct:vertex_id_compare
+operator ++	include/grid.hpp	/^  friend bool operator++ ( iterator& i ) { $/;"	f	class:GridIter
+operator +=	include/grid.hpp	/^  bool operator+= ( size_type i ) { $/;"	f	class:GridIter
+operator --	include/grid.hpp	/^  friend bool operator-- ( iterator& i ) { $/;"	f	class:GridIter
+operator -=	include/grid.hpp	/^  bool operator-= ( size_type i ) {$/;"	f	class:GridIter
+operator =	include/graph.hpp	/^  Graph<Weight>& operator= ( const Graph<Weight>& g ) {$/;"	f	class:Graph
+operator =	include/grid.hpp	/^  const iterator& operator= ( const iterator& g ) {$/;"	f	class:GridIter
+operator =	include/particleInteractionHandler.hpp	/^  PIH_& operator= ( const PIH_& p ) {$/;"	f	class:ParticleInteractionHandler
+operator ==	include/particleInteractionHandler.hpp	/^  bool operator== ( const PIH_& p ) const {$/;"	f	class:ParticleInteractionHandler
+operator []	include/grid.hpp	/^  const voxel_type& operator[] ( size_type entry ) const {$/;"	f	class:Grid
+operator []	include/grid.hpp	/^  voxel_type& operator[] ( size_type entry ) {$/;"	f	class:Grid
+orderingError	include/particleContainerChaperone.hpp	/^  void orderingError( const char * file ) {$/;"	f	class:ParticleContainerChaperone
+out_edge_iterator	include/graph.hpp	/^  typedef typename boost_graph::out_edge_iterator out_edge_iterator;$/;"	t	class:Graph
+out_graph	include/calcFuncs.h	/^typedef adjacency_list< listS , vecS , directedS > out_graph;$/;"	t
+p	include/graph.hpp	/^  ParentMap& p;$/;"	m	class:level_recorder
+parents	include/calcFuncs.h	/^  ParentMap * parents;$/;"	m	struct:ThreadArgs
+particle	src/lglrebuild.C	/^typedef Sphere< prec_t > particle;$/;"	t	file:
+particle_type	include/particleContainerChaperone.hpp	/^  typedef Particle particle_type;$/;"	t	class:ParticleContainerChaperone
+particle_type	include/particleInteractionHandler.hpp	/^  typedef Particle particle_type;$/;"	t	class:ParticleInteractionHandler
+pc_	include/particleContainerChaperone.hpp	/^  PC_& pc_;$/;"	m	class:ParticleContainerChaperone
+placementFormula	src/calcFuncs.C	/^prec_t placementFormula( prec_t placementDistance , int vertices2place , int dimension )$/;"	f
+posOutFile	include/particleContainerChaperone.hpp	/^  void posOutFile( const char * x ) { $/;"	f	class:ParticleContainerChaperone
+posRange_	include/particleContainerChaperone.hpp	/^  precision posRange_;       \/\/ Range for randomizing positions  $/;"	m	class:ParticleContainerChaperone
+pos_	include/particleContainerChaperone.hpp	/^  vec_type pos_;$/;"	m	class:ParticleContainerChaperone
+prec_t	src/lglrebuild.C	/^typedef float prec_t;$/;"	t	file:
+precision	include/grid.hpp	/^  typedef typename Occupant::precision precision;$/;"	t	class:Grid
+precision	include/particleContainerChaperone.hpp	/^  typedef typename particle_type::precision precision;$/;"	t	class:ParticleContainerChaperone
+precision	include/particleInteractionHandler.hpp	/^  typedef typename particle_type::precision precision;$/;"	t	class:ParticleInteractionHandler
+print	include/graph.hpp	/^  void print( std::ostream& o = std::cout ) const$/;"	f	class:Graph
+print	include/grid.hpp	/^  void print ( std::ostream& o = std::cout ) const {$/;"	f	class:GridIter
+print	include/grid.hpp	/^  void print( std::ostream& o=std::cout ) const {$/;"	f	class:Grid
+print	include/particleInteractionHandler.hpp	/^  void print( std::ostream& o=std::cout ) const {$/;"	f	class:ParticleInteractionHandler
+printOutput	src/calcFuncs.C	/^void printOutput( long i , prec_t d , long la , ostream& o )$/;"	f
+radius_	include/particleContainerChaperone.hpp	/^  precision radius_;$/;"	m	class:ParticleContainerChaperone
+randomPos_	include/particleContainerChaperone.hpp	/^  bool randomPos_;$/;"	m	class:ParticleContainerChaperone
+randomVec	include/particleContainerChaperone.hpp	/^  vec_type& randomVec( vec_type& v , precision range ) {$/;"	f	class:ParticleContainerChaperone
+randomVel_	include/particleContainerChaperone.hpp	/^  bool randomVel_;$/;"	m	class:ParticleContainerChaperone
+randomizePosRange	include/particleContainerChaperone.hpp	/^  void randomizePosRange( precision p ) { posRange_=p; randomPos_=1; }$/;"	f	class:ParticleContainerChaperone
+randomizeVelRange	include/particleContainerChaperone.hpp	/^  void randomizeVelRange( precision v ) { velRange_=v; randomVel_=1; }$/;"	f	class:ParticleContainerChaperone
+readLGL	include/graph.hpp	/^void readLGL( Graph& g , const char * file )$/;"	f
+readLGL	include/graph.hpp	/^void readLGL( Graph& g , const char * file , typename Graph::weight_type cutoff )$/;"	f
+readLGL_weightMin	include/graph.hpp	/^void readLGL_weightMin( Graph& g , const char * file ,$/;"	f
+readNCOL	include/graph.hpp	/^void readNCOL( Graph& g , const char * file )$/;"	f
+record_dos	include/graph.hpp	/^record_dos( LevelMap& m , Vertex v ) { return dos_recorder<LevelMap,Vertex>(m,v); }$/;"	f
+record_levels	include/graph.hpp	/^record_levels( LevelMap& m , ParentMap& p )$/;"	f
+record_levels2	include/graph.hpp	/^record_levels2( LevelMap& m ) { return level_recorder2<LevelMap>(m); };$/;"	f
+remap	include/graph.hpp	/^void remap( Graph& g )$/;"	f
+removeEdge	include/graph.hpp	/^  void removeEdge( const edge_descriptor& e ) { remove_edge( e , G ); }$/;"	f	class:Graph
+reset	include/grid.hpp	/^  void reset () {$/;"	f	class:GridIter
+rewindNbhrInc	include/grid.hpp	/^  void rewindNbhrInc() { neighbor_=current_; neighborCtr=0; }$/;"	f	class:GridIter
+setLevelMapFromMST	include/graph.hpp	/^void setLevelMapFromMST( const Graph& mst , LevelMap& lm , ParentMap& parents ,$/;"	f
+setMFromFile	include/particleContainerChaperone.hpp	/^  bool setMFromFile( Particle& p , string id2check= "") {$/;"	f	class:ParticleContainerChaperone
+setMSTFromGraph	include/graph.hpp	/^void setMSTFromGraph( Graph& g , Graph& mst )$/;"	f
+setVFromFile	include/particleContainerChaperone.hpp	/^  bool setVFromFile( Particle& p , string id2check= "") {$/;"	f	class:ParticleContainerChaperone
+setXFromFile	include/particleContainerChaperone.hpp	/^  bool setXFromFile( Particle& p , const string& id2check= "" ) {$/;"	f	class:ParticleContainerChaperone
+set_size_sort	src/lglbreakup.C	/^bool set_size_sort( const vector<int>& v1 , const vector<int>& v2 ) {$/;"	f
+shift_particle	include/grid.hpp	/^void shift_particle( Particle& p , Grid& g )$/;"	f
+size	include/grid.hpp	/^  size_type size() const { return voxelCount; }$/;"	f	class:Grid
+size_type	include/grid.hpp	/^  typedef typename Grid::size_type size_type;$/;"	t	class:GridIter
+size_type	include/grid.hpp	/^  typedef unsigned int size_type;$/;"	t	class:Grid
+size_type	include/particleContainerChaperone.hpp	/^  typedef typename PC_::size_type size_type;$/;"	t	class:ParticleContainerChaperone
+size_type	src/lglrebuild.C	/^typedef Mol::size_type size_type;$/;"	t	file:
+specialSpringConstant	include/calcFuncs.h	/^  prec_t specialSpringConstant;$/;"	m	struct:ThreadArgs
+springConstant	include/particleInteractionHandler.hpp	/^  precision springConstant() const { return springConstant_; }$/;"	f	class:ParticleInteractionHandler
+springConstant	include/particleInteractionHandler.hpp	/^  void springConstant( precision k ) { springConstant_=k; }$/;"	f	class:ParticleInteractionHandler
+springConstant_	include/particleInteractionHandler.hpp	/^  precision springConstant_;$/;"	m	class:ParticleInteractionHandler
+springRepulsiveInteraction	include/particleInteractionHandler.hpp	/^  void springRepulsiveInteraction( Particle& p1 , Particle& p2 ) const {$/;"	f	class:ParticleInteractionHandler
+start	include/grid.hpp	/^  const Vec_l& start() const { return startingPoint; }$/;"	f	class:GridIter
+start	include/grid.hpp	/^  void start( const Vec_l& s ) { $/;"	f	class:GridIter
+startVox	include/grid.hpp	/^  const voxel_type& startVox() const { return *start_; }$/;"	f	class:GridIter
+startVox	include/grid.hpp	/^  voxel_type& startVox()  { return *start_; }$/;"	f	class:GridIter
+start_	include/grid.hpp	/^  voxel_type * start_;        \/\/ Where this iterater is initialized$/;"	m	class:GridIter
+startingPoint	include/grid.hpp	/^  Vec_l startingPoint;    \/\/ Starting location of the itr in the grid$/;"	m	class:GridIter
+stats	include/calcFuncs.h	/^  ParticleStats_t * stats;$/;"	m	struct:ThreadArgs
+streams_in	include/particleContainerChaperone.hpp	/^  ifstream streams_in[3];   \/\/ X V M$/;"	m	class:ParticleContainerChaperone
+streams_out	include/particleContainerChaperone.hpp	/^  ofstream streams_out[3];  \/\/ X V Temprature$/;"	m	class:ParticleContainerChaperone
+sumDOS	include/graph.hpp	/^int sumDOS( const Graph& g , typename Graph::vertex_descriptor root )$/;"	f
+tempOutFile	include/particleContainerChaperone.hpp	/^  void tempOutFile( const char * t ) { $/;"	f	class:ParticleContainerChaperone
+threadCount	include/calcFuncs.h	/^  long threadCount;$/;"	m	struct:ThreadArgs
+timeStep	include/particleInteractionHandler.hpp	/^  precision timeStep() const { return timeStep_; }$/;"	f	class:ParticleInteractionHandler
+timeStep	include/particleInteractionHandler.hpp	/^  void timeStep( precision t ) { timeStep_=t; }$/;"	f	class:ParticleInteractionHandler
+timeStep_	include/particleInteractionHandler.hpp	/^  precision timeStep_;$/;"	m	class:ParticleInteractionHandler
+tree_edge	include/graph.hpp	/^  void tree_edge( Edge e , const BoostGraph& bg )$/;"	f	class:dos_recorder
+tree_edge	include/graph.hpp	/^  void tree_edge( Edge e , const BoostGraph& bg )$/;"	f	class:level_recorder
+tree_edge	include/graph.hpp	/^  void tree_edge( Edge e , const BoostGraph& bg )$/;"	f	class:level_recorder2
+v	include/graph.hpp	/^  vertex v;$/;"	m	class:dos_recorder
+vec_type	include/grid.hpp	/^  typedef typename Grid::vec_type vec_type;$/;"	t	class:GridIter
+vec_type	include/grid.hpp	/^  typedef typename Occupant::vec_type vec_type;$/;"	t	class:Grid
+vec_type	include/particleContainerChaperone.hpp	/^  typedef typename particle_type::vec_type vec_type;$/;"	t	class:ParticleContainerChaperone
+vec_type	include/particleInteractionHandler.hpp	/^  typedef typename particle_type::vec_type vec_type;$/;"	t	class:ParticleInteractionHandler
+vec_type	src/lglrebuild.C	/^typedef Mol::vec_type vec_type;$/;"	t	file:
+velOutFile	include/particleContainerChaperone.hpp	/^  void velOutFile( const char * v ) { $/;"	f	class:ParticleContainerChaperone
+velRange_	include/particleContainerChaperone.hpp	/^  precision velRange_;       \/\/   "    "      "       velocities$/;"	m	class:ParticleContainerChaperone
+vel_	include/particleContainerChaperone.hpp	/^  vec_type vel_;$/;"	m	class:ParticleContainerChaperone
+vertexCount	include/graph.hpp	/^  typename boost_graph::vertices_size_type vertexCount() const { return num_vertices(G); }$/;"	f	class:Graph
+vertexIdMap	include/graph.hpp	/^  const vertex_index_map& vertexIdMap() const { return mutmap; }$/;"	f	class:Graph
+vertexIdMap	include/graph.hpp	/^  void vertexIdMap( const vertex_index_map& m ){ mutmap = m; }$/;"	f	class:Graph
+vertex_descriptor	include/graph.hpp	/^  typedef typename boost_graph::vertex_descriptor vertex_descriptor;$/;"	t	class:Graph
+vertex_id_compare	include/graph.hpp	/^  vertex_id_compare( const Graph& g1 ) : g(g1) { }$/;"	f	struct:vertex_id_compare
+vertex_id_compare	include/graph.hpp	/^struct vertex_id_compare$/;"	s
+vertex_index_map	include/graph.hpp	/^  typedef MutualMap< std::string , int > vertex_index_map;$/;"	t	class:Graph
+vertex_iterator	include/graph.hpp	/^  typedef typename boost_graph::vertex_iterator vertex_iterator;$/;"	t	class:Graph
+vertices_size_type	include/graph.hpp	/^  typedef typename boost_graph::vertices_size_type vertices_size_type;$/;"	t	class:Graph
+voxPerDim	include/grid.hpp	/^  Vec_l voxPerDim;        \/\/ Number of voxels each dimension consumes$/;"	m	class:GridIter
+voxPerDim	include/grid.hpp	/^  Vec_l voxPerDim;$/;"	m	class:Grid
+voxPerEdge	include/grid.hpp	/^  Vec_l voxPerEdge;$/;"	m	class:Grid
+voxel	include/grid.hpp	/^  const voxel_type& voxel( size_type entry ) const {$/;"	f	class:Grid
+voxel	include/grid.hpp	/^  voxel_type& voxel( size_type entry ) {$/;"	f	class:Grid
+voxelCount	include/grid.hpp	/^  size_type voxelCount;    \/\/ Total voxels$/;"	m	class:Grid
+voxelHandler	include/calcFuncs.h	/^  VoxelHandler * voxelHandler;$/;"	m	struct:ThreadArgs
+voxelLength	include/grid.hpp	/^  precision voxelLength;       \/\/ The length of each voxel$/;"	m	class:Grid
+voxelList	include/calcFuncs.h	/^  FixedVec_l * voxelList;$/;"	m	struct:ThreadArgs
+voxelListSize	include/calcFuncs.h	/^  long voxelListSize;$/;"	m	struct:ThreadArgs
+voxelWidth	include/grid.hpp	/^  precision voxelWidth() const { return voxelLength; }$/;"	f	class:Grid
+voxelWidth	include/grid.hpp	/^  void voxelWidth( precision l ) { voxelLength=l; }$/;"	f	class:Grid
+voxel_type	include/grid.hpp	/^  typedef Voxel< Occupant > voxel_type;$/;"	t	class:Grid
+voxel_type	include/grid.hpp	/^  typedef typename Grid::voxel_type voxel_type;$/;"	t	class:GridIter
+voxelsPerDim	include/grid.hpp	/^  size_type voxelsPerDim( size_type ii ) const { return voxPerDim[ii]; }$/;"	f	class:Grid
+voxelsPerEdge	include/grid.hpp	/^  size_type voxelsPerEdge( size_type ii ) const { return voxPerEdge[ii]; }$/;"	f	class:Grid
+voxels_	include/grid.hpp	/^  voxel_type * voxels_;        \/\/ Pointer the allocated voxels$/;"	m	class:Grid
+weight	include/graph.hpp	/^  bool weight;$/;"	m	class:Graph
+weightBasedOnNegativeOfEdgeCount	include/graph.hpp	/^weightBasedOnNegativeOfEdgeCount( const Graph& g , const typename Graph::Edge& e )$/;"	f
+weight_map	include/graph.hpp	/^  typedef typename boost::property_map< boost_graph , boost::edge_weight_t >::type weight_map;$/;"	t	class:Graph
+weight_type	include/graph.hpp	/^  typedef Weight weight_type;$/;"	t	class:Graph
+weights	include/graph.hpp	/^  void weights( const weight_map& w )$/;"	f	class:Graph
+weights	include/graph.hpp	/^  weight_map weights() { return get( boost::edge_weight, G); }$/;"	f	class:Graph
+whichThread	include/calcFuncs.h	/^  long whichThread;$/;"	m	struct:ThreadArgs
+writeCurrentLGL	src/lglbreakup.C	/^int writeCurrentLGL( Graph_t& g , const char * outfile , int cset ,$/;"	f
+writeLGL	include/graph.hpp	/^void writeLGL( const Graph& g , const char * file )$/;"	f
+writeLevelMap2File	include/graph.hpp	/^void writeLevelMap2File( const Graph& g , const LevelMap& levels , $/;"	f
+writeNCOL	include/graph.hpp	/^void writeNCOL( const Graph& g , const char * file )$/;"	f
+writeOutFiles	include/particleContainerChaperone.hpp	/^void ParticleContainerChaperone<Particle>::writeOutFiles()$/;"	f	class:ParticleContainerChaperone
+writeResults	src/lglrebuild.C	/^void writeResults( const Mol& m , const char * outfile )$/;"	f
+writeXout	include/particleContainerChaperone.hpp	/^  void  writeXout ( const Particle& p , const string& id ) {$/;"	f	class:ParticleContainerChaperone
+~Graph	include/graph.hpp	/^  ~Graph() { }$/;"	f	class:Graph
+~Grid	include/grid.hpp	/^  virtual ~Grid(){ delete [] voxels_; }$/;"	f	class:Grid
+~GridIter	include/grid.hpp	/^  virtual ~GridIter() { \/* Don't delete any voxels *\/ }$/;"	f	class:GridIter
+~ParticleContainerChaperone	include/particleContainerChaperone.hpp	/^  virtual ~ParticleContainerChaperone() {$/;"	f	class:ParticleContainerChaperone
+~ParticleInteractionHandler	include/particleInteractionHandler.hpp	/^  virtual ~ParticleInteractionHandler() { }$/;"	f	class:ParticleInteractionHandler

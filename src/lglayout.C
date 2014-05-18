@@ -55,7 +55,7 @@ int main( int argc, char ** argv )
   char * initPosFile = 0;
   char * initMassFile = 0;
   char * rootNode = 0;
-  char * outfile = "lgl.out";
+  const char * outfile = "lgl.out";
   bool doesWritemstfile = false;
   long processorCount = 1;
   prec_t cutOffPrecision = .00001;
@@ -185,7 +185,7 @@ int main( int argc, char ** argv )
   mst.weights( G.weights() );
   Graph_t::vertex_descriptor root = 0;
   if ( ! initPosFile ) {
-    cout << "Generating Tree and checking for root.\nNodes Checked: " << flush;
+    cout << "Generating Tree and checking for root.\nChecking for root node ... " << flush;
     if ( rootNode ) { 
       // Use the provided root node
       string r(rootNode);
@@ -200,7 +200,7 @@ int main( int argc, char ** argv )
 				 (Graph_t::vertex_descriptor *)0 , mst ,
 				 useOriginalWeights );
     }
-    cout << "\nRoot Node: " << G.idFromIndex( root ) << "\n"
+    cout << "Root Node: " << G.idFromIndex( root ) << "\n"
 	 << "There are " << totalLevels << " levels." << endl;
     // Place root in graph
     shift_particle( nodes[root] , grid );

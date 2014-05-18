@@ -38,7 +38,7 @@ my $INPUTFILE = shift || '';
 # DEFAULT ARGS IN CASE A CONF FILE IS NOT PROVIDED
 
 # The location of all the lgl executables (The bin directory)
-my $LGLDIR = '';
+my $LGLDIR = '/home/adai/src/LGL-1.2/bin';
 
 # TMP dir needed by program. All results
 # are stored there (total output directory)
@@ -67,7 +67,7 @@ my $USEEDGEASWEIGHTS = 0;    # Treat the edges as EQ distances
 my $INTEGRATETYPE = ''; #'-d'
 
 # Dimension of the layout
-my $DIMENSION = 3;
+my $DIMENSION = 2;
 
 # Set this to the directory for lglayout to start
 # at. It has to be on previously started by lgl.pl

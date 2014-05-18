@@ -27,7 +27,6 @@
 #include "particleStats.hpp"
 #include <iostream>
 #include <cmath>
-#include <cstdlib>
 
 //--------------------------------------------- 
 
@@ -137,10 +136,10 @@ public:
     p1.lock();
     precision factor = 1.0;
     for ( unsigned d=0; d<dimension; ++d ) {
-      if ( (((precision)std::rand()) / ((precision)RAND_MAX+1.0)) < .5 ) {
+      if ( (((precision)rand()) / ((precision)RAND_MAX+1.0)) < .5 ) {
 	factor *= -1;
       }
-      p1.f[d] += factor * noiseAmplitude_ * (((precision)std::rand()) /
+      p1.f[d] += factor * noiseAmplitude_ * (((precision)rand()) /
 					     ((precision)RAND_MAX+1.0));
     }    
     p1.unlock();
@@ -168,7 +167,7 @@ public:
 
     for ( unsigned int ii=0; ii<dimension; ++ii ){
       precision dx = ( x1[ii] - x2[ii] );
-      if ( dx > eqDistance_ ) dx = 1.0 / dx;
+      if ( dx > eqDistance_ ) dx = 1.0 / ( dx * dx );
       precision f = dx * scale;
       f_[ii]   = f;
       fm1_[ii] = -1.0*f;

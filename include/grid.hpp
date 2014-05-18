@@ -25,6 +25,7 @@
 #include "fixedVec.hpp"
 #include <cassert>
 #include <iostream>
+#include <cstdlib>
 
 //------------------------------------------------------------
 
@@ -268,7 +269,7 @@ public:
       iterMax=NbhrVoxelPositions::iterMax3D;
     else {
       cerr << "!! GridIter Can only handle dimensions 1-3 !!\n";
-      exit(1);
+		std::exit(1);
     }
   }
 
@@ -476,14 +477,14 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 
 template < typename Particle , typename Grid > 
-void _placement_error( Particle& p , Grid& g , char * message )
+void _placement_error( Particle& p , Grid& g , const char * message )
 {
   std::cerr << "An error occured shifting a particle around in the voxels: "
 	    << message << '\n';
   std::cerr << "If the entry is outside the grid, this could be fixed by initializing a larger grid\n";
   std::cerr << "Particle: "; p.print(std::cerr);
   std::cerr << "Grid: "; g.print(std::cerr);
-  exit( EXIT_FAILURE );
+  std::exit( EXIT_FAILURE );
 }
 
 // The particle does not have to be in the grid

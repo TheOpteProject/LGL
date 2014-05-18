@@ -171,6 +171,8 @@ CONFFILE
 sub compileSources
 {
     chdir("$sourceDir") or die "Can't cd to $sourceDir: $!\n";
+
+	 setupCompileEnv();
     
     print "#### Compiling 2D ####\n";
 	changeDimension(2);
@@ -183,6 +185,31 @@ sub compileSources
     # Just clean up the .o s
     #my $status = system("make clean");
     #die "Final Make clean failed" unless $status == 0;
+}
+
+############################################
+
+sub setupCompileEnv
+{
+	my $status = system("c++ -M confcheck/boost_header_compile.cpp");
+	if ($status != 0) {
+		print "It seems boost headers aren't being found...\n";
+		# See if adding /usr/local/include makes things better
+		my $cplus_include_path = $ENV{CPLUS_INCLUDE_PATH};
+		$cplus_include_path = '' unless defined $cplus_include_path;
+		print "CPLUS_INCLUDE_PATH was: $cplus_include_path\n";
+		$ENV{CPLUS_INCLUDE_PATH} = "$cplus_include_path:/usr/local/include";
+		$status = system("c++ -M confcheck/boost_header_compile.cpp");
+		if ($status != 0) {
+			print "Tried to look in /usr/local/include for boost headers, but that didn't bring much joy.\n";
+			# Nah, that didn't help, so revert that change. Not sure what else to do...
+			$ENV{CPLUS_INCLUDE_PATH} = "$cplus_include_path";
+		}
+		else {
+			# Bingo! That helped, so keep that environment change for subsequent make invocations to take advantage of
+			print "Boost headers are located under /usr/local/include/ ! Will use them from there...\n";
+		}
+	}
 }
 
 ############################################

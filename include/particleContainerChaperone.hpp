@@ -29,6 +29,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstdlib>
+#include <string.h>	// for strdup
 
 //----------------------------------------------------
 
@@ -77,7 +79,7 @@ public:
 	streams_in[i].open(file_in[i]); 
 	if (!streams_in[i]) {
 	  cerr << " Could not open Input File: " << file_in[i] << endl;
-	  exit(EXIT_FAILURE);
+	  std::exit(EXIT_FAILURE);
 	}
       }
     }
@@ -89,7 +91,7 @@ public:
 	streams_out[i].open(file_out[i]); 
 	if (!streams_out[i]) {
 	  cerr << " Could not open Out File: " << file_out[i] << endl;
-	  exit(EXIT_FAILURE);
+	  std::exit(EXIT_FAILURE);
 	}
       }
     }
@@ -114,7 +116,7 @@ public:
   void orderingError( const char * file ) {
     cerr << "The ordering in the initialization file " 
 	 << file << " is off.\n";
-    exit(EXIT_FAILURE);
+	 std::exit(EXIT_FAILURE);
   }
   
   void  writeXout ( const Particle& p , const string& id ) {
@@ -192,7 +194,7 @@ public:
 
   vec_type& randomVec( vec_type& v , precision range ) {
     for ( unsigned int jj=0; jj<dimension; ++jj ) {
-      v[jj] = static_cast<precision>(rand()/(RAND_MAX+1.0))*range;
+      v[jj] = static_cast<precision>(std::rand()/(RAND_MAX+1.0))*range;
     } return v;
   }
   

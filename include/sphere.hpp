@@ -26,7 +26,6 @@
 #include <vector>
 #include "fixedVec.hpp"
 #include <string>
-#include <boost/random.hpp>
 #include <cstdlib>
 #include <sys/types.h>
 #include <unistd.h>
@@ -47,9 +46,10 @@ private:
   
 public:
   Sphere() : x(2,0) { }
-  Sphere( const std::string& i , const vec_type& v , precision r = 1 ) : id(i) , x(v) ,
-									 radius_(r) { }
-  Sphere( const vec_type& v , precision r = 1 ) : x(v) , radius_(r) { }
+  Sphere( const std::string& i , const vec_type& v , precision r = 1 ) :
+    id(i) , x(v) , radius_(r) { }
+  Sphere( const vec_type& v , precision r = 1 ) :
+    x(v) , radius_(r) { }
   
   int dimension() const { return x.size(); }
   const vec_type& location() const { return x; }
@@ -90,23 +90,18 @@ public:
 
 ///////////////////////////////////////////////////////
 
-template< typename Sphere >
-std::vector< typename Sphere::vec_type >
-seriesOfPointsOnSphere( Sphere& s , int count )
+template< typename Sphere , typename Vectype >
+inline void seriesOfPointsOnSphere( Sphere& s , int count , Vectype& v )
 {
-  typedef std::vector< typename Sphere::vec_type > VV; 
-  typedef typename Sphere::vec_type vec_type;
-  VV v( count , s.dimension() );
-  for ( int ii=0; ii<count; ++ii ) {
-      v[ii] = randomPointOnSurface( s );
-  }
-  return v;
+  v.resize( count );
+  for ( int ii=0; ii<count; ++ii )
+    randomPointOnSurface( s , v.at(ii) );
 }
 
 ///////////////////////////////////////////////////////
 
 template < typename Sphere >
-bool doIntersect( const Sphere& s1 , const Sphere& s2 )
+inline bool doIntersect( const Sphere& s1 , const Sphere& s2 )
 {
   typedef typename Sphere::vec_type vec_type;
   typedef typename Sphere::precision precision;
@@ -119,24 +114,46 @@ bool doIntersect( const Sphere& s1 , const Sphere& s2 )
 
 ///////////////////////////////////////////////////////
 
-static unsigned int randomPointOnSurfaceCall___ = rand() + getpid();
+template < typename Vectype >
+inline void uniform_on_sphere_vec( Vectype& v , int dimension )
+{
+  // Assume radius = 1
+  typedef typename Vectype::value_type value_type;
+  const value_type PI = 3.141592654;
+  v.resize( dimension );
+  if ( dimension == 2 )
+    {
+      value_type theta = rand()/(RAND_MAX+1.0) * 2.0 * PI;
+      v.at(0) = cos( theta ); // X
+      v.at(1) = sin( theta ); // Y
+    }
+  else if ( dimension == 3 )
+    {
+      value_type theta = 2.0 * PI * rand()/(RAND_MAX+1.0);
+      value_type phi   = acos( 1.0 - 2.0 * rand()/(RAND_MAX+1.0) );
+      v.at(0) = cos( theta ) * sin( phi ); // X
+      v.at(1) = sin( theta ) * sin( phi ); // Y
+      v.at(2) = cos( phi );                // Z
+    }
+  else
+    {
+      std::cerr << "Unsupported dimension: must be 2 or 3\n";
+      exit(EXIT_FAILURE);
+    }
+}
+
+///////////////////////////////////////////////////////
 
 template < typename Sphere >
-typename Sphere::vec_type 
-randomPointOnSurface( const Sphere& s )
+inline void randomPointOnSurface( const Sphere& s ,
+				  typename Sphere::vec_type& r )
 {
-  typedef typename boost::hellekalek1995 precision;
-  typedef typename Sphere::vec_type vec_type;  
-  precision rr(++randomPointOnSurfaceCall___);
-  boost::uniform_on_sphere<precision> usph( rr, s.dimension() );
-  std::vector<double> v = usph();
-  //copy( v.begin() , v.end() , ostream_iterator<double>(cerr," ")); cerr << '\n';
-  typename Sphere::vec_type r( v.begin() , v.end() );
+  typedef typename Sphere::vec_type vec_type; 
+  uniform_on_sphere_vec( r , s.dimension() );
   // Scale the vec to match the radius of the sphere
   scale( r.begin() , r.end() , s.radius() );
   // Recenter for the sphere
   translate( r.begin() , r.end() , s.location().begin() );
-  return r;
 }
 
 ///////////////////////////////////////////////////////

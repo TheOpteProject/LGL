@@ -28,7 +28,7 @@
 #include <boost/graph/kruskal_min_spanning_tree.hpp>
 #include <boost/graph/visitors.hpp>
 #include <boost/graph/breadth_first_search.hpp>
-#include <boost/property_map.hpp>
+#include <boost/property_map/property_map.hpp>
 #include <boost/limits.hpp>
 #include <boost/lexical_cast.hpp>
 #include <iostream>
@@ -164,7 +164,7 @@ public:
     for ( tie(e,eend) = edges(G); e!=eend; ++e ) {
       //o << "(" << source(*e,G) << "," << target(*e,G) << ")";
       o << "(" << idFromIndex(source(*e,G)) << "," << idFromIndex(target(*e,G))
-      	<< ")" << flush;
+      	<< ")" << std::flush;
       if ( weight ) {
 	o << " = " << getWeight(*e);
       }
@@ -224,35 +224,6 @@ void remap( Graph& g )
   g.boostGraph( ng );
   g.vertexIdMap( nids );
 }
-
-//--------------------------------------------------
-
-#if 0
-template< typename Graph >
-void writeLS( const Graph& g , const char * file )
-{
-  using namespace boost;
-  const typename Graph::boost_graph& bg = g.boostGraph();
-  const typename Graph::vertex_index_map& ids = g.vertexIdMap();
-  typename Graph::vertex_iterator v, vend;
-  typename Graph::out_edge_iterator ee1, ee2;
-  std::ofstream out( file );
-  if ( ! out ) { std::cerr << "Write Failed" << endl; exit(EXIT_FAILURE); }
-  // First line is vertex count only
-  out << num_vertices( bg ) << '\n';
-  for ( tie(v,vend) = vertices(bg); v!=vend; ++v ) {
-    // Write out edge count and source vertex
-    tie( ee1 , ee2 ) = out_edges( *v , bg );
-    int d = distance( ee1 , ee2 );
-    out << d << " " << ids.findFormer( source( *ee1 , bg ) ) << '\n';
-    for ( ; ee1 != ee2 ; ++ee1 ) {
-      // Write out only the targets, one per line
-      out << ids.findFormer( target( *ee1 , bg ) ) << '\n';
-    }
-  }
-  out << -1 << '\n';
-}
-#endif
 
 //--------------------------------------------------
 
@@ -412,7 +383,8 @@ private:
 
 template < typename LevelMap, typename ParentMap >
 level_recorder<LevelMap,ParentMap>
-record_levels( LevelMap& m , ParentMap& p ) { return level_recorder<LevelMap,ParentMap>(m,p); };
+record_levels( LevelMap& m , ParentMap& p )
+{ return level_recorder<LevelMap,ParentMap>(m,p); };
 
 
 template< typename Graph , typename LevelMap , typename ParentMap >
@@ -529,6 +501,7 @@ generateLevelsFromGraph( const Graph& g , LevelMap& levels , ParentMap& parents 
 			 typename Graph::vertex_descriptor * rootPtr , Graph& mst ,
 			 bool useOriginalWeights )
 {
+  using namespace boost;
   Graph newGraph( g );
   // First issue is to weight the nodes if desired
   if ( ! useOriginalWeights )
@@ -538,18 +511,67 @@ generateLevelsFromGraph( const Graph& g , LevelMap& levels , ParentMap& parents 
   // Now to determine the root node
   typename Graph::vertex_iterator v , vend;
   tie(v,vend) = vertices( mst.boostGraph() );
-  typename Graph::vertex_descriptor root;
+  typename Graph::vertex_descriptor root, v1, v2;
+
+
   if ( !rootPtr ) {
-    // Init mins and find root if none was given
-    int min = sumDOS( mst , *v );
-    root = *v;
-    int ctr = 1;
-    cerr << std::setw(8) << ctr << flush;
-    for (; v!=vend; ++v ) {
-      int sum = sumDOS( mst , *v );
-      if ( sum < min ) { min = sum; root=*v; }
-      cerr << "\b\b\b\b\b\b\b\b" << std::setw(8) << ++ctr << flush;
+
+    // linear time algorithm to find the root by Ying Wang (yw1984@stanford.edu)
+
+    int i, k, n = mst.vertexCount();
+    vector <typename Graph::vertex_descriptor> queue(n+1);
+    int *ccount, *d;
+    long long tot = 0, min, *a;
+    typename Graph::out_edge_iterator ee1,ee2;
+
+    int p, q;
+    queue[p = q = 0] = *v;
+    a = new long long[n+1];
+    ccount = new int[n+1];
+    d = new int[n+1];
+    for(i = 0; i <= n; i++) ccount[i] = 1, d[i] = -1, a[i] = 0;
+    d[ *v ] = 0;
+    const typename Graph::boost_graph& bg = mst.boostGraph();
+
+    for(; p<=q; p++) {
+      v1 = queue[p];
+      tie(ee1, ee2) = out_edges(v1, bg);
+      for(; ee1 != ee2; ee1++) {
+	v2 = target(*ee1, bg);
+	if (d[v2] == -1) queue[++q] = v2, tot += (d[v2] = d[v1] + 1);
+      }
     }
+
+    a[ *v ] = min = tot;
+    root = *v;
+
+    for(k = q; k >= 0; k--) {
+      v1 = queue[k];
+      tie(ee1, ee2) = out_edges(v1, bg);
+      for(; ee1 != ee2; ee1++) {
+	v2 = target(*ee1, bg);
+	if (d[v2] > d[v1]) {
+	  ccount[v1] += ccount[v2];
+	}
+      }
+    }
+
+    for(k = 0; k <= q; k++) {
+      v1 = queue[k];
+      tie(ee1, ee2) = out_edges(v1, bg);
+      for(; ee1 != ee2; ee1++) {
+	v2 = target(*ee1, bg);
+	if (d[v2] > d[v1]) {
+	  a[v2] = a[v1] - ccount[v2] + (n - ccount[v2]);
+	  if (a[v2] < min) root = v2, min = a[v2];
+	}
+      }
+    }
+
+    delete []a;
+    delete []d;
+    delete []ccount;
+    cerr << "root finding done!" << endl;
   } else {
     root = *rootPtr;
   }
@@ -583,11 +605,11 @@ generateLevelsFromGraphProper( const Graph& g , LevelMap& levels ,
     int min = sumDOS( g , *v );
     root = *v;
     int ctr = 1;
-    cerr << std::setw(8) << ctr << flush;
+    std::cerr << std::setw(8) << ctr << std::flush;
     for (; v!=vend; ++v ) {
       int sum = sumDOS( g , *v );
       if ( sum < min ) { min = sum; root=*v; }
-      cerr << "\b\b\b\b\b\b\b\b" << std::setw(8) << ++ctr << flush;
+      std::cerr << "\b\b\b\b\b\b\b\b" << std::setw(8) << ++ctr << std::flush;
     }
   } else {
     root = *rootPtr;
@@ -634,7 +656,7 @@ void writeLGL( const Graph& g , const char * file )
 
   std::ofstream out( file );
   if ( !out ) { 
-    cerr << "writeLGL: Open of " << file << " failed.\n";
+    std::cerr << "writeLGL: Open of " << file << " failed.\n";
     exit(EXIT_FAILURE);
   }
   
@@ -672,6 +694,59 @@ void writeLGL( const Graph& g , const char * file )
 //--------------------------------------------------
 
 template< typename Graph >
+void writeNCOL( const Graph& g , const char * file )
+{
+  using namespace boost;
+  const typename Graph::boost_graph& bg = g.boostGraph();
+  const typename Graph::vertex_index_map& ids = g.vertexIdMap();
+  typedef typename Graph::weight_type W;
+  typename Graph::vertex_iterator vi, viend;
+  typename Graph::vertex_descriptor v1 , v2;
+  typename Graph::out_edge_iterator ee1, ee2;
+
+  if ( g.edgeCount() == 0 ) { return; }
+
+  std::ofstream out( file );
+  if ( !out ) { 
+    std::cerr << "writeLGL: Open of " << file << " failed.\n";
+    exit(EXIT_FAILURE);
+  }
+  
+  // Sort based on ids
+  vertex_id_compare<Graph> vid(g);
+  std::vector< typename Graph::vertex_descriptor > vertices( g.vertexCount() );
+  int ii=0;
+  for ( boost::tie(vi,viend) = boost::vertices( bg ); vi!=viend; ++vi, ++ii )
+    vertices[ii]= *vi;
+  sort( vertices.begin() , vertices.end() , vid );
+  
+  for ( unsigned ii=0; ii<vertices.size(); ++ii ) {
+    v1 = vertices[ii];
+    tie( ee1 , ee2 ) = out_edges( v1 , bg );
+    if ( ee1 == ee2 ) { continue; }
+    std::string lines;
+    bool entry = false;
+    while( ee1 != ee2 ) {
+      v2 = target( *ee1 , bg ); 
+      if ( g.idFromIndex( v1 ) < g.idFromIndex( v2 ) ) {
+	entry = true;
+	lines += ids.findFormer( v1 ) + " ";
+	lines += ids.findFormer( v2 );
+	if ( g.hasWeights() ) {
+	  lines += " " + boost::lexical_cast<std::string,W>(g.getWeight( *ee1 ));
+	}
+	lines += '\n';
+      }
+      ++ee1;
+    }
+    if ( entry ) { out << lines; }
+  }
+
+}
+
+//--------------------------------------------------
+
+template< typename Graph >
 void readLGL( Graph& g , const char * file )
 {
   readLGL( g ,file, std::numeric_limits<typename Graph::weight_type>::max() );
@@ -690,7 +765,7 @@ void readLGL( Graph& g , const char * file , typename Graph::weight_type cutoff 
 
   std::ifstream in( file );
   if ( !in ) { 
-    cerr << "readLGL: Open of " << file << " failed.\n";
+    std::cerr << "readLGL: Open of " << file << " failed.\n";
     exit(EXIT_FAILURE);
   }
   
@@ -774,7 +849,7 @@ void readNCOL( Graph& g , const char * file )
 
   std::ifstream in( file );
   if ( !in ) { 
-    cerr << "readNCOL: Open of " << file << " failed.\n";
+    std::cerr << "readNCOL: Open of " << file << " failed.\n";
     exit(EXIT_FAILURE);
   }
   
@@ -855,7 +930,7 @@ void readLGL_weightMin( Graph& g , const char * file ,
 
   std::ifstream in( file );
   if ( !in ) { 
-    cerr << "readLGL: Open of " << file << " failed.\n";
+    std::cerr << "readLGL: Open of " << file << " failed.\n";
     exit(EXIT_FAILURE);
   }
   

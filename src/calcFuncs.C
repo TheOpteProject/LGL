@@ -263,8 +263,9 @@ void beginSimulation( ThreadContainer& threads ,
 
 void initializeCurrentLayer( Graph_t& layout_graph , NodeContainer& nodes ,
 			     LevelMap& levels , ParentMap& parents , Grid_t& grid ,
-			     unsigned int currentLevel , Graph_t& actualG, prec_t placementDistance,
-			     prec_t placementRadius , bool placeLeafsClose )
+			     unsigned int currentLevel , Graph_t& actualG,
+			     prec_t placementDistance, prec_t placementRadius ,
+			     bool placeLeafsClose )
 {
   Graph_t::vertex_iterator v, vend; 
   out_graph edges2add;
@@ -324,7 +325,7 @@ void layerNPlacement( NodeContainer& nodes , Grid_t& grid , out_graph& g ,
 
       S s( spot );
       s.radius( 1.0 );
-      x =  seriesOfPointsOnSphere( s , vertices2place ); 
+      seriesOfPointsOnSphere( s , vertices2place , x ); 
 
     } else {
 
@@ -358,7 +359,7 @@ void layerNPlacement( NodeContainer& nodes , Grid_t& grid , out_graph& g ,
       S s( spot );
       s.radius( placementRadius );
       Vec direction( d.begin() , d.end() );
-      x = seriesOfPointsOnSphere( s , vertices2place );
+      seriesOfPointsOnSphere( s , vertices2place , x );
 
     }
 
@@ -379,7 +380,8 @@ void layerNPlacement( NodeContainer& nodes , Grid_t& grid , out_graph& g ,
 
 static std::set<long> areParents;
 
-bool doesVertexHaveAnyChildren( Graph_t& G, Graph_t::vertex_descriptor v , out_graph& g , ParentMap& parents )
+bool doesVertexHaveAnyChildren( Graph_t& G, Graph_t::vertex_descriptor v ,
+				out_graph& g , ParentMap& parents )
 { 
   if ( areParents.empty() ) {
     // Generate list for the first time
@@ -489,9 +491,9 @@ static int iteration__ = 0;
 
 void printOutput( long i , prec_t d , long la , ostream& o )
 {
-  char * im = "Iteration: ";
-  char * dx = " Dx: ";
-  char * l  = " Level: ";
+  const char * im = "Iteration: ";
+  const char * dx = " Dx: ";
+  const char * l  = " Level: ";
   if ( iteration__ > 0 ) { 
     int j=0;
     while ( ++j<=(24+20) ) { o << '\b'; }

@@ -1,17 +1,15 @@
 CPP=c++
 
-#CPP_FLAGS=-Wall -ftemplate-depth-30
-CPP_FLAGS=-Wall -O3 -ftemplate-depth-30
+CPP_FLAGS=-Wall -O3 -ftemplate-depth-50 -g
 
 SOURCES= lglayout.C calcFuncs.C
 OBJECTS= lglayout.o calcFuncs.o
 
 LIBS=-lm -lpthread
 
-INCPATH=-I../include -I../boost-1.30.2
-#LIBPATH=-L../lib
+INCPATH=-I../include
 
-all: lglayout lglbreakup lglrebuild
+all: lglayout lglbreakup lglrebuild lglfileconvert
 
 lglayout: $(OBJECTS)
 	$(CPP) -o lglayout $(OBJECTS) $(LIBPATH) $(LIBS)
@@ -22,8 +20,11 @@ lglbreakup: lglbreakup.o
 lglrebuild: lglrebuild.o
 	$(CPP) -o lglrebuild lglrebuild.o $(LIBPATH) $(LIBS)
 
+lglfileconvert: lglfileconvert.o
+	$(CPP) -o lglfileconvert lglfileconvert.o $(LIBPATH) $(LIBS)
+
 install:
-	mv -f lglrebuild lglbreakup lglayout ../bin/.
+	mv -f lglrebuild lglbreakup lglayout lglfileconvert ../bin/.
 
 .C.o:
 	$(CPP) $(INCPATH) -c $(CPP_FLAGS) $<
@@ -32,4 +33,4 @@ clean:
 	rm -f *.o
 
 tidy:
-	rm -f *o core lglayout lglbreakup lglrebuild
+	rm -f *.o core lglayout lglbreakup lglrebuild lglfileconvert

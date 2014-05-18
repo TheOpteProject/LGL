@@ -34,7 +34,7 @@ using namespace std;
 
 /////////////////////////////////////////////////////////////////////////
 
-char * doutputdir = "/tmp/lgl_temp";
+const char * doutputdir = "/tmp/lgl_temp";
 const bool defaultWrite = true;
 const prec_t cutoff = 1e30;
 const bool defaultDoesWriteLgl = true;
@@ -71,7 +71,7 @@ int main( int argc, char ** argv )
   } 
 
   // Defaults
-  char * outputdir = doutputdir;
+  const char * outputdir = doutputdir;
   bool doesWrite = defaultWrite;
   bool writeNewLGL = defaultDoesWriteLgl;
   bool useMST = false;
