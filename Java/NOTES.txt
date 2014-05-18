@@ -1,0 +1,19 @@
+JAMA: Java Matrix Package
+http://math.nist.gov/javanumerics/jama/
+Downloaded 2014.05.10
+
+RUN:
+
+java -Xmx512m -Xms256m -cp ./LGLLib.jar Viewer2D.Viewer2D
+
+java -Xmx512m -Xms256m -cp ./LGLLib.jar ImageMaker.GenerateImages
+
+java -Xmx512m -Xms256m -jar ./LGLView.jar
+
+java -Xmx512m -Xms256m -jar ./ImageMaker.jar
+
+*****
+
+http://stackoverflow.com/questions/9089675/creating-huge-bufferedimage
+https://code.google.com/p/pngj/
+http://commons.apache.org/proper/commons-imaging/index.html

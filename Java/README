@@ -21,8 +21,10 @@ Much thanks to the Marcotte lab for testing.
 
 You must have javac and jar in your path
 to compile JAVA programs. If you don't the
-compiles will fail. Run 'which javac' and
-'which jar' to confirm this.
+compiles will fail. Examine the build.sh file
+in this directory, and modify the variable
+$JAVABINPATH. This variable is only important
+for the compilation process.
 
 ######################################
 # I
@@ -39,5 +41,8 @@ usage. This program is very crude, and will
 probably be expanded as soon as time permits.
 The source code is there so feel free to dive
 in!
+
+Numerous warnings will be produced, but it should
+compile.
 
 ######################################

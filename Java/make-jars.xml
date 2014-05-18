@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_jars">
+	<target name="create_jars">
+		<jar destfile="./dist/LGLLib.jar">
+			<fileset dir="./bin" />
+			<zipfileset excludes="META-INF/*.SF" src="./lib/Jama-1.0.3.jar" />
+		</jar>
+		<jar destfile="./dist/ImageMaker.jar">
+			<manifest>
+				<attribute name="Main-Class" value="ImageMaker.GenerateImages" />
+			</manifest>
+			<fileset dir="./bin" />
+			<zipfileset excludes="META-INF/*.SF" src="./lib/Jama-1.0.3.jar" />
+		</jar>
+		<jar destfile="./dist/LGLView.jar">
+			<manifest>
+				<attribute name="Main-Class" value="Viewer2D.Viewer2D" />
+			</manifest>
+			<fileset dir="./bin" />
+			<zipfileset excludes="META-INF/*.SF" src="./lib/Jama-1.0.3.jar" />
+		</jar>
+	</target>
+</project>
