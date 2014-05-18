@@ -1,0 +1,12 @@
+* text=auto
+
+*.C text
+*.c text
+*.h text
+*.cpp text
+*.hpp text
+
+Makefile text
+README text
+
+*.pl text
