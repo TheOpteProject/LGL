@@ -204,7 +204,7 @@ int main( int argc, char ** argv )
 	 << "There are " << totalLevels << " levels." << endl;
     // Place root in graph
     shift_particle( nodes[root] , grid );
-    // Put everythin else in some crazy place
+    // Put everything else in some crazy place
     // (pretty helpful for finding bugs)
     for ( NodeContainer::size_type ii=0; ii<nodes.size(); ++ii ) { 
       if ( root!=ii) nodes[ii].X(1e6);
