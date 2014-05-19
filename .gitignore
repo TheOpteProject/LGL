@@ -1,1 +1,7 @@
 tags
+*.o
+/bin/lglayout2D
+/bin/lglayout3D
+/bin/lglbreakup
+/bin/lglfileconvert
+/bin/lglrebuild

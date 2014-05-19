@@ -80,6 +80,13 @@ my $PICKUPDIR = '';
 require ParseConfigFile;
 require LGLFormatHandler;
 
+if ( $option{c} )
+{
+    # This will overwrite the above defaults if
+    # the corresponding arg is given.
+    loadConfig( $option{c} );
+}
+
 if ( $LGLDIR eq '' or ! -d $LGLDIR )
 {
     print STDERR <<ENDMSG
@@ -90,12 +97,6 @@ executables (Set variable LGLDIR in bin/lgl.pl)
 ENDMSG
 ;
     exit;
-}
-if ( $option{c} )
-{
-    # This will overwrite the above defaults if
-    # the corresponding arg is given.
-    loadConfig( $option{c} );
 }
 
 my $status = 0;
