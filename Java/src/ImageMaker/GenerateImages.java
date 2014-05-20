@@ -125,6 +125,7 @@ public class GenerateImages {
 				panel.setFormatter(formatter);
 				panel.setEdgeColor(EDGE_COLOR);
 				panel.setVertexColor(Color.white);
+				panel.setBackgroundColor(Color.BLACK);
 
 				BufferedImage bufferedImage = new BufferedImage(windowSizes[0],
 						windowSizes[1], BufferedImage.TYPE_INT_RGB);

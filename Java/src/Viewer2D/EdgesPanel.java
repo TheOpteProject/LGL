@@ -30,6 +30,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -106,10 +107,38 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	private Matrix mins, maxs;
 	private Matrix inverted;
 
-	// CONSTRUCTOR
+	private BufferedImage bufferedImage;
+	private boolean paintImage;
+
+	protected BufferedImage getBufferedImage() {
+		if (bufferedImage == null) {
+			bufferedImage = new BufferedImage(xWindowSize, yWindowSize,
+					BufferedImage.TYPE_INT_RGB);
+		}
+		return bufferedImage;
+	}
+
+	// TODO: SESS - shall we expose this?
+	// public void setBufferedImage(BufferedImage bufferedImage) {
+	// this.bufferedImage = bufferedImage;
+	// }
+
+	public boolean isPaintImage() {
+		return paintImage;
+	}
+
+	public void setPaintImage(boolean paintImage) {
+		this.paintImage = paintImage;
+	}
+
+	public void setPaintImage() {
+		paintImage = true;
+	}
+
 	public EdgesPanel(Edge[] edges, Vertex[] vertices, int xWindowSize,
 			int yWindowSize) {
 		super();
+		System.out.println("EdgesPanel()"); // TODO: deleteme
 		this.xWindowSize = xWindowSize;
 		this.yWindowSize = yWindowSize;
 		this.setPreferredSize(new Dimension(xWindowSize, yWindowSize));
@@ -140,7 +169,6 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		// Matrices need for zooming moving etc
 		mins = new Matrix(2, 1);
 		maxs = new Matrix(2, 1);
-
 	}
 
 	// -------------------------------------------------------
@@ -148,15 +176,65 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	// -------------------------------------------------------
 
 	public void paint(Graphics g) {
+		System.out.println("paint()"); // TODO: deleteme
 		super.paint(g);
-		paintComponent(g);
+		// TODO: deleteme! - super.paint() already call paintComponent()
+		// paintComponent(g);
 	}
 
 	public void update(Graphics g) {
+		System.out.println("update()"); // TODO: deleteme
+		paintImage();
 		paint(g);
 	}
 
+	@Override
+	public void repaint() {
+		System.out.println("repaint()"); // TODO: deleteme
+		paintImage();
+		super.repaint();
+	}
+	
+	public void paintImage(BufferedImage bufferedImage) {
+		System.out.println("paintImage(" + bufferedImage + ")");
+		Graphics2D g2 = (Graphics2D) bufferedImage.getGraphics();
+		
+		Rectangle2D.Double rect = new Rectangle2D.Double(0, 0,
+				bufferedImage.getWidth(), bufferedImage.getHeight());
+		// g2.setPaint(backgroundColor); 
+		g2.setColor(backgroundColor);
+		g2.fill(rect);
+	
+		setRenderingHints(g2);
+
+		if (edges != null) {
+			paintNonColoredEdges(g2);
+			// Now to draw the colored edges. They must be drawn last
+			// (so they are drawn on top);
+			paintColoredEdges(g2);
+			paintVertices(g2);
+			paintIds(g2);
+		}
+	}
+
+	public void paintImage() {
+		System.out.println("generateImage() " + paintImage + " "
+				+ bufferedImage);
+		// SESS: Sanity check
+		// Seems that inherited constructor calls repaint().
+		// Until I understand why lets keep this check.
+		if (bufferedImage == null) {
+			return;
+		}
+		if (!paintImage) {
+			return;
+		}
+		paintImage(getBufferedImage());
+		paintImage = false;
+	}
+
 	public void paintNonColoredEdges(Graphics g) {
+		System.out.println("paintNonColoredEdges() " + g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(edgeColor);
 		for (Edge edge : edges) {
@@ -174,6 +252,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 
 	@SuppressWarnings("unchecked")
 	public void paintColoredEdges(Graphics g) {
+		System.out.println("paintColoredEdges() " + g);
 		Graphics2D g2 = (Graphics2D) g;
 		for (Map.Entry<Edge, Color> e : ((Map<Edge, Color>) edgeColorMap)
 				.entrySet()) {
@@ -190,6 +269,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void paintNonColoredVertices(Graphics g) {
+		System.out.println("paintNonColoredVertices() " + g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(vertexColor);
 
@@ -209,6 +289,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 
 	@SuppressWarnings("unchecked")
 	public void paintColoredVertices(Graphics g) {
+		System.out.println("paintColoredVertices() " + g);
 		Graphics2D g2 = (Graphics2D) g;
 		for (Map.Entry<Vertex, Color> e : ((Map<Vertex, Color>) vertexColorMap)
 				.entrySet()) {
@@ -228,18 +309,22 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void paintComponent(Graphics g) {
+		System.out.println("paintComponent() " + g);
 		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
-		setRenderingHints(g2);
-		setBackground(backgroundColor);
-		if (edges != null) {
-			paintNonColoredEdges(g);
-			// Now to draw the colored edges. They must be drawn last
-			// (so they are drawn on top);
-			paintColoredEdges(g);
-			paintVertices(g);
-			paintIds(g2);
-		}
+		g.drawImage(getBufferedImage(), 0, 0, null);
+
+		// TODO: Work in progress... DELETEME AFTER
+		// Graphics2D g2 = (Graphics2D) g;
+		// setRenderingHints(g2);
+		// setBackground(backgroundColor);
+		// if (edges != null) {
+		// paintNonColoredEdges(g);
+		// // Now to draw the colored edges. They must be drawn last
+		// // (so they are drawn on top);
+		// paintColoredEdges(g);
+		// paintVertices(g);
+		// paintIds(g2);
+		// }
 	}
 
 	public void applyFit(VertexFitter f) {
@@ -401,7 +486,9 @@ public class EdgesPanel extends JPanel implements MouseListener,
 			i = g.getDeviceConfiguration().createCompatibleImage(xWindowSize,
 					yWindowSize, BufferedImage.TYPE_INT_RGB);
 		}
-		paint(i.getGraphics());
+		// TODO: SESS - check is OK
+		paintImage(i);
+		// paint(i.getGraphics());
 		try {
 			ImageIO.write(i, "png", f);
 		} catch (IOException e) {
@@ -793,13 +880,12 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		if (edges == null) {
 			return;
 		}
-
 		mins.set(0, 0, zoomStepSize * xWindowSize);
 		mins.set(1, 0, zoomStepSize * yWindowSize);
 		maxs.set(0, 0, xWindowSize - zoomStepSize * xWindowSize);
 		maxs.set(1, 0, yWindowSize - zoomStepSize * yWindowSize);
-
 		zoomPrep(f);
+		setPaintImage();
 	}
 
 	public void zoomOut(VertexFitter f) {
@@ -998,6 +1084,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 			if (idRegion) {
 				runIdRegion();
 			}
+			setPaintImage();
 			repaint();
 			statusBar.setText("Done.");
 		}
