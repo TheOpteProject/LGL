@@ -64,6 +64,8 @@ import javax.swing.JTextField;
  */
 // TODO: SESS - Leverage UI thread. All operations are run on UI thread!
 // TODO: SESS - Also show "working, please wait..."
+// TODO: SESS - When edges panel should repaint is repainting this frame
+// should be only the edges panel
 public class EdgesFrame extends JFrame {
 	private static final long serialVersionUID = 1099866981814538683L;
 
@@ -283,8 +285,6 @@ public class EdgesFrame extends JFrame {
 					int returnVal = chooser.showSaveDialog(EdgesFrame.this);
 					if (returnVal == JFileChooser.APPROVE_OPTION) {
 						panel.saveEdgeColorMap(chooser.getSelectedFile());
-					} else {
-						// Operation Cancelled
 					}
 				}
 			}
@@ -301,8 +301,6 @@ public class EdgesFrame extends JFrame {
 					int returnVal = chooser.showOpenDialog(EdgesFrame.this);
 					if (returnVal == JFileChooser.APPROVE_OPTION) {
 						loadVertexColorFile(chooser.getSelectedFile());
-					} else {
-						// Operation Cancelled
 					}
 				}
 			}
@@ -319,8 +317,6 @@ public class EdgesFrame extends JFrame {
 					int returnVal = chooser.showSaveDialog(EdgesFrame.this);
 					if (returnVal == JFileChooser.APPROVE_OPTION) {
 						panel.saveVertexColorMap(chooser.getSelectedFile());
-					} else {
-						// Operation Cancelled
 					}
 				}
 			}
@@ -508,7 +504,10 @@ public class EdgesFrame extends JFrame {
 				if (c != null) {
 					fontColor = c;
 					panel.setFontColor(fontColor);
-					repaint();
+					// TODO: SESS - Check if something related to font is
+					// rendered
+					panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+					panel.repaint();
 				}
 			}
 		});
@@ -530,7 +529,11 @@ public class EdgesFrame extends JFrame {
 					} else {
 						font = font.deriveFont(newFontSize);
 						panel.setFont(font);
-						repaint();
+						// TODO: SESS - Check if something related to font is
+						// rendered
+						panel.setPaintImage(); // TODO: move inside
+												// panel.xxxx()?
+						panel.repaint();
 					}
 				}
 			}
@@ -563,7 +566,8 @@ public class EdgesFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				panel.clearAllVertexColors();
 				edgesio.clearAllVertexColors();
-				repaint();
+				panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+				panel.repaint();
 			}
 		});
 		vertexIssues.add(vertexClear);
@@ -578,7 +582,8 @@ public class EdgesFrame extends JFrame {
 				if (c != null) {
 					vertexColor = c;
 					panel.setVertexColor(vertexColor);
-					repaint();
+					panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+					panel.repaint();
 				}
 			}
 		});
@@ -601,7 +606,9 @@ public class EdgesFrame extends JFrame {
 					} else {
 						vertexRadius = newVSize;
 						panel.setVertexRadius(vertexRadius);
-						repaint();
+						panel.setPaintImage(); // TODO: move inside
+												// panel.xxxx()?
+						panel.repaint();
 					}
 				}
 			}
@@ -619,7 +626,8 @@ public class EdgesFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				panel.clearAllEdgeColors();
 				edgesio.clearAllEdgeColors();
-				repaint();
+				panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+				panel.repaint();
 			}
 		});
 		edgeIssues.add(edgeClear);
@@ -634,7 +642,8 @@ public class EdgesFrame extends JFrame {
 				if (c != null) {
 					edgeColor = c;
 					panel.setEdgeColor(edgeColor);
-					repaint();
+					panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+					panel.repaint();
 				}
 			}
 		});
@@ -651,7 +660,8 @@ public class EdgesFrame extends JFrame {
 				if (c != null) {
 					backgroundColor = c;
 					panel.setBackgroundColor(backgroundColor);
-					repaint();
+					panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+					panel.repaint();
 				}
 			}
 		});
@@ -765,6 +775,7 @@ public class EdgesFrame extends JFrame {
 		try {
 			edgesio.loadEdgeColorFile(f);
 			panel.addEdgeColors(edgesio.getEdgeColorMap());
+			panel.setPaintImage(); // TODO: Shall we do this in setters?
 			panel.repaint();
 		} catch (FileNotFoundException ee) {
 			JOptionPane.showMessageDialog(null, "File Not Found", "Error",
@@ -816,6 +827,7 @@ public class EdgesFrame extends JFrame {
 					windowSizes, threads);
 			panel.setFormatter(formatter);
 			panel.fitData();
+			panel.setPaintImage(); // TODO: Shall we do this in setters?
 			panel.repaint();
 		} catch (FileNotFoundException ee) {
 			JOptionPane.showMessageDialog(null, "File Not Found", "Error",
@@ -847,101 +859,94 @@ public class EdgesFrame extends JFrame {
 		((FlowLayout) buttonsPanel.getLayout()).setAlignment(FlowLayout.LEFT);
 		container.add(buttonsPanel, BorderLayout.NORTH);
 
-		// UNDO
 		JButton undo = new JButton("Undo");
-		// undo.setMnemonic( 'U' );
 		undo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				panel.undo();
-				repaint();
+				panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+				panel.repaint();
 			}
 		});
 		buttonsPanel.add(undo);
 
-		// ZOOM IN
 		JButton zoomIn = new JButton("In");
-		// zoomIn.setMnemonic( 'I' );
 		zoomIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				VertexFitter f = new VertexFitter();
 				panel.zoomIn(f);
 				panel.applyFit(f);
-				repaint();
+				panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+				panel.repaint();
 			}
 		});
 		buttonsPanel.add(zoomIn);
 
-		// ZOOM OUT
 		JButton zoomOut = new JButton("Out");
-		// zoomOut.setMnemonic( 'O' );
 		zoomOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				VertexFitter f = new VertexFitter();
 				panel.zoomOut(f);
 				panel.applyFit(f);
-				repaint();
+				panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+				panel.repaint();
 			}
 		});
 		buttonsPanel.add(zoomOut);
 
-		// MOVE UP
 		JButton moveup = new JButton("Up");
-		// moveup.setMnemonic('U');
 		moveup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				panel.moveUp();
-				repaint();
+				panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+				panel.repaint();
 			}
 		});
 		buttonsPanel.add(moveup);
 
-		// MOVE DOWN
 		JButton movedown = new JButton("Down");
-		// movedown.setMnemonic('D');
 		movedown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				panel.moveDown();
-				repaint();
+				panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+				panel.repaint();
 			}
 		});
 		buttonsPanel.add(movedown);
 
-		// MOVE LEFT
 		JButton moveleft = new JButton("Left");
-		// moveleft.setMnemonic('L');
 		moveleft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				panel.moveLeft();
-				repaint();
+				panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+				panel.repaint();
 			}
 		});
 		buttonsPanel.add(moveleft);
 
-		// MOVE RIGHT
 		JButton moveright = new JButton("Right");
-		// moveright.setMnemonic('R');
 		moveright.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				panel.moveRight();
-				repaint();
+				panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+				panel.repaint();
 			}
 		});
 		buttonsPanel.add(moveright);
 
 		JButton fit = new JButton("Fit");
-		// fit.setMnemonic('F');
 		fit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// TODO: SESS - twice?
 				panel.fitData();
 				panel.fitData();
 				System.out.println("Fit data still buggy.");
-				repaint();
+				panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+				panel.repaint();
 			}
 		});
 		buttonsPanel.add(fit);
 
 		JButton snap = new JButton("SnapShot");
-		// snap.setMnemonic('S');
 		snap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				statusBar.setText("Preparing to write Image");
@@ -950,29 +955,24 @@ public class EdgesFrame extends JFrame {
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					panel.writeImage(chooser.getSelectedFile()
 							.getAbsolutePath(), null);
-				} else {
-					// Cancelled operation
 				}
 			}
 		});
 		buttonsPanel.add(snap);
 
-		// SESS: DELETEME!
-		// constraints.gridwidth = 2;
-
-		// SHOWING IDS
 		showFonts = new JRadioButtonMenuItem("Show All IDs");
-		// showFonts.setMnemonic( 'I' );
 		showFonts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (showFonts.isSelected()) {
 					panel.setFontColor(fontColor);
 					panel.setFont(font);
 					panel.showIds(true);
-					repaint();
+					panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+					panel.repaint();
 				} else {
 					panel.showIds(false);
-					repaint();
+					panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+					panel.repaint();
 				}
 			}
 		});
@@ -984,10 +984,12 @@ public class EdgesFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (showVertices.isSelected()) {
 					panel.showVertices(true);
-					repaint();
+					panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+					panel.repaint();
 				} else {
 					panel.showVertices(false);
-					repaint();
+					panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+					panel.repaint();
 				}
 			}
 		});
@@ -1007,7 +1009,7 @@ public class EdgesFrame extends JFrame {
 			}
 			font = font.deriveFont(style);
 			panel.setFont(font);
-			repaint();
+			panel.repaint();
 		}
 	}
 
