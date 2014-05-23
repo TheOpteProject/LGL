@@ -5,3 +5,7 @@ tags
 /bin/lglbreakup
 /bin/lglfileconvert
 /bin/lglrebuild
+/testrun/the_internet/setup.cfg
+/testrun/the_internet/tmp
+/testrun/the_internet/*.tmp
+/testrun/the_internet/*.out
