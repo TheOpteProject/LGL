@@ -168,9 +168,11 @@ public:
 
     for ( unsigned int ii=0; ii<dimension; ++ii ){
       precision dx = ( x1[ii] - x2[ii] );
+#if 0	// results in a bad image for "the internet"
       if ( dx > eqDistance_ ) dx = 1.0 / dx;
+#endif
       precision f = dx * scale;
-      f_[ii]   = f;
+      f_[ii] = f;
       fm1_[ii] = -1.0*f;
     }
 
