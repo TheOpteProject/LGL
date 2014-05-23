@@ -117,7 +117,7 @@ int main( int argc, char ** argv )
     {
       cerr << "Using MSTs..." << flush;
       if ( ! G.hasWeights() ){
-	cerr << "Tree doeen't have weights. Exiting.\n";
+	cerr << "Tree doesn't have weights. Exiting.\n";
 	exit(EXIT_FAILURE);
       }
       Graph_t mst;      

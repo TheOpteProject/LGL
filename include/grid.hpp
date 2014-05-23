@@ -137,7 +137,7 @@ class Grid : public Amutex {
     Grid_::initVoxels();
   }
 
-  // This will determine which voxel the provied
+  // This will determine which voxel the provided
   // point would be in. The current
   voxel_type * getVoxelFromPosition( const vec_type& x ) const {
   	Vec_l coord;

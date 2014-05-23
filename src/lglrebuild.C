@@ -221,7 +221,7 @@ int main( int argc , char ** argv )
 void displayUsage( char ** args )
 {
   cerr << "\nUsage: " << args[0] << " [-r radius] [-o outfile] "
-       << "[-c filelist]\n\t[-S] coordsfile1 coordsfile2 ...\n\n"
+       << "[-s stepsize] [-c filelist]\n\t[-S] [-d] coordsfile1 coordsfile2 ...\n\n"
        << "\tDefault outfile  : " << defaultoutfile << '\n'
        << "\tDefault radius   : " << defaultradius << '\n'
        << "\tDefault StepSize : " << defaultstepsize << '\n';

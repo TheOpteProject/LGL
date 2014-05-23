@@ -375,7 +375,7 @@ void displayUsage(char ** argv)
 {
   cerr << "\nUsage: " << argv[0] << " [-x InitPositionFile]" 
        << "\n\t[-t ThreadCount] [-m InitMassFile] [-i IterationMax] "
-       << "\n\t[-s] [-r nbhdRadius] [-T timeStep] [-R nodeSizeRadius]\n"
+       << "\n\t[-s] [-r nbhdRadius] [-T timeStep] [-S nodeSizeRadius]\n"
        << "\t[-k casualSpringConstant] [-s specialSpringConstant]\n"
        << "\t[-e] [-l] [-y] [-q EQ Distance] [-u placementDistance]\n"
        << "\t[-v placementRadius] [-L] nodeFile.lgl\n\n";
