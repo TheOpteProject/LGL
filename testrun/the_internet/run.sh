@@ -59,19 +59,25 @@ fi
 
 export PERL5LIB=$topdir/perls
 start_time=`date +%s`
-$topdir/bin/lgl.pl -c $config | tee $rundir/$start_time.out
+outfile=$rundir/$start_time.out
+$topdir/bin/lgl.pl -c $config | tee $outfile
 exitcode=$?
 end_time=`date +%s`
 echo
-echo "lgl.pl took `convertsecs $(( $end_time - $start_time ))` to run."
+echo "lgl.pl took `convertsecs $(( $end_time - $start_time ))` to run." | tee -a $outfile
 exit_if_error $exitcode "lgl.pl failed with code $exitcode"
 
-echo "Opening viewer(s)..."
+echo "Opening viewer(s)..." | tee -a $outfile
 jar_path=$topdir/lglview.jar
 if [ ! -e $jar_path -a -e $topdir/Java/lglview.jar ]; then
 	jar_path=$topdir/Java/lglview.jar
 fi
-set -x
-java -jar $jar_path $tmpdir/*/0.lgl $tmpdir/final.coords &
-java -jar $jar_path $tmpdir/final.mst.lgl $tmpdir/final.coords &
-set +x
+if [ ! -e $jar_path -a -e $topdir/Java/jar/LGLView.jar ]; then
+	jar_path=$topdir/Java/jar/LGLView.jar
+fi
+view_command="java -jar $jar_path $tmpdir/*/0.lgl $tmpdir/final.coords"
+echo $view_command | tee -a $outfile
+$view_command &
+view_command="java -jar $jar_path $tmpdir/final.mst.lgl $tmpdir/final.coords"
+echo $view_command | tee -a $outfile
+$view_command &
