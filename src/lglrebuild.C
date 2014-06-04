@@ -18,15 +18,21 @@
 //  
 ///////////////////////////////////////////////////////////
 
-#include "edLookupTable.hpp"
-#include "molecule.hpp"
-#include "sphere.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <cstdlib>
 #include <cstring>
 #include <cstdio>
 #include <algorithm>
+
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/foreach.hpp>
+
+#include "edLookupTable.hpp"
+#include "molecule.hpp"
+#include "sphere.hpp"
 
 ///////////////////////////////////////////////////////////
 
@@ -37,6 +43,7 @@ typedef Mol::vec_type vec_type;
 typedef std::vector< Mol > Molecules;
 typedef Mol::size_type size_type;
 typedef EDLookupTable<particle,prec_t> EDTable;
+typedef std::vector<prec_t> EllipseFactors;
 
 using namespace std;
  
@@ -49,10 +56,11 @@ prec_t defaultstepsize = .49;
 ///////////////////////////////////////////////////////////
 
 void displayUsage( char ** args );
-void writeResults( const Mol& m , const char * outfile );
+void writeResults( const Mol& m, const EllipseFactors& ellipseFactors, const char * outfile );
 void addMoleculeToTable( Mol&m , EDTable& table );
 bool checkMoleculeAgainstTable( const Mol& m , EDTable& table );
 void loadFilesFromList( const char * file , Molecules& m , prec_t radius );
+EllipseFactors parseEllipseFactors( const std::string& optionStr );
 
 ///////////////////////////////////////////////////////////
 
@@ -75,9 +83,10 @@ int main( int argc , char ** argv )
   prec_t stepSize = defaultstepsize;
   int integrateType = GRAVITATIONAL;
   bool sortSetsFirst = true;
+  EllipseFactors ellipseFactors(1, 1);
 
   int optch;
-  while ( (optch = getopt(argc,argv,"r:o:s:dc:S")) != -1 )
+  while ( (optch = getopt(argc,argv,"r:o:s:dc:Se:")) != -1 )
     {
       switch (optch)
         {
@@ -87,6 +96,7 @@ int main( int argc , char ** argv )
 	case 'd': integrateType = DLA; break;
 	case 'c': fileList = strdup(optarg); break; 
 	case 'S': sortSetsFirst = false; break; 
+	case 'e': ellipseFactors = parseEllipseFactors(optarg); break; 
 	default: cerr << "Bad Option. Exiting."; exit(EXIT_FAILURE); 
 	}
     }
@@ -109,7 +119,7 @@ int main( int argc , char ** argv )
   // In the event that only one molecule was provided, then
   // the simulation is over.
   if ( argc == 2 ) { 
-    writeResults( molecules[0] , outfile );
+    writeResults( molecules[0], ellipseFactors, outfile );
     exit(EXIT_SUCCESS);
   }
 
@@ -211,7 +221,7 @@ int main( int argc , char ** argv )
   scale( min.begin() , min.end() , -1.0 );
   growth.translateMolecule( min );
 
-  writeResults( growth , outfile );
+  writeResults( growth, ellipseFactors, outfile );
 
   return EXIT_SUCCESS;
 }
@@ -221,7 +231,7 @@ int main( int argc , char ** argv )
 void displayUsage( char ** args )
 {
   cerr << "\nUsage: " << args[0] << " [-r radius] [-o outfile] "
-       << "[-s stepsize] [-c filelist]\n\t[-S] [-d] coordsfile1 coordsfile2 ...\n\n"
+       << "[-s stepsize] [-c filelist]\n\t[-e ellipsefactors] [-S] [-d] coordsfile1 coordsfile2 ...\n\n"
        << "\tDefault outfile  : " << defaultoutfile << '\n'
        << "\tDefault radius   : " << defaultradius << '\n'
        << "\tDefault StepSize : " << defaultstepsize << '\n';
@@ -230,7 +240,7 @@ void displayUsage( char ** args )
 
 ///////////////////////////////////////////////////////////
 
-void writeResults( const Mol& m , const char * outfile )
+void writeResults( const Mol& m, const EllipseFactors& ellipseFactors, const char * outfile )
 {
   ofstream out( outfile );
   if ( !out ) {
@@ -238,7 +248,12 @@ void writeResults( const Mol& m , const char * outfile )
     exit(EXIT_FAILURE);
   }
   for ( size_type jj=0; jj<m.size(); ++jj ) {
-    m[jj].printBasic(out);
+	  particle p = m[ jj ];
+	  particle::vec_type& loc = p.location();
+	  for ( size_type i = 0; i < loc.size(); ++i )
+		  loc[ i ] *= i < ellipseFactors.size() ? ellipseFactors[ i ] : ellipseFactors.back();
+
+    p.printBasic(out);
   }
 }
 
@@ -290,3 +305,14 @@ void loadFilesFromList( const char * file , Molecules& m , prec_t radius )
 
 ///////////////////////////////////////////////////////////
 
+EllipseFactors parseEllipseFactors( const std::string& optionStr )
+{
+	EllipseFactors ret;
+	std::vector< std::string > factors;
+	boost::algorithm::split( factors, optionStr, boost::algorithm::is_any_of( "x" ) );
+	BOOST_FOREACH( const std::string& f, factors )
+		ret.push_back( boost::lexical_cast< prec_t >( f ) );
+	return ret;
+}
+
+///////////////////////////////////////////////////////////

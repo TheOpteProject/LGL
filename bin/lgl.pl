@@ -62,6 +62,7 @@ my $PLACEMENTDISTANCE = '';  # Set to a float to activate
 my $PLACEMENTRADIUS = '';    # Set to a float to activate (positive)
 my $PLACELEAFSCLOSE = 0;     # Place children that are all leafs close
 my $USEEDGEASWEIGHTS = 0;    # Treat the edges as EQ distances
+my $ELLIPSEFACTORS = '1x1';  # Ellipse skewing factors (leave circle by default)
 
 # LGLBUILD OPTIONS
 my $INTEGRATETYPE = ''; #'-d'
@@ -209,6 +210,7 @@ my @part3;
 my $lglrebuild = "$LGLDIR\/lglrebuild";
 push @part3, $lglrebuild;
 push @part3, ('-o', "$TMPDIR\/$FINALOUTCOORDS");
+push @part3, ('-e', "$ELLIPSEFACTORS");
 push @part3, "$INTEGRATETYPE";
 opendir INDIR, "$outdir" or
     die "lgl.pl::FileList:Open of dir $outdir failed: $!";
@@ -288,6 +290,7 @@ sub loadConfig
     $PLACEMENTRADIUS = $conf->value('placementradius') if $conf->value('placementradius');
     $PLACELEAFSCLOSE = $conf->value('placeleafsclose') if $conf->value('placeleafsclose');
     $USEEDGEASWEIGHTS = $conf->value('useedgeasweights') if $conf->value('useedgeasweights');
+    $ELLIPSEFACTORS = $conf->value('ellipsefactors') if $conf->value('ellipsefactors');
 }
 
 ######################################################
