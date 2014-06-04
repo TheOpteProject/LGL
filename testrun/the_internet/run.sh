@@ -77,7 +77,7 @@ if [ ! -e $jar_path -a -e $topdir/Java/jar/LGLView.jar ]; then
 fi
 view_command="java -jar $jar_path $tmpdir/*/0.lgl $tmpdir/final.coords"
 echo $view_command | tee -a $outfile
-$view_command &
+$view_command >/dev/null 2>&1 &
 view_command="java -jar $jar_path $tmpdir/final.mst.lgl $tmpdir/final.coords"
 echo $view_command | tee -a $outfile
-$view_command &
+$view_command >/dev/null 2>&1 &

@@ -58,14 +58,13 @@ public:
   void radius( precision r ) { radius_=r; }
   void ID( const std::string& s ) { id=s; }
   const std::string& ID() const { return id; }
-  
+
   template< typename iterator >
   void location( iterator b , iterator e  )
   {
-    x.clear();
-    copy( b , e , x.begin() );
+    x.assign( b, e );
   }
-  
+
   void print( std::ostream& o = std::cout ) const {
     o << "ID: " << ID() << "\tR: " << radius_ << "\tX: ";
     std::copy( x.begin() , x.end() , std::ostream_iterator<precision>(o," "));
