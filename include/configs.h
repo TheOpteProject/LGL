@@ -9,7 +9,6 @@
 #include "particleContainer.hpp"
 #include "particleContainerChaperone.hpp"
 #include "particleStats.hpp"
-#include "particleInteractionHandler.hpp"
 #include "aPthread.hpp"
 #include "timeKeeper.hpp"
 #include "voxelInteractionHandler.hpp"
@@ -37,6 +36,7 @@ typedef ParticleContainerChaperone< Node > PCChaperone;
 typedef ApthreadContainer ThreadContainer;
 typedef Voxel< Node > Voxel_t;
 typedef TimeKeeper<prec_t> TimeKeeper_t;
+template < typename Particle > class ParticleInteractionHandler;
 typedef ParticleInteractionHandler< Node > NodeInteractionHandler;
 typedef VoxelInteractionHandler< Voxel_t , NodeInteractionHandler > VoxelHandler;
 typedef GridSchedual_MTS< Grid_t > GridSchedual_t;
@@ -45,6 +45,7 @@ typedef Graph< prec_t > Graph_t;
 typedef vector< unsigned > LevelMap;
 typedef vector< unsigned > ParentMap;
 typedef vector< bool > PlacementStatus;
+typedef std::vector< prec_t > EllipseFactors;
 
 //------------------------------------------------------
 

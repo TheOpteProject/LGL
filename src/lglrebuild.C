@@ -25,14 +25,10 @@
 #include <cstdio>
 #include <algorithm>
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
-
 #include "edLookupTable.hpp"
 #include "molecule.hpp"
 #include "sphere.hpp"
+#include "calcFuncs.h"
 
 ///////////////////////////////////////////////////////////
 
@@ -60,7 +56,6 @@ void writeResults( const Mol& m, const EllipseFactors& ellipseFactors, const cha
 void addMoleculeToTable( Mol&m , EDTable& table );
 bool checkMoleculeAgainstTable( const Mol& m , EDTable& table );
 void loadFilesFromList( const char * file , Molecules& m , prec_t radius );
-EllipseFactors parseEllipseFactors( const std::string& optionStr );
 
 ///////////////////////////////////////////////////////////
 
@@ -301,18 +296,6 @@ void loadFilesFromList( const char * file , Molecules& m , prec_t radius )
       m.push_back( readMoleculeFromCoordFile<Mol>( coordsFile.c_str() ,
 						   radius ) );
     }
-}
-
-///////////////////////////////////////////////////////////
-
-EllipseFactors parseEllipseFactors( const std::string& optionStr )
-{
-	EllipseFactors ret;
-	std::vector< std::string > factors;
-	boost::algorithm::split( factors, optionStr, boost::algorithm::is_any_of( "x" ) );
-	BOOST_FOREACH( const std::string& f, factors )
-		ret.push_back( boost::lexical_cast< prec_t >( f ) );
-	return ret;
 }
 
 ///////////////////////////////////////////////////////////

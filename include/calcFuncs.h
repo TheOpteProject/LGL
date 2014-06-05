@@ -36,6 +36,7 @@ struct ThreadArgs
   long voxelListSize;
   Grid_t * grid;
   prec_t eqDistance;
+  EllipseFactors ellipseFactors;
   GridIterator * gridIterator;
   long threadCount;
   long whichThread;
@@ -91,6 +92,8 @@ prec_t placementFormula( prec_t placementDistance , int vertices2place, int dime
 
 void gridPrepAndInit( NodeContainer& nc, Grid_t& g , prec_t voxelLength );
 bool doesVertexHaveAnyChildren( Graph_t& G, Graph_t::vertex_descriptor v , out_graph& g , ParentMap& parents );
+
+EllipseFactors parseEllipseFactors( const std::string& optionStr );
 
 //------------------------------------------------
 

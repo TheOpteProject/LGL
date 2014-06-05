@@ -18,6 +18,12 @@
 //  MA 02111-1307 USA
 //
 
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/foreach.hpp>
+
+#include "particleInteractionHandler.hpp"
 #include "calcFuncs.h"
 
 using namespace boost;
@@ -543,6 +549,18 @@ void gridPrepAndInit( NodeContainer& nc , Grid_t& nw ,
   nw.voxelWidth(voxelLength);
   nw.initGrid();
 
+}
+
+//----------------------------------------------------------
+
+EllipseFactors parseEllipseFactors( const std::string& optionStr )
+{
+	EllipseFactors ret;
+	std::vector< std::string > factors;
+	boost::algorithm::split( factors, optionStr, boost::algorithm::is_any_of( "x" ) );
+	BOOST_FOREACH( const std::string& f, factors )
+		ret.push_back( boost::lexical_cast< prec_t >( f ) );
+	return ret;
 }
 
 //----------------------------------------------------------

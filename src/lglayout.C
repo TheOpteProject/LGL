@@ -19,8 +19,6 @@
 //  
 //
 
-#include "configs.h"
-#include "calcFuncs.h"
 #include <iostream>
 #include <unistd.h>
 #include <pthread.h>
@@ -28,6 +26,11 @@
 #include <iomanip>
 #include <cstdio>
 #include <cstdlib>
+
+#include "configs.h"
+#include "calcFuncs.h"
+#include "particleInteractionHandler.hpp"
+
 //#include <boost/timer.hpp>
 
 using namespace std;
@@ -69,6 +72,7 @@ int main( int argc, char ** argv )
   int writeInterval = WRITE_INTERVAL;
   prec_t casualSpringConstant = DEFAULT_SPRING_CONSTANT;
   prec_t specialSpringConstant = DEFAULT_SPRING_CONSTANT;
+  EllipseFactors ellipseFactors;
   bool doesWriteEdgeLevels = false;
   bool useOriginalWeights = false;
   bool layoutTreeOnly = false;
@@ -79,7 +83,7 @@ int main( int argc, char ** argv )
   timer.max(MAXITER);
   timer.timeStep(PART_TIME_STEP);
 
-  while ( (optch = getopt(argc,argv,"x:wt:m:M:i:s:r:k:T:R:S:W:z:o:leOyu:v:Iq:L")) != -1 )
+  while ( (optch = getopt(argc,argv,"x:wt:m:M:i:s:r:k:T:R:S:W:z:o:leOyu:v:Iq:E:L")) != -1 )
     {
       switch (optch) 
         {
@@ -105,6 +109,7 @@ int main( int argc, char ** argv )
 	case 'v': placementRadius = atof(optarg); break;
 	case 'I': isSilent = true; break;
 	case 'q': eqDistance = atof(optarg); break;
+	case 'E': ellipseFactors = parseEllipseFactors(optarg); break;
 	case 'L': placeLeafsClose = true; break;
 	default : cerr << "Bad option -\t" << (char) optch 
 		       << '\n'; exit(EXIT_FAILURE);
@@ -263,6 +268,7 @@ int main( int argc, char ** argv )
       ThreadArgs& current = threadArgs[threadCtr];
       current.nodes = &nodes;
       current.eqDistance = eqDistance;
+      current.ellipseFactors = ellipseFactors;
       current.grid = &grid;
       current.nbhdRadius = nbhdRadius;
       current.threadCount = threadCount;
@@ -281,6 +287,7 @@ int main( int argc, char ** argv )
       current.nodeHandler->forceLimit( .1 * voxelLength /
 				       static_cast<prec_t>(timer.timeStep()) );
       current.nodeHandler->eqDistance( eqDistance );
+      current.nodeHandler->ellipseFactors( ellipseFactors );
       current.voxelHandler = new VoxelHandler(vh);
       current.voxelHandler->id(threadCtr);
       current.voxelHandler->interactionHandler(*(current.nodeHandler));
@@ -355,6 +362,9 @@ int main( int argc, char ** argv )
 	<< "Special Spring Constant: " << specialSpringConstant << '\n'
 	<< "Does Write Edge Levels: " << doesWriteEdgeLevels << '\n'
 	<< "Use Original Weights: " << useOriginalWeights << '\n'
+	<< "Ellipse Factors: ";
+	std::copy( ellipseFactors.begin(), ellipseFactors.end(), std::ostream_iterator< prec_t >( log, " " ) );
+	log << '\n'
 	<< "Layout Tree Only: " << layoutTreeOnly << '\n';
     //double elapsed = start_time.elapsed() - stop_time.elapsed();
     //log << "Total Run Seconds: " << elapsed << '\n';

@@ -189,6 +189,7 @@ foreach my $file ( @lglinputfiles )
     push @part2 , '-y' if ( $TREELAYOUT != 0 );
     push @part2 , '-O' if ( $USEORIGINALWEIGHTS != 0 );
     push @part2 , ('-t', "$THREADCOUNT") if ( $THREADCOUNT > 1 );
+    push @part2 , ('-E', "$ELLIPSEFACTORS");
     push @part2 , '-e' if ( $OUTPUTMST != 0 );
     push @part2 , '-l' if ( $EDGELEVELMAP != 0 );
     push @part2 , '-I' if ( $ISSILENT != 0 );
@@ -210,7 +211,7 @@ my @part3;
 my $lglrebuild = "$LGLDIR\/lglrebuild";
 push @part3, $lglrebuild;
 push @part3, ('-o', "$TMPDIR\/$FINALOUTCOORDS");
-push @part3, ('-e', "$ELLIPSEFACTORS");
+#push @part3, ('-e', "$ELLIPSEFACTORS");
 push @part3, "$INTEGRATETYPE";
 opendir INDIR, "$outdir" or
     die "lgl.pl::FileList:Open of dir $outdir failed: $!";

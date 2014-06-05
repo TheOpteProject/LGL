@@ -23,11 +23,15 @@
 
 //--------------------------------------------- 
 
-#include "particle.hpp"
-#include "particleStats.hpp"
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
+
+#include <boost/algorithm/cxx11/all_of.hpp>
+
+#include "particle.hpp"
+#include "particleStats.hpp"
+#include "configs.h"
 
 //--------------------------------------------- 
 
@@ -49,6 +53,7 @@ public:
   precision eqDistance_;
   precision forceConstraint_;
   precision noiseAmplitude_;
+  EllipseFactors ellipseFactors_;
   int id_;
 
   // This encourages pass throughs by giving a boost to whatever
@@ -146,6 +151,16 @@ public:
     p1.unlock();
   }
 
+  void ellipseFactors( EllipseFactors ef ) {
+	  ellipseFactors_.swap( ef );
+	  if ( boost::algorithm::all_of_equal( ellipseFactors_, EllipseFactors::value_type( 1 ) ) )
+		  ellipseFactors_.clear();	// just an optimization
+	  if ( ellipseFactors_.empty() )
+		  return;
+	  if ( ellipseFactors_.size() < dimension )
+		  ellipseFactors_.resize( dimension, ellipseFactors_.back() );
+  }
+
   void interaction( Particle& p1 , Particle& p2 ) const {
     if ( euclideanDistance( p1.X().begin() , p1.X().end() , p2.X().begin() ) <
 	 eqDistance_ ) {
@@ -157,8 +172,15 @@ public:
     
     if ( p1.collisionCheck(p2) ) { addNoise(p1); addNoise(p2); return; }
 
-    const vec_type& x1 = p1.X();
-    const vec_type& x2 = p2.X();
+    vec_type x1 = p1.X();
+    vec_type x2 = p2.X();
+
+    for ( std::size_t i = 0; i < ellipseFactors_.size(); ++i ) {
+      const EllipseFactors::value_type f = ellipseFactors_[ i ];
+      x1[ i ] *= f;
+      x2[ i ] *= f;
+    }
+
     const precision magx1x2 = x1.distance( x2 );
     const precision sepFromIdeal = ( magx1x2 - eqDistance_ );
     const precision scale = -1.0 * springConstant_ * sepFromIdeal / magx1x2;

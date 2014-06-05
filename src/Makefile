@@ -17,8 +17,8 @@ lglayout: $(OBJECTS)
 lglbreakup: lglbreakup.o
 	$(CPP) -o lglbreakup lglbreakup.o $(LIBPATH) $(LIBS)
 
-lglrebuild: lglrebuild.o
-	$(CPP) -o lglrebuild lglrebuild.o $(LIBPATH) $(LIBS)
+lglrebuild: lglrebuild.o calcFuncs.o
+	$(CPP) -o lglrebuild lglrebuild.o calcFuncs.o $(LIBPATH) $(LIBS)
 
 lglfileconvert: lglfileconvert.o
 	$(CPP) -o lglfileconvert lglfileconvert.o $(LIBPATH) $(LIBS)
