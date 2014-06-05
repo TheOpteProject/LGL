@@ -388,7 +388,7 @@ void displayUsage(char ** argv)
        << "\n\t[-s] [-r nbhdRadius] [-T timeStep] [-S nodeSizeRadius]\n"
        << "\t[-k casualSpringConstant] [-s specialSpringConstant]\n"
        << "\t[-e] [-l] [-y] [-q EQ Distance] [-u placementDistance]\n"
-       << "\t[-v placementRadius] [-L] nodeFile.lgl\n\n";
+       << "\t[-E ellipseFactors] [-v placementRadius] [-L] nodeFile.lgl\n\n";
   cerr << "\n\t-[mx]\t A file that has the node id followed by\n"
        << "\t\tthe initial values.\n";
   cerr << "\n\t-t\tThe number of threads to spawn.\n"
@@ -409,6 +409,7 @@ void displayUsage(char ** argv)
   cerr << "\n\t-y\tLayout the tree only.\n";
   cerr << "\n\t-I\tDon't show layout progress, be quiet (kinda)\n";
   cerr << "\n\t-q\tEquilibrium distance.\n";
+  cerr << "\n\t-E\tEllipse factors.\n";
   cerr << "\n\t-u\tPlacement distance is the distance you want\n"
        << "\t\tthe next level to be placed with respect to\n"
        << "\t\tthe previous level. If this float value is not\n"
