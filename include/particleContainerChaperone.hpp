@@ -138,28 +138,28 @@ public:
 #endif
 
   bool setXFromFile( Particle& p , const string& id2check= "" ) {
-    string id = "";
-    if ( !streams_in[_X_FILE__].eof() && streams_in[_X_FILE__] >> id ) {
-      if ( id2check != "" && id2check != id ) {
-	for ( size_type ii=0; ii<pc_.size(); ++ii ) {
-	  if ( pc_.ids[ii] == id ) {
-	    for ( size_type jj=0; jj<dimension; ++jj) {
-	      streams_in[_X_FILE__] >> pos_[jj];
-	    }
-	    pc_[ii].X(pos_);
-	    return 1;
+	  string id = "";
+	  if ( !streams_in[_X_FILE__].eof() && streams_in[_X_FILE__] >> id ) {
+		  if ( id2check != "" && id2check != id ) {
+			  for ( size_type ii=0; ii<pc_.size(); ++ii ) {
+				  if ( pc_.ids[ii] == id ) {
+					  for ( size_type jj=0; jj<dimension; ++jj) {
+						  streams_in[_X_FILE__] >> pos_[jj];
+					  }
+					  pc_[ii].X(pos_);
+					  return 1;
+				  }
+			  }
+			  PCC_::orderingError(file_in[_X_FILE__]);
+		  }
+		  for ( size_type ii=0; ii<dimension; ++ii) {
+			  streams_in[_X_FILE__] >> pos_[ii];
+		  }
+		  p.X(pos_);
+		  return 1;
+	  } else {
+		  return 0;
 	  }
-	}
-	PCC_::orderingError(file_in[_X_FILE__]);
-      }
-      for ( size_type ii=0; ii<dimension; ++ii) {
-	streams_in[_X_FILE__] >> pos_[ii];
-      }
-      p.X(pos_);
-      return 1;
-    } else {
-      return 0;
-    }
   }
   
   bool setVFromFile( Particle& p , string id2check= "") {
