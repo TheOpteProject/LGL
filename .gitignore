@@ -9,3 +9,7 @@ tags
 /testrun/the_internet/tmp
 /testrun/the_internet/*.tmp
 /testrun/the_internet/*.out
+/testrun/test-June-10/setup.cfg
+/testrun/test-June-10/tmp
+/testrun/test-June-10/*.tmp
+/testrun/test-June-10/*.out

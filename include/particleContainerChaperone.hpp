@@ -24,13 +24,16 @@
 // care of initializations and such of X, V, etc
 //----------------------------------------------------
 
-#include "particle.hpp"
-#include "particleContainer.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <cstdlib>
+#include <map>
+#include <stdexcept>
 #include <string.h>	// for strdup
+
+#include "particle.hpp"
+#include "particleContainer.hpp"
 
 //----------------------------------------------------
 
@@ -161,6 +164,16 @@ public:
 		  return 0;
 	  }
   }
+
+  bool setXFromAnchors( Particle& p, const std::string& id2check )
+  {
+	  typename AnchorPositions_t::const_iterator const it = anchorPositions_.find( id2check );
+	  if ( it == anchorPositions_.end() ) 
+		  return false;
+	  p.X( it->second );
+	  p.markAnchor();
+	  return true;
+  }
   
   bool setVFromFile( Particle& p , string id2check= "") {
     string id = "";
@@ -218,6 +231,15 @@ public:
 
   void initPos( const char * x ) { file_in[_X_FILE__]=strdup(x); }
   void initMass( const char * m ) { file_in[_M_FILE__]=strdup(m); }
+
+  void initAnchors( const std::string &filepath )
+  {
+	  std::ifstream f( filepath.c_str() );
+	  if ( !f )
+		  throw std::runtime_error( "Failed to open " + filepath + " for reading" );
+	  readAnchors( f );
+  }
+
   void initVel( const vec_type& v ) { initVel_=v; randomVel_=0; }
   void initPos( const vec_type& x ) { initPos_=x; randomPos_=0; }
   void initMass( precision m ) { initMass_=m; }
@@ -248,6 +270,30 @@ public:
     }
   }
 
+private:
+	typedef std::map< std::string, vec_type > AnchorPositions_t;
+	AnchorPositions_t anchorPositions_;
+
+	void readAnchors( std::istream &is )
+	{
+		std::string id;
+		vec_type pos;
+		while ( is >> id ) {
+			if ( !readPos( is, pos ) )
+				throw std::domain_error( "Anchor position input failed for node '" + id + '\'' );
+			if ( !anchorPositions_.insert( std::make_pair( id, pos ) ).second )
+				throw std::domain_error( "Anchor '" + id + "' has already been specified!" );
+		}
+		if ( !is.eof() )
+			throw std::domain_error( "Anchor file input failed around node '" + id + '\'' );
+	}
+
+	static std::istream &readPos( std::istream &is, vec_type &pos )
+	{
+		for ( size_type ii = 0; ii < dimension; ++ii )
+			is >> pos[ ii ];
+		return is;
+	}
 };
 
 //----------------------------------------------------
@@ -261,7 +307,7 @@ void ParticleContainerChaperone<Particle>::initAllParticles()
     string id = pc_.ids[ii];
     if ( file_in[_X_FILE__] ) {
       PCC_::setXFromFile(pc_[ii],id);
-    } else {
+    } else if ( !PCC_::setXFromAnchors( pc_[ii], id ) ) {
       if ( randomPos_ ) { pc_[ii].X( PCC_::randomVec(initPos_,posRange_) ); }
       else { pc_[ii].X(initPos_); }
     }

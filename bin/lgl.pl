@@ -63,6 +63,7 @@ my $PLACEMENTRADIUS = '';    # Set to a float to activate (positive)
 my $PLACELEAFSCLOSE = 0;     # Place children that are all leafs close
 my $USEEDGEASWEIGHTS = 0;    # Treat the edges as EQ distances
 my $ELLIPSEFACTORS = '1x1';  # Ellipse skewing factors (leave circle by default)
+my $ANCHORSFILE = '';        # Anchors file
 
 # LGLBUILD OPTIONS
 my $INTEGRATETYPE = ''; #'-d'
@@ -186,6 +187,7 @@ foreach my $file ( @lglinputfiles )
     # Possible arg is the number of threads to spawn
     push @part2 , ('-o', "$outdir\/$lgloutfile");
     # Now to deal with all the options to lglayout
+    push @part2 , ('-a', "$ANCHORSFILE") if ( $ANCHORSFILE ne '' );
     push @part2 , '-y' if ( $TREELAYOUT != 0 );
     push @part2 , '-O' if ( $USEORIGINALWEIGHTS != 0 );
     push @part2 , ('-t', "$THREADCOUNT") if ( $THREADCOUNT > 1 );
@@ -292,6 +294,7 @@ sub loadConfig
     $PLACELEAFSCLOSE = $conf->value('placeleafsclose') if $conf->value('placeleafsclose');
     $USEEDGEASWEIGHTS = $conf->value('useedgeasweights') if $conf->value('useedgeasweights');
     $ELLIPSEFACTORS = $conf->value('ellipsefactors') if $conf->value('ellipsefactors');
+    $ANCHORSFILE = $conf->value('anchorsfile') if $conf->value('anchorsfile');
 }
 
 ######################################################

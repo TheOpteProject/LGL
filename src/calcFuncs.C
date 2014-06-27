@@ -374,8 +374,10 @@ void layerNPlacement( NodeContainer& nodes , Grid_t& grid , out_graph& g ,
     tie( e , eend ) = out_edges( *v , g );
     for ( ; e!=eend ; ++e ) {
       vertex_descriptor other = target( *e , g );
-      nodes[ other ].X( x[ctr].begin() , x[ctr].end() );
-      ++ctr;
+      if ( !nodes[ other ].isAnchor() ) {
+         nodes[ other ].X( x[ctr].begin() , x[ctr].end() );
+         ++ctr;
+      }
     }
 
   }

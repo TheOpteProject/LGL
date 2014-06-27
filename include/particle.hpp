@@ -53,6 +53,7 @@ class Particle {
 
   Amutex mutex;
   std::string id_;
+  bool isAnchor_;
 
  public:
   vec_type x; // position in x,y,z
@@ -69,7 +70,10 @@ class Particle {
   const std::string& id() const { return id_; }
   void id( const string& i ) { id_=i; }
 
-  bool collisionCheck( const Particle_& vp )  {
+  bool isAnchor() const { return isAnchor_; }
+  void markAnchor() { isAnchor_ = true; }
+
+  bool collisionCheck( const Particle_& vp ) const  {
     return ( x.distance(vp.x) <= (radius()+vp.radius()) );
   }
 
@@ -108,6 +112,7 @@ class Particle {
     //interactionCtr_=0;
     x=0; f=0; container_ = -1; index_ = 0; id_ = "";
     //v=0;
+    isAnchor_ = false;
   }
 
   prec_ dx() const { return dx_; }
@@ -124,12 +129,13 @@ class Particle {
   }
 
   void copy( const Particle_& p ){
-    if ( *this == p ) return;
+    if ( *this == p ) return;	// TODO: really? compare objects (in this case indices) instead of addresses?
     index_=p.index_; radius_=p.radius_;
     mass_=p.mass_;
     x=p.x; f=p.f;
     // v=p.v;
     mutex=p.mutex;
+    isAnchor_ = p.isAnchor_;
   }
 
   // Print specific particle info.

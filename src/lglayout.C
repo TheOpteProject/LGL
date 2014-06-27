@@ -20,6 +20,8 @@
 //
 
 #include <iostream>
+#include <exception>
+
 #include <unistd.h>
 #include <pthread.h>
 #include <assert.h> 
@@ -39,6 +41,7 @@ using namespace boost;
 void displayUsage(char ** argv);
 
 int main( int argc, char ** argv )
+try
 {
 
   //  boost::timer start_time;
@@ -59,6 +62,7 @@ int main( int argc, char ** argv )
   char * initMassFile = 0;
   char * rootNode = 0;
   const char * outfile = "lgl.out";
+  std::string anchorsFile;
   bool doesWritemstfile = false;
   long processorCount = 1;
   prec_t cutOffPrecision = .00001;
@@ -83,11 +87,12 @@ int main( int argc, char ** argv )
   timer.max(MAXITER);
   timer.timeStep(PART_TIME_STEP);
 
-  while ( (optch = getopt(argc,argv,"x:wt:m:M:i:s:r:k:T:R:S:W:z:o:leOyu:v:Iq:E:L")) != -1 )
+  while ( (optch = getopt(argc,argv,"x:a:t:m:M:i:s:r:k:T:R:S:W:z:o:leOyu:v:Iq:E:L")) != -1 )
     {
       switch (optch) 
         {
         case 'x': initPosFile = strdup(optarg); break; 
+        case 'a': anchorsFile = optarg; break; 
         case 'm': initMassFile = strdup(optarg); break;
         case 'M': mass = atof(optarg); break;
 	case 't': processorCount = atol(optarg); break;
@@ -154,6 +159,8 @@ int main( int argc, char ** argv )
   else {  chaperone.randomizePosRange(outerRadius); }
   if ( initMassFile != 0 ) { chaperone.initMass(initMassFile); }
   else { chaperone.initMass(mass); }
+  if ( !anchorsFile.empty() )
+	  chaperone.initAnchors( anchorsFile );
   chaperone.initRadius(nodeSizeRadius);
   chaperone.posOutFile( outfile );
   chaperone.initAllParticles(); 
@@ -209,10 +216,13 @@ int main( int argc, char ** argv )
 	 << "There are " << totalLevels << " levels." << endl;
     // Place root in graph
     shift_particle( nodes[root] , grid );
-    // Put everything else in some crazy place
-    // (pretty helpful for finding bugs)
     for ( NodeContainer::size_type ii=0; ii<nodes.size(); ++ii ) { 
-      if ( root!=ii) nodes[ii].X(1e6);
+      if ( root != ii ) {
+         if ( nodes[ii].isAnchor() )
+            shift_particle( nodes[ii], grid );	// Place anchor in graph
+         else
+            nodes[ii].X(1e6); // Put everything else in some crazy place (pretty helpful for finding bugs)
+      }
     }
   } else {
     cout << "Coords provided, skipping Tree Generation.\n";
@@ -345,6 +355,8 @@ int main( int argc, char ** argv )
       log << "Init Position File: " << initPosFile << '\n';
     if ( initMassFile != 0 )
       log << "Init Mass File: " << initMassFile << '\n';
+    if ( !anchorsFile.empty() )
+       log << "Anchors File: " << anchorsFile << '\n';
     log << "Root Node: " << G.idFromIndex( root ) << '\n'
 	<< "Outfile: " <<  outfile << '\n'
 	<< "Does Write MST File: " <<  doesWritemstfile  << '\n'
@@ -378,12 +390,16 @@ int main( int argc, char ** argv )
   
   return EXIT_SUCCESS;
 } 
+catch ( std::exception const &e ) {
+	std::cerr << "Error: " << e.what() << '\n';
+	return EXIT_FAILURE;
+}
 
 //----------------------------------------------------------
 
 void displayUsage(char ** argv)
 {
-  cerr << "\nUsage: " << argv[0] << " [-x InitPositionFile]" 
+  cerr << "\nUsage: " << argv[0] << " [-x InitPositionFile] [-a AnchorsFile]" 
        << "\n\t[-t ThreadCount] [-m InitMassFile] [-i IterationMax] "
        << "\n\t[-s] [-r nbhdRadius] [-T timeStep] [-S nodeSizeRadius]\n"
        << "\t[-k casualSpringConstant] [-s specialSpringConstant]\n"

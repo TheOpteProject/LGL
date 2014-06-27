@@ -1,0 +1,31 @@
+#!/usr/bin/php -f
+<?php
+
+
+error_reporting(0);
+
+$coords=explode("\n", file_get_contents("final.coords"));
+
+$anchors=explode("\n", file_get_contents("top_asn_count.txt"));
+
+/* fix anchors */
+while(list($a, $b)=each($anchors))
+{
+	$fix=explode(" ", $b);
+	$anchor_ar[$fix[0]]=1;
+}
+
+
+while(list($n, $coord)=each($coords))
+{
+	$exp=explode(" ", $coord);
+	$node=$exp[0];
+
+	if ( isset($anchor_ar[$node]))
+	{
+		printf("$coord\n");
+	}
+}
+
+
+?>	

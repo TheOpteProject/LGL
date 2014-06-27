@@ -170,7 +170,14 @@ public:
 
   void springRepulsiveInteraction( Particle& p1 , Particle& p2 ) const {
     
-    if ( p1.collisionCheck(p2) ) { addNoise(p1); addNoise(p2); return; }
+    const bool p1anchor = p1.isAnchor(), p2anchor = p2.isAnchor();
+    if ( p1.collisionCheck(p2) ) {
+       if ( !p1anchor )
+          addNoise(p1);
+       if ( !p2anchor || p1anchor )
+          addNoise(p2);
+       return;
+    }
 
     vec_type x1 = p1.X();
     vec_type x2 = p2.X();
@@ -204,13 +211,21 @@ public:
 //     p1.print(); 
 //     p2.print(); 
 
-    p1.lock();
-    p1.add2F(f_);
-    p1.unlock();
+    if ( !p1anchor ) {
+       if ( p2anchor )
+          f_.scale( 2 );
+       p1.lock();
+       p1.add2F(f_);
+       p1.unlock();
+    }
 
-    p2.lock();
-    p2.add2F(fm1_);
-    p2.unlock();
+    if ( !p2anchor ) {
+       if ( p1anchor )
+          fm1_.scale( 2 );
+       p2.lock();
+       p2.add2F(fm1_);
+       p2.unlock();
+    }
 
 //    cout << "AFTER" << endl; 
 //    p1.print(); 
