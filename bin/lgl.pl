@@ -248,6 +248,10 @@ if ( $OUTPUTMST != 0 )
     close(O);
 }
 
+my $movedFinalCoords = "`dirname $INPUTFILE`\/`basename $INPUTFILE`.coords";
+$status = system( "cp -f $TMPDIR\/$FINALOUTCOORDS $movedFinalCoords" );
+die "Error copying $TMPDIR\/$FINALOUTCOORDS to $movedFinalCoords: $?" unless $status == 0;
+
 # End of Script
 ######################################################
 
