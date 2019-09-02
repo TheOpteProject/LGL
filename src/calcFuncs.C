@@ -75,9 +75,9 @@ void * integrateParticles ( void * arg_ )
   Vi v, vend;
   int vertexCount = num_vertices( layout_graph.boostGraph() );
   tie( v , vend ) = vertices( layout_graph.boostGraph() );
-  if ( whichThread != 0 ) { boost::advance( v , whichThread ); }
+  if ( whichThread != 0 ) { std::advance( v , whichThread ); }
   for ( int vctr = whichThread; vctr<vertexCount; vctr+=threadCount ) {
-    if ( vctr != whichThread ) { boost::advance( v , threadCount ); }
+    if ( vctr != whichThread ) { std::advance( v , threadCount ); }
     //cout << *v << " " << levels.size() << endl;
     if ( levels[*v] > currentLevel ) { continue; }
     //cout << *v << " -" << endl;
@@ -115,10 +115,10 @@ void * collectEdgeStats( void * arg_ )
   prec_t dx = 0;
   Ei ei , eend;
   tie( ei , eend ) = edges( layout_graph.boostGraph() );
-  if ( whichThread != 0 ) { boost::advance( ei , whichThread ); }
+  if ( whichThread != 0 ) { std::advance( ei , whichThread ); }
   for ( int ectr = whichThread; ectr<edgeCount; ectr+=threadCount )
     {
-      if ( ectr != whichThread ) { boost::advance( ei , threadCount ); }
+      if ( ectr != whichThread ) { std::advance( ei , threadCount ); }
       vertex_descriptor v1 = source( *ei , layout_graph.boostGraph() );
       vertex_descriptor v2 = target( *ei , layout_graph.boostGraph() );
       if ( levels[ v1 ] == currentLevel ||
@@ -151,7 +151,7 @@ void * onlyEdgeInteractions( void * arg_ )
   int edgeCount = num_edges( layout_graph.boostGraph() );
   Ei ei , eend;
   tie( ei , eend ) = edges( layout_graph.boostGraph() );
-  if ( whichThread != 0 ) { boost::advance( ei , whichThread ); }
+  if ( whichThread != 0 ) { std::advance( ei , whichThread ); }
   for ( int ectr = whichThread; ectr<edgeCount; ectr+=threadCount )
     {
       if ( ectr != whichThread ) { std::advance( ei , threadCount ); }
