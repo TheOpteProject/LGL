@@ -235,7 +235,7 @@ void Particle<prec_,dimension>::printV(std::ostream& o) const {
 
 template< typename prec_ , unsigned int dimension >
 void Particle<prec_,dimension>::printF(std::ostream& o) const {
-  o << id;
+  o << id_;
   for (unsigned int ii=0; ii<dimension; ++ii) {
     o << '\t' << f[ii];
   } o << '\n';

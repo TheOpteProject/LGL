@@ -1,6 +1,6 @@
 CPP=c++
 
-CPP_FLAGS=-Wall -O3 -ftemplate-depth-50 -g
+CPP_FLAGS=-std=c++11 -Wall -O3 -ftemplate-depth=100 -g
 
 SOURCES= lglayout.C calcFuncs.C
 OBJECTS= lglayout.o calcFuncs.o
@@ -34,3 +34,4 @@ clean:
 
 tidy:
 	rm -f *.o core lglayout lglbreakup lglrebuild lglfileconvert
+
