@@ -58,6 +58,9 @@ else
 	sed -i "s|^inputfile =.*|inputfile = '$rundir/$ncol'|" $config && \
 	    sed -i "s|^tmpdir =.*|tmpdir = '$tmpdir'|" $config && \
 	    sed -i "s|^threadcount =.*|threadcount = '$threads'|" $config && \
+	    sed -i "s|^treelayout =.*|treelayout = '1'|" $config && \
+	    sed -i "s|^useoriginalweights =.*|useoriginalweights = '1'|" $config && \
+	    sed -i "s|^placeleafsclose =.*|placeleafsclose = '1'|" $config && \
 	    echo "lgldir = '$topdir/bin'" >> $config
 	## threadcount = '1'
 	exit_if_error $? "failed to adjust config file $config"
