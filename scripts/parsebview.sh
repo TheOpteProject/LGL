@@ -17,6 +17,7 @@ get_neighbors() {
 	# go through and print the neighbors (assuming ASpath input)
 	for (( i=1; i<$len; i++ )); do
 	    ## order it, is very useful for debugging
+	    ## also we must check that we don't have duplicates
 	    if [ "${wa[$i-1]}" != "${wa[$i]}" ]; then
 		if [ "${wa[$i-1]}" -lt "${wa[$i]}" ]; then
 		    echo "${wa[$i-1]} ${wa[$i]}" ;
@@ -43,7 +44,10 @@ get_pairs() {
 	len=${#wa[@]}
 	for (( i=1; i<$len; i++ )); do
 	    ## start outputting!
-	    echo "${wa[0]} ${wa[$i]}" ;
+	    ## but only if they are different
+	    if [ "${wa[0]}" !=  "${wa[$i]}" ]; then
+		echo "${wa[0]} ${wa[$i]}" ;
+	    fi
 	done
     done
 }
