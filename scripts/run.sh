@@ -45,6 +45,10 @@ tmpdir=$rundir/tmp
 rm -rf $tmpdir && mkdir $tmpdir
 exit_if_error $? "failed to prepare tmpdir $tmpdir"
 
+threads=$(lscpu -p | egrep -v '^#' | wc -l)
+threads=$(((threads-2)>2 ? (threads-2) : 2))
+echo "Selecting to go with $threads threads (based on max(cores-2, 2))"
+					     
 config=$rundir/setup.cfg
 if [ -e $config ]; then
 	echo "$config already exists, using it..."
@@ -52,8 +56,10 @@ else
 	./setup.pl -c $config
 	exit_if_error $? "failed to generate config file $config"
 	sed -i "s|^inputfile =.*|inputfile = '$rundir/$ncol'|" $config && \
-	sed -i "s|^tmpdir =.*|tmpdir = '$tmpdir'|" $config && \
-	echo "lgldir = '$topdir/bin'" >> $config
+	    sed -i "s|^tmpdir =.*|tmpdir = '$tmpdir'|" $config && \
+	    sed -i "s|^threadcount =.*|threadcount = '$threads'|" $config && \
+	    echo "lgldir = '$topdir/bin'" >> $config
+	## threadcount = '1'
 	exit_if_error $? "failed to adjust config file $config"
 fi
 
@@ -76,7 +82,7 @@ if [ ! -e $jar_path -a -e $topdir/Java/jar/LGLView.jar ]; then
 	jar_path=$topdir/Java/jar/LGLView.jar
 fi
 
-perl $topdir/perls/colorEdgesBasedOnLevel.pl $tmpdir/*/0.coords.edge_level > color_file
+perl $topdir/perls/colorEdgesBasedOnLevel.pl $tmpdir/*/0.coords.edge_levels > color_file
 
 view_command="java -jar $jar_path $tmpdir/*/0.lgl $tmpdir/*/0.coords"
 echo $view_command | tee -a $outfile
