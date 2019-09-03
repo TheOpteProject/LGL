@@ -73,6 +73,9 @@ echo
 echo "lgl.pl took `convertsecs $(( $end_time - $start_time ))` to run." | tee -a $outfile
 exit_if_error $exitcode "lgl.pl failed with code $exitcode"
 
+echo "Generating color_file..." | tee -a $outfile
+perl $topdir/perls/colorEdgesBasedOnLevel.pl $tmpdir/*/0.coords.edge_levels > $rundir/color_file
+
 echo "Opening viewer(s)..." | tee -a $outfile
 jar_path=$topdir/lglview.jar
 if [ ! -e $jar_path -a -e $topdir/Java/lglview.jar ]; then
@@ -81,8 +84,6 @@ fi
 if [ ! -e $jar_path -a -e $topdir/Java/jar/LGLView.jar ]; then
 	jar_path=$topdir/Java/jar/LGLView.jar
 fi
-
-perl $topdir/perls/colorEdgesBasedOnLevel.pl $tmpdir/*/0.coords.edge_levels > color_file
 
 view_command="java -jar $jar_path $tmpdir/*/0.lgl $tmpdir/*/0.coords"
 echo $view_command | tee -a $outfile
