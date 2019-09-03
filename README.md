@@ -3,7 +3,7 @@
 All files distributed with LGL fall under the terms of 
 the GNU General Public License, and are copyright (c) 2002, 2003 Alex Adai.
 
-Changed done in this repository copyright (c) 2019 Fredrik Lindeberg
+Changes done in this fork copyright (c) 2019 Fredrik Lindeberg
 
 LGL on the web at:  http://www.opte.org/lgl/ (defunct)
 
