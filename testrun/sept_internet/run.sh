@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 rundir=`dirname $0`
-rundir=`greadlink -f $rundir`
+rundir=`readlink -f $rundir`
 topdir=$rundir/../..
-topdir=`greadlink -f $topdir`
+topdir=`readlink -f $topdir`
 
 function exit_if_error
 {
