@@ -48,7 +48,16 @@ around 10 minutes on a fairly modern computer (8 threads or so) with a decent In
     prompt$ wget http://data.ris.ripe.net/rrc00/2000.09/bview.20000901.0610.gz
     prompt$ ./bootstrap.sh bview.20000901.0610.gz
     prompt$ # doing magic, and creating a graph
+    prompt$ # wby default generating a 2400x2400 png (change run.sh for different resolution)
+    prompt$ # should be a 'internet_2001.png' in 'testrun/internet_2001' if all went well
     
+ Or simply (does basically the same as above):
+ 
+    prompt$ cd scripts/
+    prompt$ ./creategraphfromurl.sh http://data.ris.ripe.net/rrc00/2000.09/bview.20000901.0610.gz
+    prompt$ # wait for magic, by default generating a 2400x2400 png (change run.sh for different resolution)
+    prompt$ # should be a 'view.20000901.0610.png' in 'testrun/bview.20000901.0610' if all went well
+ 
 Replace the bview-file with a more recent one for a larger and newer network network. Coloring is
 set in `perls/colorEdgesBasedOnLevel.pl`, currently a mix of greenish and bluish tints going on white
 at the edges. 
