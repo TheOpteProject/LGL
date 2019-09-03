@@ -15,9 +15,12 @@ echo "Converted and got ncol-file $ncol"
 # run.sh uses $ncol variable
 ./run.sh -C
 
+echo "Sleeping for a couple of second to wait in image generation"
+sleep 5
+
 echo "Moving images, png to '${rundir}' and '../../resource/images/' for easy commit."
 # take care of the images
-cp tmp/*/*.png ${filename}.png
+cp tmp/*/0.coords*.png ${filename}.png
 cp ${filename}.png ../../resources/images/.
 
 echo "Moving graph-components (lgl and coords)"
