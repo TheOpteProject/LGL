@@ -35,6 +35,7 @@ get_pairs() {
     # 1.1.1.1/24 13
     # 1.1.1.1/24 14
     # 1.1.1.1/24 15
+    echo "nada"
 }
 
 ## First argument is bview-file. The rest is automatic
