@@ -1,7 +1,9 @@
 #!/bin/bash
 
 
-## Uses a bview file (such as http://data.ris.ripe.net/rrc00/latest-bview.gz), i.e. not updates but the entire view, and generates graphs from that.
+## Uses a bview file (such as http://data.ris.ripe.net/rrc00/latest-bview.gz),
+## i.e. not updates but the entire view, and generates ncol files which can
+## be used as graphs from that.
 
 get_neighbors() {
     # assuming ASpath input, i.e. "10 21 34 213" and we want the pairs
@@ -35,22 +37,36 @@ get_pairs() {
     # 1.1.1.1/24 13
     # 1.1.1.1/24 14
     # 1.1.1.1/24 15
-    echo "nada"
+    while read a; do
+	# go through and pair all with first
+	wa=($a)
+	len=${#wa[@]}
+	for (( i=1; i<$len; i++ )); do
+	    ## start outputting!
+	    echo "${wa[0]} ${wa[$i]}" ;
+	done
+    done
 }
 
 ## First argument is bview-file. The rest is automatic
 filename=$(basename -- "$1")
 extension="${filename##*.}"
 filename="${filename%.*}"
+asas=${filename}.as_as.ncol
+preas=${filename}.prefix_as.ncol
+export ncol=${filename}.full.ncol
 
 echo "Parsing $1 for ASpath-info (i.e. AS -> AS routing)"
-zcat $1 | bgpdump -m - | head -n 500 | cut -d '|' -f 7 |\
-    sed "s/[{},]/ /" | get_neighbors | sort | uniq -c |\
-    awk '{$1=$1};1' | awk '{print $2 " " $3 " " $1}' > ${filename}.as_as.ncol
+time (zcat $1 | bgpdump -m - | cut -d '|' -f 7 |\
+	  sed -e 's/[{},]/ /g' | get_neighbors | sort | uniq -c |\
+	  awk '{$1=$1};1' | awk '{print $2 " " $3 " " $1}' | sort -n > $asas)
 
 echo "Parsing $1 for prefix-info (i.e. AS -> prefix routing)"
-zcat $1 | bgpdump -m - | head -n 500 | cut -d '|' -f 6-7 |\
-    sed "s/|]/ /" | awk -F' ' '{print $1 " " $NF}' | awk '{$1=$1};1' |\
-    get_neighbors | sort | uniq -c |\
-    awk '{print $2 " " $3 " " $1}' > ${filename}.prefix_as.ncol
+time (zcat $1 | bgpdump -m - | cut -d '|' -f 6-7 |\
+	  sed "s/|/ /" | awk -F' ' '{print $1 " " $NF}' | awk '{$1=$1};1' |\
+	  sed -e 's/[{},]/ /g' | get_pairs | sort | uniq -c |\
+	  awk '{print $2 " " $3 " " $1}' | sort -n > $preas)
+      
+echo "Combining $asas and $preas into $ncol"
+time (cat $asas $preas > $ncol)
 
