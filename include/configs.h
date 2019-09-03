@@ -22,7 +22,7 @@
 //------------------------------------------------------
 
 typedef float prec_t;
-const unsigned int DIMENSION = 2;
+const unsigned int DIMENSION = 3;
 
 //------------------------------------------------------
 

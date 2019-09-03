@@ -38,7 +38,7 @@ my $INPUTFILE = shift || '';
 # DEFAULT ARGS IN CASE A CONF FILE IS NOT PROVIDED
 
 # The location of all the lgl executables (The bin directory)
-my $LGLDIR = '/home/adai/src/LGL-1.2/bin';
+my $LGLDIR = '/Users/freli38/projects/LGL-flindeberg/bin';
 
 # TMP dir needed by program. All results
 # are stored there (total output directory)

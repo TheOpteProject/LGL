@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 rundir=`dirname $0`
-rundir=`readlink -f $rundir`
+rundir=`greadlink -f $rundir`
 topdir=$rundir/../..
-topdir=`readlink -f $topdir`
+topdir=`greadlink -f $topdir`
 
 function exit_if_error
 {
@@ -51,8 +51,8 @@ if [ -e $config ]; then
 else
 	./setup.pl -c $config
 	exit_if_error $? "failed to generate config file $config"
-	sed -i "s|^inputfile =.*|inputfile = '$rundir/opte-out.lgl'|" $config && \
-	sed -i "s|^tmpdir =.*|tmpdir = '$tmpdir'|" $config && \
+	gsed -i "s|^inputfile =.*|inputfile = '$rundir/opte-out.lgl'|" $config && \
+	gsed -i "s|^tmpdir =.*|tmpdir = '$tmpdir'|" $config && \
 	echo "lgldir = '$topdir/bin'" >> $config
 	exit_if_error $? "failed to adjust config file $config"
 fi
