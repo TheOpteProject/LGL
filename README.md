@@ -46,7 +46,7 @@ around 10 minutes on a fairly modern computer (8 threads or so) with a decent In
     prompt$ ./create_run.sh internet_2001
     prompt$ cd ../testrun/internet_2001
     prompt$ wget http://data.ris.ripe.net/rrc00/2000.09/bview.20000901.0610.gz
-    prompt$ ./bootstrap bview.20000901.0610.gz
+    prompt$ ./bootstrap.sh bview.20000901.0610.gz
     prompt$ # doing magic, and creating a graph
     
 Replace the bview-file with a more recent one for a larger and newer network network. Coloring is
