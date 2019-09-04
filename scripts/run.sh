@@ -96,7 +96,7 @@ echo $view_command | tee -a $outfile
 $view_command >/dev/null 2>&1 &
 
 # Lets create a nice image as well
-view_command="java -jar $topdir/Java/jar/ImageMaker.jar 2400 2400 $tmpdir/*/0.lgl $tmpdir/*/0.coords"
+view_command="java -jar $topdir/Java/jar/ImageMaker.jar 2400 2400 $tmpdir/*/0.lgl $tmpdir/*/0.coords -c $rundir/color_file"
 echo $view_command | tee -a $outfile
 $view_command >/dev/null 2>&1 
 
