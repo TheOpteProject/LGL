@@ -53,6 +53,7 @@ public class GenerateImages {
 		int[] windowSizes = new int[2];
 		windowSizes[0] = new Integer(args[0]).intValue();
 		windowSizes[1] = new Integer(args[1]).intValue();
+		System.out.println("Loading flindeberg mod");
 		System.out.println("Image size is " + windowSizes[0] + " x "
 				+ windowSizes[1]);
 
@@ -100,6 +101,7 @@ public class GenerateImages {
 		}
 		System.out.println("Edges loading complete.");
 
+		System.out.println("Going for dark");
 		// Lets process coords files
 		for (String coordFile : coordFiles) {
 			try {
@@ -107,7 +109,7 @@ public class GenerateImages {
 				verterIO.loadVertexCoords(new File(coordFile));
 
 				String pngFile = MessageFormat.format(
-						"{0}_{1,number,0}x{2,number,0}.png", coordFile,
+						"{0}_{1,number,0}x{2,number,0}_dark.png", coordFile,
 						windowSizes[0], windowSizes[1]);
 				System.out.println("Preparing " + pngFile + "...");
 				FormatVertex formatter = new FormatVertex(
@@ -139,6 +141,48 @@ public class GenerateImages {
 						"Error processing {0}:\n{1}", e.getMessage()));
 			}
 		}
+
+		System.out.println("Going for light");
+		// Lets process coords files
+		for (String coordFile : coordFiles) {
+			try {
+				System.out.println("Loading " + coordFile + "...");
+				verterIO.loadVertexCoords(new File(coordFile));
+
+				String pngFile = MessageFormat.format(
+						"{0}_{1,number,0}x{2,number,0}_light.png", coordFile,
+						windowSizes[0], windowSizes[1]);
+				System.out.println("Preparing " + pngFile + "...");
+				FormatVertex formatter = new FormatVertex(
+						verterIO.getVertices(), verterIO.getStats(),
+						windowSizes, 1);
+
+				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
+						verterIO.getVertices(), windowSizes[0], windowSizes[1]);
+
+				if (loadedEdgeColors)
+					panel.addEdgeColors(verterIO.getEdgeColorMap());
+
+				panel.showVertices(true);
+				panel.setVisibilityTest(true);
+				panel.setFormatter(formatter);
+				panel.setEdgeColor(EDGE_COLOR);
+				panel.setVertexColor(Color.white);
+				panel.setBackgroundColor(Color.white);
+
+				BufferedImage bufferedImage = new BufferedImage(windowSizes[0],
+						windowSizes[1], BufferedImage.TYPE_INT_RGB);
+				
+				// Now the image has to be fitted to the given region
+				panel.fitData();
+				panel.writeImage(pngFile, bufferedImage);
+				System.out.println("Done.");
+			} catch (IOException e) {
+				System.out.println(MessageFormat.format(
+						"Error processing {0}:\n{1}", e.getMessage()));
+			}
+		}
+
 	}
 
 	public static void message() {
@@ -147,7 +191,7 @@ public class GenerateImages {
 						+ "\t<width> <height> <edges file> <coords file1> <coords file2>... [-c <colors file> ]\n\n"
 						+ "If no colors file specified program will try to load file named \""
 						+ EDGE_COLOR_FILE + "\".\n"
-						+ "By default edges are white.");
+						+ "By default edges are white. flindeberg mod");
 		System.exit(1);
 	}
 
