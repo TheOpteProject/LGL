@@ -58,6 +58,9 @@ else
 	sed -i "s|^inputfile =.*|inputfile = '$rundir/$ncol'|" $config && \
 	    sed -i "s|^tmpdir =.*|tmpdir = '$tmpdir'|" $config && \
 	    sed -i "s|^threadcount =.*|threadcount = '$threads'|" $config && \
+	    sed -i "s|^treelayout =.*|treelayout = '1'|" $config && \
+	    sed -i "s|^useoriginalweights =.*|useoriginalweights = '1'|" $config && \
+	    sed -i "s|^placeleafsclose =.*|placeleafsclose = '1'|" $config && \
 	    echo "lgldir = '$topdir/bin'" >> $config
 	## threadcount = '1'
 	exit_if_error $? "failed to adjust config file $config"
@@ -93,6 +96,8 @@ echo $view_command | tee -a $outfile
 $view_command >/dev/null 2>&1 &
 
 # Lets create a nice image as well
-view_command="java -jar $topdir/Java/jar/ImageMaker.jar 2400 2400 $tmpdir/*/0.lgl $tmpdir/*/0.coords"
+view_command="java -jar $topdir/Java/jar/ImageMaker.jar 2400 2400 $tmpdir/*/0.lgl $tmpdir/*/0.coords -c $rundir/color_file"
 echo $view_command | tee -a $outfile
+$view_command >/dev/null 2>&1 
 
+echo "run.sh -- finished"
