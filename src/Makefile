@@ -23,7 +23,7 @@ lglrebuild: lglrebuild.o calcFuncs.o
 lglfileconvert: lglfileconvert.o
 	$(CPP) -o lglfileconvert lglfileconvert.o $(LIBPATH) $(LIBS)
 
-install:
+install: all
 	mv -f lglrebuild lglbreakup lglayout lglfileconvert ../bin/.
 
 .C.o:
@@ -35,3 +35,4 @@ clean:
 tidy:
 	rm -f *.o core lglayout lglbreakup lglrebuild lglfileconvert
 
+.PHONY: all clean tidy
