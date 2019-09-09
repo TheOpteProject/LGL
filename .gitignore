@@ -13,3 +13,4 @@ tags
 /testrun/test-June-10/tmp
 /testrun/test-June-10/*.tmp
 /testrun/test-June-10/*.out
+**/*.class
