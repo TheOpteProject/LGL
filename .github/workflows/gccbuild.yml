@@ -12,5 +12,5 @@ jobs:
     - name: "Configure and make (C++)"
       run: |
         cd src
-        ./configure
+        env $LDFLAGS="-L'$BOOST_ROOT':$LDFLAGS" ./configure
         make 
