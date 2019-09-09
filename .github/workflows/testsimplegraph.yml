@@ -1,1 +1,16 @@
+name: Test simple graph (Internet 2000)
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: "Create a simple script"
+      run: |
+        cd scripts
+        ./creategraphfromurl.sh http://data.ris.ripe.net/rrc00/2000.09/bview.20000901.0610.gz
 
