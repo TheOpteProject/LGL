@@ -9,7 +9,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: Run a one-line script
+    - name: "Testing a simple script"
       run: echo Hello, world!
     - name: "Make jarfiles"
       run: |
