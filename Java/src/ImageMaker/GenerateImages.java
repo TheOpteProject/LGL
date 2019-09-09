@@ -130,7 +130,7 @@ public class GenerateImages {
 				panel.setBackgroundColor(Color.BLACK);
 
 				BufferedImage bufferedImage = new BufferedImage(windowSizes[0],
-						windowSizes[1], BufferedImage.TYPE_INT_RGB);
+						windowSizes[1], BufferedImage.TYPE_INT_ARGB);
 				
 				// Now the image has to be fitted to the given region
 				panel.fitData();
@@ -171,7 +171,7 @@ public class GenerateImages {
 				panel.setBackgroundColor(Color.white);
 
 				BufferedImage bufferedImage = new BufferedImage(windowSizes[0],
-						windowSizes[1], BufferedImage.TYPE_INT_RGB);
+						windowSizes[1], BufferedImage.TYPE_INT_ARGB);
 				
 				// Now the image has to be fitted to the given region
 				panel.fitData();
@@ -183,6 +183,47 @@ public class GenerateImages {
 			}
 		}
 
+		System.out.println("Going for transparent");
+		// Lets process coords files
+		for (String coordFile : coordFiles) {
+			try {
+				System.out.println("Loading " + coordFile + "...");
+				verterIO.loadVertexCoords(new File(coordFile));
+
+				String pngFile = MessageFormat.format(
+						"{0}_{1,number,0}x{2,number,0}_transparent.png", coordFile,
+						windowSizes[0], windowSizes[1]);
+				System.out.println("Preparing " + pngFile + "...");
+				FormatVertex formatter = new FormatVertex(
+						verterIO.getVertices(), verterIO.getStats(),
+						windowSizes, 1);
+
+				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
+						verterIO.getVertices(), windowSizes[0], windowSizes[1]);
+
+				if (loadedEdgeColors)
+					panel.addEdgeColors(verterIO.getEdgeColorMap());
+
+				panel.showVertices(true);
+				panel.setVisibilityTest(true);
+				panel.setFormatter(formatter);
+				panel.setEdgeColor(EDGE_COLOR);
+				panel.setVertexColor(Color.white);
+				panel.setBackgroundColor(new Color(0f,0f,0f,0f));
+
+				BufferedImage bufferedImage = new BufferedImage(windowSizes[0],
+						windowSizes[1], BufferedImage.TYPE_INT_ARGB);
+				
+				// Now the image has to be fitted to the given region
+				panel.fitData();
+				panel.writeImage(pngFile, bufferedImage);
+				System.out.println("Done.");
+			} catch (IOException e) {
+				System.out.println(MessageFormat.format(
+						"Error processing {0}:\n{1}", e.getMessage()));
+			}
+		}
+		
 	}
 
 	public static void message() {

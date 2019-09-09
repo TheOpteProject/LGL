@@ -163,7 +163,10 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		vertexColorMap = new HashMap();
 		edgeColor = Color.black;
 		fontColor = Color.blue;
-		backgroundColor = Color.white;
+		// Lets start with transparent
+		//backgroundColor = Color.white;
+		// transparent white
+		backgroundColor = new Color(0f,0f,0f,0f);
 		vertexColor = Color.red;
 
 		// Matrices need for zooming moving etc
@@ -201,8 +204,11 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		
 		Rectangle2D.Double rect = new Rectangle2D.Double(0, 0,
 				bufferedImage.getWidth(), bufferedImage.getHeight());
-		// g2.setPaint(backgroundColor); 
+		// g2.setPaint(backgroundColor);
+		System.out.println(" Getting background color '" + backgroundColor + "'");
+		System.out.println(" Getting background color alpha '" + backgroundColor.getTransparency() + "'");
 		g2.setColor(backgroundColor);
+		g2.setPaint(backgroundColor);
 		g2.fill(rect);
 	
 		setRenderingHints(g2);
@@ -484,7 +490,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		Graphics2D g = (Graphics2D) getGraphics();
 		if (i == null) {
 			i = g.getDeviceConfiguration().createCompatibleImage(xWindowSize,
-					yWindowSize, BufferedImage.TYPE_INT_RGB);
+					yWindowSize, BufferedImage.TYPE_INT_ARGB);
 		}
 		// TODO: SESS - check is OK
 		paintImage(i);
