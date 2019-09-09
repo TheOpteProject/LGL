@@ -12,5 +12,5 @@ jobs:
     - name: "Configure and make (C++)"
       run: |
         cd src
-        ./configure
+        ./configure --with-boost=$BOOST_ROOT
         make 
