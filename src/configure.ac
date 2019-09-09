@@ -10,6 +10,11 @@ AC_CONFIG_HEADERS([config.h])
 # Checks for programs.
 AC_PROG_CXX
 
+AC_LANG_PUSH([C++])
+AC_CHECK_HEADERS([boost/tokenizer.hpp], [],
+    [AC_MSG_ERROR(You need the Boost libraries.)])
+AC_LANG_POP([C++])
+
 # Checks for libraries.
 
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
