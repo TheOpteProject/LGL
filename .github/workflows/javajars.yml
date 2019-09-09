@@ -14,5 +14,5 @@ jobs:
     - name: "Make jarfiles"
       run: |
         echo "Running java jarfiles"
-        make -C java/ jarfiles
+        make -C Java/ jarfiles
         echo "Did it work?"
