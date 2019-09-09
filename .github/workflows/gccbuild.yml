@@ -9,8 +9,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: "Make (C++)"
-      run: make -C src/ all
-    - name: "Make install (C++)"
-      run: make -C src/ install
-
+    - name: "Configure and make (C++)"
+      run: |
+        cd src
+        ./configure
+        make 
