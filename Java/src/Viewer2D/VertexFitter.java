@@ -22,7 +22,7 @@ package Viewer2D;
 import Jama.*;
 //import Jama.Matrix.*;
 
-// This class is used to fit vertexs to a window
+// This class is used to fit vertexes to a window
 
 public class VertexFitter {
 
@@ -47,7 +47,7 @@ public class VertexFitter {
 
     public Matrix getManipulationMatrix() { return manipulation; }
 
-    // MUTATORS
+    // MUTATOR
 
     // This method returns a new vertex fitted given the transformations
     public void fitVertex( Vertex original )
@@ -55,7 +55,7 @@ public class VertexFitter {
 	original.location( manipulation.times( original.location() ) );
     }
 
-    // This is to add a minipulation to the 'to do' list.
+    // This is to add a manipulation to the 'to do' list.
     // This permits composite manipulations
     public void addManipulation( Transformer manip )
     {

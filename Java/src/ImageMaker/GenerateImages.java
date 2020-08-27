@@ -22,6 +22,7 @@ package ImageMaker;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -30,6 +31,12 @@ import java.util.List;
 import Viewer2D.EdgesPanel;
 import Viewer2D.FormatVertex;
 import Viewer2D.ViewerIO;
+import de.erichseifert.vectorgraphics2d.Document;
+import de.erichseifert.vectorgraphics2d.Processor;
+import de.erichseifert.vectorgraphics2d.Processors;
+import de.erichseifert.vectorgraphics2d.VectorGraphics2D;
+import de.erichseifert.vectorgraphics2d.intermediate.CommandSequence;
+import de.erichseifert.vectorgraphics2d.util.PageSize;
 
 /**
  * <b>SESS - 2014.05.10:</b>
@@ -224,6 +231,58 @@ public class GenerateImages {
 			}
 		}
 		
+
+		System.out.println("Going for EPS (under construction)");
+		// Lets process coords files
+		for (String coordFile : coordFiles) {
+			try {
+				System.out.println("Loading " + coordFile + "...");
+				verterIO.loadVertexCoords(new File(coordFile));
+
+				String pngFile = MessageFormat.format(
+						"{0}_{1,number,0}x{2,number,0}_transparent.pdf", coordFile,
+						windowSizes[0], windowSizes[1]);
+				System.out.println("Preparing " + pngFile + "...");
+				FormatVertex formatter = new FormatVertex(
+						verterIO.getVertices(), verterIO.getStats(),
+						windowSizes, 1);
+
+				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
+						verterIO.getVertices(), windowSizes[0], windowSizes[1]);
+
+				if (loadedEdgeColors)
+					panel.addEdgeColors(verterIO.getEdgeColorMap());
+
+				panel.showVertices(true);
+				panel.setVisibilityTest(true);
+				panel.setFormatter(formatter);
+				panel.setEdgeColor(EDGE_COLOR);
+				panel.setVertexColor(Color.white);
+				panel.setBackgroundColor(new Color(0f,0f,0f,0f));
+
+				// Use vector instead
+				VectorGraphics2D g2 = new VectorGraphics2D();
+								
+				// Now the image has to be fitted to the given region
+				panel.fitData();
+				panel.writeVectorImage(g2);
+
+				CommandSequence commands = ((VectorGraphics2D) g2).getCommands();
+				Processor pdfProcessor = Processors.get("pdf");
+				Document doc = pdfProcessor.getDocument(commands, PageSize.A4);
+
+				try {
+					doc.writeTo(new FileOutputStream(pngFile));
+				} catch (Exception e) {
+					System.out.println("Could not write vector graphics");
+				}
+
+				System.out.println("Done.");
+			} catch (IOException e) {
+				System.out.println(MessageFormat.format(
+						"Error processing {0}:\n{1}", e.getMessage()));
+			}
+		}
 	}
 
 	public static void message() {

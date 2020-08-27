@@ -138,6 +138,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	public EdgesPanel(Edge[] edges, Vertex[] vertices, int xWindowSize,
 			int yWindowSize) {
 		super();
+		
 		System.out.println("EdgesPanel()"); // TODO: deleteme
 		this.xWindowSize = xWindowSize;
 		this.yWindowSize = yWindowSize;
@@ -198,6 +199,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		super.repaint();
 	}
 	
+	// Paint a bitmap image
 	public void paintImage(BufferedImage bufferedImage) {
 		System.out.println("paintImage(" + bufferedImage + ")");
 		Graphics2D g2 = (Graphics2D) bufferedImage.getGraphics();
@@ -207,10 +209,16 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		// g2.setPaint(backgroundColor);
 		System.out.println(" Getting background color '" + backgroundColor + "'");
 		System.out.println(" Getting background color alpha '" + backgroundColor.getTransparency() + "'");
+
 		g2.setColor(backgroundColor);
 		g2.setPaint(backgroundColor);
 		g2.fill(rect);
 	
+		paintImage(g2);
+	}
+
+	/** Used by vector path */
+	private void paintImage(Graphics2D g2){
 		setRenderingHints(g2);
 
 		if (edges != null) {
@@ -487,6 +495,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		if (statusBar != null) {
 			statusBar.setText("Writing " + f.getAbsolutePath() + "...");
 		}
+
 		Graphics2D g = (Graphics2D) getGraphics();
 		if (i == null) {
 			i = g.getDeviceConfiguration().createCompatibleImage(xWindowSize,
@@ -504,6 +513,13 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		if (statusBar != null) {
 			statusBar.setText("Done.");
 		}
+	}
+
+
+	public void writeVectorImage(Graphics2D i)
+	{
+		// Just try paint it		
+		paintImage(i);
 	}
 
 	// Produce an image of a given region
