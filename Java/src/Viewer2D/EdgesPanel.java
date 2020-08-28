@@ -194,7 +194,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 
 	@Override
 	public void repaint() {
-		System.out.println("repaint()"); // TODO: deleteme
+		//System.out.println("repaint()"); // TODO: deleteme
 		paintImage();
 		super.repaint();
 	}
@@ -232,8 +232,8 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void paintImage() {
-		System.out.println("generateImage() " + paintImage + " "
-				+ bufferedImage);
+		//System.out.println("generateImage() " + paintImage + " "
+		//		+ bufferedImage);
 		// SESS: Sanity check
 		// Seems that inherited constructor calls repaint().
 		// Until I understand why lets keep this check.

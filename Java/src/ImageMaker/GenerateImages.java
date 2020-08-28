@@ -114,7 +114,7 @@ public class GenerateImages {
 
 		generateTransparent(loadedEdgeColors, windowSizes, coordFiles, verterIO);
 		
-		System.out.println("Going for EPS (under construction)");
+		System.out.println("Going for vector graphics (currently broken)");
 		// Lets process coords files
 		for (String coordFile : coordFiles) {
 			try {
