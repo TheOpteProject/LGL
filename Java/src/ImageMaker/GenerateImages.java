@@ -108,11 +108,11 @@ public class GenerateImages {
 		}
 		System.out.println("Edges loading complete.");
 
-		//generateDark(loadedEdgeColors, windowSizes, coordFiles, verterIO);
+		generateDark(loadedEdgeColors, windowSizes, coordFiles, verterIO);
 
-		//generateLight(loadedEdgeColors, windowSizes, coordFiles, verterIO);
+		generateLight(loadedEdgeColors, windowSizes, coordFiles, verterIO);
 
-		//generateTransparent(loadedEdgeColors, windowSizes, coordFiles, verterIO);
+		generateTransparent(loadedEdgeColors, windowSizes, coordFiles, verterIO);
 		
 		System.out.println("Going for EPS (under construction)");
 		// Lets process coords files
