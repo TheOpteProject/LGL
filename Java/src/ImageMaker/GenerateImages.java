@@ -108,13 +108,13 @@ public class GenerateImages {
 		}
 		System.out.println("Edges loading complete.");
 
-		//generateDark(loadedEdgeColors, windowSizes, coordFiles, verterIO);
+		generateDark(loadedEdgeColors, windowSizes, coordFiles, verterIO);
 
-		//generateLight(loadedEdgeColors, windowSizes, coordFiles, verterIO);
+		generateLight(loadedEdgeColors, windowSizes, coordFiles, verterIO);
 
-		//generateTransparent(loadedEdgeColors, windowSizes, coordFiles, verterIO);
+		generateTransparent(loadedEdgeColors, windowSizes, coordFiles, verterIO);
 		
-		System.out.println("Going for EPS (under construction)");
+		System.out.println("Going for vector graphics (currently broken)");
 		// Lets process coords files
 		for (String coordFile : coordFiles) {
 			try {

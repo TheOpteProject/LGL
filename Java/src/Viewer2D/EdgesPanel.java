@@ -194,7 +194,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 
 	@Override
 	public void repaint() {
-		System.out.println("repaint()"); // TODO: deleteme
+		//System.out.println("repaint()"); // TODO: deleteme
 		paintImage();
 		super.repaint();
 	}
@@ -232,8 +232,8 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void paintImage() {
-		System.out.println("generateImage() " + paintImage + " "
-				+ bufferedImage);
+		//System.out.println("generateImage() " + paintImage + " "
+		//		+ bufferedImage);
 		// SESS: Sanity check
 		// Seems that inherited constructor calls repaint().
 		// Until I understand why lets keep this check.
@@ -248,7 +248,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void paintNonColoredEdges(Graphics g) {
-		System.out.println("paintNonColoredEdges() " + g);
+		//System.out.println("paintNonColoredEdges() " + g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(edgeColor);
 		for (Edge edge : edges) {
@@ -266,7 +266,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 
 	@SuppressWarnings("unchecked")
 	public void paintColoredEdges(Graphics g) {
-		System.out.println("paintColoredEdges() " + g);
+		//System.out.println("paintColoredEdges() " + g);
 		Graphics2D g2 = (Graphics2D) g;
 		for (Map.Entry<Edge, Color> e : ((Map<Edge, Color>) edgeColorMap)
 				.entrySet()) {
@@ -283,7 +283,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void paintNonColoredVertices(Graphics g) {
-		System.out.println("paintNonColoredVertices() " + g);
+		//System.out.println("paintNonColoredVertices() " + g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(vertexColor);
 
@@ -303,7 +303,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 
 	@SuppressWarnings("unchecked")
 	public void paintColoredVertices(Graphics g) {
-		System.out.println("paintColoredVertices() " + g);
+		//System.out.println("paintColoredVertices() " + g);
 		Graphics2D g2 = (Graphics2D) g;
 		for (Map.Entry<Vertex, Color> e : ((Map<Vertex, Color>) vertexColorMap)
 				.entrySet()) {
