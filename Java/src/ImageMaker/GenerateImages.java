@@ -22,6 +22,7 @@ package ImageMaker;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -30,6 +31,12 @@ import java.util.List;
 import Viewer2D.EdgesPanel;
 import Viewer2D.FormatVertex;
 import Viewer2D.ViewerIO;
+import de.erichseifert.vectorgraphics2d.Document;
+import de.erichseifert.vectorgraphics2d.Processor;
+import de.erichseifert.vectorgraphics2d.Processors;
+import de.erichseifert.vectorgraphics2d.VectorGraphics2D;
+import de.erichseifert.vectorgraphics2d.intermediate.CommandSequence;
+import de.erichseifert.vectorgraphics2d.util.PageSize;
 
 /**
  * <b>SESS - 2014.05.10:</b>
@@ -53,7 +60,7 @@ public class GenerateImages {
 		int[] windowSizes = new int[2];
 		windowSizes[0] = new Integer(args[0]).intValue();
 		windowSizes[1] = new Integer(args[1]).intValue();
-		System.out.println("Loading flindeberg mod");
+		System.out.println("Loading flindeberg mod 2");
 		System.out.println("Image size is " + windowSizes[0] + " x "
 				+ windowSizes[1]);
 
@@ -101,17 +108,20 @@ public class GenerateImages {
 		}
 		System.out.println("Edges loading complete.");
 
-		System.out.println("Going for dark");
+		//generateDark(loadedEdgeColors, windowSizes, coordFiles, verterIO);
+
+		//generateLight(loadedEdgeColors, windowSizes, coordFiles, verterIO);
+
+		//generateTransparent(loadedEdgeColors, windowSizes, coordFiles, verterIO);
+		
+		System.out.println("Going for EPS (under construction)");
 		// Lets process coords files
 		for (String coordFile : coordFiles) {
 			try {
 				System.out.println("Loading " + coordFile + "...");
 				verterIO.loadVertexCoords(new File(coordFile));
 
-				String pngFile = MessageFormat.format(
-						"{0}_{1,number,0}x{2,number,0}_dark.png", coordFile,
-						windowSizes[0], windowSizes[1]);
-				System.out.println("Preparing " + pngFile + "...");
+				
 				FormatVertex formatter = new FormatVertex(
 						verterIO.getVertices(), verterIO.getStats(),
 						windowSizes, 1);
@@ -127,62 +137,47 @@ public class GenerateImages {
 				panel.setFormatter(formatter);
 				panel.setEdgeColor(EDGE_COLOR);
 				panel.setVertexColor(Color.white);
-				panel.setBackgroundColor(Color.BLACK);
+				panel.setBackgroundColor(new Color(0f,0f,0f,0f));
 
-				BufferedImage bufferedImage = new BufferedImage(windowSizes[0],
-						windowSizes[1], BufferedImage.TYPE_INT_ARGB);
-				
+				// Use vector instead
+				VectorGraphics2D g2 = new VectorGraphics2D();
+								
 				// Now the image has to be fitted to the given region
 				panel.fitData();
-				panel.writeImage(pngFile, bufferedImage);
-				System.out.println("Done.");
+				panel.writeVectorImage(g2);
+
+				CommandSequence commands = ((VectorGraphics2D) g2).getCommands();
+				
+				String[] elements = {"pdf", "eps", "svg"};
+				for (String ext : elements) {
+					
+					Processor pdfProcessor = Processors.get(ext);
+					Document doc = pdfProcessor.getDocument(commands, PageSize.A4);
+					
+					String pngFile = MessageFormat.format(
+							"{0}_{1,number,0}x{2,number,0}_transparent.{3}", coordFile,
+							windowSizes[0], windowSizes[1], ext);
+
+					System.out.println("Preparing " + pngFile + "...");
+					try {
+						doc.writeTo(new FileOutputStream(pngFile));
+					} catch (Exception e) {
+						System.out.println("Could not write vector graphics");
+					}
+
+					System.out.println("Done.");
+				}
+
+				
 			} catch (IOException e) {
 				System.out.println(MessageFormat.format(
 						"Error processing {0}:\n{1}", e.getMessage()));
 			}
 		}
+	}
 
-		System.out.println("Going for light");
-		// Lets process coords files
-		for (String coordFile : coordFiles) {
-			try {
-				System.out.println("Loading " + coordFile + "...");
-				verterIO.loadVertexCoords(new File(coordFile));
-
-				String pngFile = MessageFormat.format(
-						"{0}_{1,number,0}x{2,number,0}_light.png", coordFile,
-						windowSizes[0], windowSizes[1]);
-				System.out.println("Preparing " + pngFile + "...");
-				FormatVertex formatter = new FormatVertex(
-						verterIO.getVertices(), verterIO.getStats(),
-						windowSizes, 1);
-
-				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
-						verterIO.getVertices(), windowSizes[0], windowSizes[1]);
-
-				if (loadedEdgeColors)
-					panel.addEdgeColors(verterIO.getEdgeColorMap());
-
-				panel.showVertices(true);
-				panel.setVisibilityTest(true);
-				panel.setFormatter(formatter);
-				panel.setEdgeColor(EDGE_COLOR);
-				panel.setVertexColor(Color.white);
-				panel.setBackgroundColor(Color.white);
-
-				BufferedImage bufferedImage = new BufferedImage(windowSizes[0],
-						windowSizes[1], BufferedImage.TYPE_INT_ARGB);
-				
-				// Now the image has to be fitted to the given region
-				panel.fitData();
-				panel.writeImage(pngFile, bufferedImage);
-				System.out.println("Done.");
-			} catch (IOException e) {
-				System.out.println(MessageFormat.format(
-						"Error processing {0}:\n{1}", e.getMessage()));
-			}
-		}
-
+	private static void generateTransparent(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,
+			ViewerIO verterIO) {
 		System.out.println("Going for transparent");
 		// Lets process coords files
 		for (String coordFile : coordFiles) {
@@ -223,7 +218,94 @@ public class GenerateImages {
 						"Error processing {0}:\n{1}", e.getMessage()));
 			}
 		}
-		
+	}
+
+	private static void generateLight(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,
+			ViewerIO verterIO) {
+		System.out.println("Going for light");
+		// Lets process coords files
+		for (String coordFile : coordFiles) {
+			try {
+				System.out.println("Loading " + coordFile + "...");
+				verterIO.loadVertexCoords(new File(coordFile));
+
+				String pngFile = MessageFormat.format(
+						"{0}_{1,number,0}x{2,number,0}_light.png", coordFile,
+						windowSizes[0], windowSizes[1]);
+				System.out.println("Preparing " + pngFile + "...");
+				FormatVertex formatter = new FormatVertex(
+						verterIO.getVertices(), verterIO.getStats(),
+						windowSizes, 1);
+
+				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
+						verterIO.getVertices(), windowSizes[0], windowSizes[1]);
+
+				if (loadedEdgeColors)
+					panel.addEdgeColors(verterIO.getEdgeColorMap());
+
+				panel.showVertices(true);
+				panel.setVisibilityTest(true);
+				panel.setFormatter(formatter);
+				panel.setEdgeColor(EDGE_COLOR);
+				panel.setVertexColor(Color.white);
+				panel.setBackgroundColor(Color.white);
+
+				BufferedImage bufferedImage = new BufferedImage(windowSizes[0],
+						windowSizes[1], BufferedImage.TYPE_INT_ARGB);
+				
+				// Now the image has to be fitted to the given region
+				panel.fitData();
+				panel.writeImage(pngFile, bufferedImage);
+				System.out.println("Done.");
+			} catch (IOException e) {
+				System.out.println(MessageFormat.format(
+						"Error processing {0}:\n{1}", e.getMessage()));
+			}
+		}
+	}
+
+	private static void generateDark(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,
+			ViewerIO verterIO) {
+		System.out.println("Going for dark");
+		// Lets process coords files
+		for (String coordFile : coordFiles) {
+			try {
+				System.out.println("Loading " + coordFile + "...");
+				verterIO.loadVertexCoords(new File(coordFile));
+
+				String pngFile = MessageFormat.format(
+						"{0}_{1,number,0}x{2,number,0}_dark.png", coordFile,
+						windowSizes[0], windowSizes[1]);
+				System.out.println("Preparing " + pngFile + "...");
+				FormatVertex formatter = new FormatVertex(
+						verterIO.getVertices(), verterIO.getStats(),
+						windowSizes, 1);
+
+				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
+						verterIO.getVertices(), windowSizes[0], windowSizes[1]);
+
+				if (loadedEdgeColors)
+					panel.addEdgeColors(verterIO.getEdgeColorMap());
+
+				panel.showVertices(true);
+				panel.setVisibilityTest(true);
+				panel.setFormatter(formatter);
+				panel.setEdgeColor(EDGE_COLOR);
+				panel.setVertexColor(Color.white);
+				panel.setBackgroundColor(Color.BLACK);
+
+				BufferedImage bufferedImage = new BufferedImage(windowSizes[0],
+						windowSizes[1], BufferedImage.TYPE_INT_ARGB);
+				
+				// Now the image has to be fitted to the given region
+				panel.fitData();
+				panel.writeImage(pngFile, bufferedImage);
+				System.out.println("Done.");
+			} catch (IOException e) {
+				System.out.println(MessageFormat.format(
+						"Error processing {0}:\n{1}", e.getMessage()));
+			}
+		}
 	}
 
 	public static void message() {
