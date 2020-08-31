@@ -30,7 +30,7 @@ get_bview_url(){
         then
             ## potentially add -b for fork, except collection is too hard in bash
             echo "Downloading $fullurl to $folder"
-            wget $fullurl -O "${folder}/bview_$3_$2_$filename" 2> /dev/null
+            wget $fullurl -O "${folder}/bview_$1_$2_$filename" 2> /dev/null
         else
            #echo "$fullurl does not exist."
            :
