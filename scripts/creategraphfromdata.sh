@@ -7,30 +7,37 @@
 ## and takes the first day of the month
 
 fetch_date="$1.$2"
+folder="bview_${fetch_date}"
 
 get_bview_url(){
 
     folderurl="http://data.ris.ripe.net/rrc${1}/${2}/"
 
-    if curl --head --silent --fail $fullurl 2> /dev/null;
+    #echo "Trying $folderurl ..."
+
+    if curl --head --silent --fail $folderurl > /dev/null;
     then
-        filename=$(curl --silent $1 | grep "bview.[0-9]" | sed -E 's/.*>(bview\.[0-9]*\.[0-9]*\.gz).*/\1/' | tail -n 1)
+        filename=$(curl --silent $folderurl | grep "bview.[0-9]" | sed -E 's/.*>(bview\.[0-9]*\.[0-9]*\.gz).*/\1/' | tail -n 1)
 
         fullurl="${folderurl}/${filename}"
 
         #"http://data.ris.ripe.net/rrc${rrc}/${y}/" "rrc${rrc}" "${y}"
 
-        mkdir -p "bview_${2}"
+        mkdir -p "${folder}"
 
         #echo $fullurl
-        if curl --head --silent --fail $fullurl 2> /dev/null;
+        if curl --head --silent --fail $fullurl > /dev/null;
         then
-            wget -b $fullurl -O "bview_${2}/bview_$3_$2_$filename"
+            ## potentially add -b for fork, except collection is too hard in bash
+            echo "Downloading $fullurl to $folder"
+            wget $fullurl -O "${folder}/bview_$3_$2_$filename" 2> /dev/null
         else
-            echo "$fullurl does not exist."
+           #echo "$fullurl does not exist."
+           :
         fi
     else
-	    echo "$folderurl does not exist."
+	    #echo "$folderurl does not exist."
+        :
     fi
 }
 
@@ -41,20 +48,15 @@ get_rrcs(){
     done
 }
 
-for rrc in $(get_rrcs)
-do
-    ## Forking doesn't really work, so take it slow
-    get_bview_url $rcc $fetch_date
-done
 
 ### Just go through all arguments
-echo -e "\n -- Using '$url' as source for graph -- \n" 
+echo -e "\n -- Using '$folder' as source for graph -- \n" 
 
-filename=$(basename -- "$1")
+filename=${folder/\./_}
 extension="${filename##*.}"
 filename="${filename%.*}"
 
-echo -e "\n -- File name as '$filename' and extension '$extension'  -- \n"
+echo -e "\n -- Using files in '$folder'  -- \n"
 
 ## set up the folder
 echo -e "\n -- Setting up folders -- \n"
@@ -62,11 +64,16 @@ echo -e "\n -- Setting up folders -- \n"
 cd ../testrun/$filename
 echo -e "\n -- In $(pwd), folders setup complete -- \n "
 
-## download the data
-echo -e "\n -- Starting download... -- \n"
-wget $url
-echo -e "\n -- Bootstrapping the bgpdump -- \n "
-./bootstrap.sh ${filename}.${extension}
+
+echo -e "\n -- Downloading dumps (${fetch_date}) -- \n "
+for rrc in $(get_rrcs)
+do
+    ## Forking doesn't really work, so take it slow
+    get_bview_url "$rrc" "$fetch_date"
+done
+
+echo -e "\n -- Bootstrapping the bgpdumps in ${folder} -- \n "
+./bootstrap.sh ${folder}/bview*.gz
 
 ## go back to scripts
 cd ../../scripts

@@ -6,6 +6,11 @@ if [ -d "../testrun/${1}" ];
 then
     ## bkp it
     echo "Directory ${1} exists, moving it." 
+    if [ -d "../testrun/${1}_old"];
+    then
+        echo "Directory ${1}_old exists, removing backup (keeping one generation only)." 
+        rm -rf "../testrun/${1}_old"
+    fi
     mv "../testrun/${1}" "../testrun/${1}_old";
 fi
 

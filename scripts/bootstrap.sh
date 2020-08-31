@@ -22,7 +22,9 @@ sleep 5
 
 echo "Moving images, png to '${rundir}' and '../../resource/images/' for easy commit."
 # take care of the images
-cp tmp/*/0.coords*.png ${filename}.png
+cp tmp/*/0.coords*transparent.png ${filename}.png
+cp tmp/*/0.coords*light.png ${filename}_black.png
+cp tmp/*/0.coords*dark.png ${filename}_white.png
 cp ${filename}.png ../../resources/images/.
 
 echo "Moving graph-components (lgl and coords)"
