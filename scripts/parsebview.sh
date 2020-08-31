@@ -60,17 +60,40 @@ asas=${filename}.as_as.ncol
 preas=${filename}.prefix_as.ncol
 export ncol=${filename}.full.ncol
 
-echo "Parsing $1 for ASpath-info (i.e. AS -> AS routing)"
-time (zcat $1 | bgpdump -m - | cut -d '|' -f 7 |\
-	  sed -e 's/[{},]/ /g' | get_neighbors | sort | uniq -c |\
-	  awk '{$1=$1};1' | awk '{print $2 " " $3 " " $1}' | sort -n > $asas)
+## Rough outline aspath info
+## zcat -- reads multiple files (bgpdump only takes one)
+## bgpdump -- format into table format
+## cut -d '|' -f 7 -- takes the relevant info out (i.e. ASpath)
+## sed -e ... -- get rid of commas and stuff
+## get_neighbors -- see above, get all pairs of neighbors in order
+## sort -- sorts pairs
+## uniq -c -- counts unique occcurences
+## awk and awk -- reformat into the format we want
+## sort -n -- a last numerical sort after reformatting
 
-echo "Parsing $1 for prefix-info (i.e. AS -> prefix routing)"
-time (zcat $1 | bgpdump -m - | cut -d '|' -f 6-7 |\
+echo "Parsing $@ for ASpath-info (i.e. AS -> AS routing)"
+time zcat $@ | bgpdump -m - | cut -d '|' -f 7 |\
+	  sed -e 's/[{},]/ /g' | get_neighbors | sort | uniq -c |\
+	  awk '{$1=$1};1' | awk '{print $2 " " $3 " " $1}' | sort -n > $asas
+
+## rough ooutline mapping prefixes
+## zcat -- reads multiple files (bgpdump only takes one)
+## bgpdump -- format into table format
+## cut -d '|' -f 6-7 -- takes the relevant info out (i.e. ASpath and prefix)
+## sed -e ... -- get rid of commas and stuff
+## awk and awk -- formatting
+## get_pairs -- see above, get all pairs of neighbors in order
+## sort -- sorts pairs
+## uniq -c -- counts unique occcurences
+## awk and awk -- reformat into the format we want
+## sort -n -- a last numerical sort after reformatting
+
+echo "Parsing $@ for prefix-info (i.e. AS -> prefix routing)"
+time zcat $@ | bgpdump -m - | cut -d '|' -f 6-7 |\
 	  sed "s/|/ /" | awk -F' ' '{print $1 " " $NF}' | awk '{$1=$1};1' |\
 	  sed -e 's/[{},]/ /g' | get_pairs | sort | uniq -c |\
-	  awk '{print $2 " " $3 " " $1}' | sort -n > $preas)
+	  awk '{print $2 " " $3 " " $1}' | sort -n > $preas
       
 echo "Combining $asas and $preas into $ncol"
-time (cat $asas $preas > $ncol)
+time cat $asas $preas > $ncol
 
