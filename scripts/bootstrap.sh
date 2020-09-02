@@ -1,20 +1,28 @@
 #!/bin/bash
 
+## Get the current folder and use it for naming
+folder=$(basename $(pwd))
 
+# for run.sh
+export ncol=${folder}.full.ncol
 
-filename=$(basename -- "$1")
-extension="${filename##*.}"
-filename="${filename%.*}"
-asas=${filename}.as_as.ncol
-preas=${filename}.prefix_as.ncol
-export ncol=${filename}.full.ncol
-
-echo "Running bootstrap for $@ (using $filename as base)"
+echo "Running bootstrap for $@ (using ${folder} as base)"
 
 ./parsebview.sh $@
 
 echo "Converted and got ncol-file $ncol"
+
+
+if [ -z "$lgltest" ]
+then
+      echo "$lgltest is empty"
+else
+      echo "$lgltest is set, quitting"
+      exit
+fi
+
 # run.sh uses $ncol variable
+## Skip for now, testing
 ./run.sh -C
 
 echo "Sleeping for a couple of second to wait in image generation"
@@ -22,14 +30,14 @@ sleep 5
 
 echo "Moving images, png to '${rundir}' and '../../resource/images/' for easy commit."
 # take care of the images
-cp tmp/*/0.coords*transparent.png ${filename}.png
-cp tmp/*/0.coords*light.png ${filename}_white.png
-cp tmp/*/0.coords*dark.png ${filename}_black.png
-cp ${filename}.png ../../resources/images/.
+cp tmp/*/0.coords*transparent.png ${folder}_transparent.png
+cp tmp/*/0.coords*light.png ${folder}_light.png
+cp tmp/*/0.coords*dark.png ${folder}_dark.png
+cp ${folder}_transparent.png ../../resources/images/.
 
 echo "Moving graph-components (lgl and coords)"
-cp tmp/*/0.lgl ${filename}.lgl
-cp tmp/*/0.coords ${filename}.coords
+cp tmp/*/0.lgl ${folder}.lgl
+cp tmp/*/0.coords ${folder}.coords
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     xdg-open .
