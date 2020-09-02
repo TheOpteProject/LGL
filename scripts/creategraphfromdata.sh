@@ -1,5 +1,7 @@
 #!/bin/bash
 
+## Load exports
+source setup.sh
 
 ## Creates a graph from a date (i.e. YYYY MM)
 ## $1 is the year
@@ -7,6 +9,7 @@
 ## and takes the first day of the month
 
 fetch_date="$1.$2"
+fetch_folder="$1.$2"
 folder="bview_${fetch_date}"
 
 get_bview_url(){
@@ -73,7 +76,9 @@ do
 done
 
 echo -e "\n -- Bootstrapping the bgpdumps in ${folder} -- \n "
-./bootstrap.sh ${folder}/bview*.gz
+
+echo -e "Writing bootstrap to log ${folder}/bootstrap_${folder}.log"
+./bootstrap.sh ${folder}/bview*.gz > bootstrap_${folder}.log
 
 ## go back to scripts
 cd ../../scripts

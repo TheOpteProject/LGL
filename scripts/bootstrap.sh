@@ -23,10 +23,17 @@ sleep 5
 echo "Moving images, png to '${rundir}' and '../../resource/images/' for easy commit."
 # take care of the images
 cp tmp/*/0.coords*transparent.png ${filename}.png
-cp tmp/*/0.coords*light.png ${filename}_black.png
-cp tmp/*/0.coords*dark.png ${filename}_white.png
+cp tmp/*/0.coords*light.png ${filename}_white.png
+cp tmp/*/0.coords*dark.png ${filename}_black.png
 cp ${filename}.png ../../resources/images/.
 
 echo "Moving graph-components (lgl and coords)"
 cp tmp/*/0.lgl ${filename}.lgl
 cp tmp/*/0.coords ${filename}.coords
+
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    xdg-open .
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    open .
+    # Mac OSX
+fi
