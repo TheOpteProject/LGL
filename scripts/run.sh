@@ -1,8 +1,9 @@
-#!/usr/bin/env bash
-rundir=`dirname $0`
-rundir=`readlink -f $rundir`
+#!/usr/bin/env zsh
+
+rundir=$(dirname $0)
+rundir=$(readlink -f $rundir)
 topdir=$rundir/../..
-topdir=`readlink -f $topdir`
+topdir=$(readlink -f $topdir)
 
 function exit_if_error
 {

@@ -17,7 +17,7 @@ fi
 mkdir -p ../testrun/$1
 
 ## copy and make executable
-cp run.sh parsebview.sh bootstrap.sh ../testrun/$1/
+cp run.sh parsebview.sh bootstrap.sh get_neigh.sh get_pairs.sh ../testrun/$1/
 chmod +x ../testrun/$1/*.sh
 
 # should be done
