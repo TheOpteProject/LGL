@@ -1,9 +1,16 @@
 #!/usr/bin/env zsh
 
+readlink=readlink # start with normal zcat on path
+
+# if we have greadlink (gnu-version), lets use it
+if hash greadlink 2>/dev/null; then
+	readlink=greadlink
+fi
+
 rundir=$(dirname $0)
-rundir=$(readlink -f $rundir)
+rundir=$(${readlink} -f $rundir)
 topdir=${rundir}/../..
-topdir=$(readlink -f $topdir)
+topdir=$(${readlink} -f $topdir)
 
 function exit_if_error
 {
