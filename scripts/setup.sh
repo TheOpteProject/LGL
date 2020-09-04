@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 ## run this with source so correct variables are setup
 ## i.e. source setup.sh
