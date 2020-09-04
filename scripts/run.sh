@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 readlink=readlink # start with normal zcat on path
 
@@ -44,16 +44,22 @@ done
 
 cd $topdir
 
-if [ "$compile" == "yes" ]; then
-	./setup.pl -i 
-	exit_if_error $? "compile failed"
-fi
+#if [ "$compile" = "yes" ]; then
+#	echo "Compiling"
+#	./setup.pl -i 
+#	exit_if_error $? "compile failed"
+#fi
 
 tmpdir=$rundir/tmp
 rm -rf $tmpdir && mkdir $tmpdir
-exit_if_error $? "failed to prepare tmpdir $tmpdir"
+#exit_if_error $? "failed to prepare tmpdir $tmpdir"
 
-threads=$(lscpu -p | egrep -v '^#' | wc -l)
+if hash lscpu 2>/dev/null; then
+	threads=$(lscpu -p | egrep -v '^#' | wc -l)
+else
+	threads=$(sysctl -n hw.ncpu)
+fi
+
 threads=$(((threads-2)>2 ? (threads-2) : 2))
 echo "Selecting to go with $threads threads (based on max(cores-2, 2))"
 					     
@@ -62,16 +68,16 @@ if [ -e $config ]; then
 	echo "$config already exists, using it..."
 else
 	./setup.pl -c $config
-	exit_if_error $? "failed to generate config file $config"
-	sed -i "s|^inputfile =.*|inputfile = '$rundir/$ncol'|" $config && \
-	    sed -i "s|^tmpdir =.*|tmpdir = '$tmpdir'|" $config && \
-	    sed -i "s|^threadcount =.*|threadcount = '$threads'|" $config && \
-	    sed -i "s|^treelayout =.*|treelayout = '1'|" $config && \
-	    sed -i "s|^useoriginalweights =.*|useoriginalweights = '1'|" $config && \
-	    sed -i "s|^placeleafsclose =.*|placeleafsclose = '1'|" $config && \
-	    echo "lgldir = '$topdir/bin'" >> $config
+	##exit_if_error $? "failed to generate config file $config"
+	sed -i.bkp "s|^inputfile =.*|inputfile = '$rundir/$ncol'|" $config && \
+	sed -i.bkp "s|^tmpdir =.*|tmpdir = '$tmpdir'|" $config && \
+	sed -i.bkp "s|^threadcount =.*|threadcount = '$threads'|" $config && \
+	sed -i.bkp "s|^treelayout =.*|treelayout = '1'|" $config && \
+	sed -i.bkp "s|^useoriginalweights =.*|useoriginalweights = '1'|" $config && \
+	sed -i.bkp "s|^placeleafsclose =.*|placeleafsclose = '1'|" $config && \
+	echo "lgldir = '$topdir/bin'" >> $config
 	## threadcount = '1'
-	exit_if_error $? "failed to adjust config file $config"
+	#exit_if_error $? "failed to adjust config file $config"
 fi
 
 export PERL5LIB=$topdir/perls
@@ -82,7 +88,7 @@ exitcode=$?
 end_time=`date +%s`
 echo
 echo "lgl.pl took `convertsecs $(( $end_time - $start_time ))` to run." | tee -a $outfile
-exit_if_error $exitcode "lgl.pl failed with code $exitcode"
+#exit_if_error $exitcode "lgl.pl failed with code $exitcode"
 
 echo "Generating color_file..." | tee -a $outfile
 perl $topdir/perls/colorEdgesBasedOnLevel.pl $tmpdir/*/0.coords.edge_levels > $rundir/color_file
