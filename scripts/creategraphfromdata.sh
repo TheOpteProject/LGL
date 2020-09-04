@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env zsh
 
+## Load exports
+source setup.sh
 
 ## Creates a graph from a date (i.e. YYYY MM)
 ## $1 is the year
@@ -7,6 +9,7 @@
 ## and takes the first day of the month
 
 fetch_date="$1.$2"
+fetch_folder="$1.$2"
 folder="bview_${fetch_date}"
 
 get_bview_url(){
@@ -30,7 +33,7 @@ get_bview_url(){
         then
             ## potentially add -b for fork, except collection is too hard in bash
             echo "Downloading $fullurl to $folder"
-            wget $fullurl -O "${folder}/bview_$1_$2_$filename" 2> /dev/null
+            wget $fullurl -O "${folder}/bview_${1}_${2}_$filename" 2> /dev/null
         else
            #echo "$fullurl does not exist."
            :
@@ -44,7 +47,7 @@ get_bview_url(){
 get_rrcs(){
     for i in {00..24}
     do
-	echo "$i"
+	    echo "$i"
     done
 }
 
@@ -73,7 +76,9 @@ do
 done
 
 echo -e "\n -- Bootstrapping the bgpdumps in ${folder} -- \n "
-./bootstrap.sh ${folder}/bview*.gz
+
+echo -e "Writing bootstrap to log ${folder}/bootstrap_${folder}.log"
+./bootstrap.sh ${folder}/bview*.gz > bootstrap_${folder}.log
 
 ## go back to scripts
 cd ../../scripts

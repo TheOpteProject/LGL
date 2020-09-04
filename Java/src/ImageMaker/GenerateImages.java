@@ -114,66 +114,66 @@ public class GenerateImages {
 
 		generateTransparent(loadedEdgeColors, windowSizes, coordFiles, verterIO);
 		
-		System.out.println("Going for vector graphics (currently broken)");
-		// Lets process coords files
-		for (String coordFile : coordFiles) {
-			try {
-				System.out.println("Loading " + coordFile + "...");
-				verterIO.loadVertexCoords(new File(coordFile));
+		// System.out.println("Going for vector graphics (currently broken)");
+		// // Lets process coords files
+		// for (String coordFile : coordFiles) {
+		// 	try {
+		// 		System.out.println("Loading " + coordFile + "...");
+		// 		verterIO.loadVertexCoords(new File(coordFile));
 
 				
-				FormatVertex formatter = new FormatVertex(
-						verterIO.getVertices(), verterIO.getStats(),
-						windowSizes, 1);
+		// 		FormatVertex formatter = new FormatVertex(
+		// 				verterIO.getVertices(), verterIO.getStats(),
+		// 				windowSizes, 1);
 
-				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
-						verterIO.getVertices(), windowSizes[0], windowSizes[1]);
+		// 		EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
+		// 				verterIO.getVertices(), windowSizes[0], windowSizes[1]);
 
-				if (loadedEdgeColors)
-					panel.addEdgeColors(verterIO.getEdgeColorMap());
+		// 		if (loadedEdgeColors)
+		// 			panel.addEdgeColors(verterIO.getEdgeColorMap());
 
-				panel.showVertices(true);
-				panel.setVisibilityTest(true);
-				panel.setFormatter(formatter);
-				panel.setEdgeColor(EDGE_COLOR);
-				panel.setVertexColor(Color.white);
-				panel.setBackgroundColor(new Color(0f,0f,0f,0f));
+		// 		panel.showVertices(true);
+		// 		panel.setVisibilityTest(true);
+		// 		panel.setFormatter(formatter);
+		// 		panel.setEdgeColor(EDGE_COLOR);
+		// 		panel.setVertexColor(Color.white);
+		// 		panel.setBackgroundColor(new Color(0f,0f,0f,0f));
 
-				// Use vector instead
-				VectorGraphics2D g2 = new VectorGraphics2D();
+		// 		// Use vector instead
+		// 		VectorGraphics2D g2 = new VectorGraphics2D();
 								
-				// Now the image has to be fitted to the given region
-				panel.fitData();
-				panel.writeVectorImage(g2);
+		// 		// Now the image has to be fitted to the given region
+		// 		panel.fitData();
+		// 		panel.writeVectorImage(g2);
 
-				CommandSequence commands = ((VectorGraphics2D) g2).getCommands();
+		// 		CommandSequence commands = ((VectorGraphics2D) g2).getCommands();
 				
-				String[] elements = {"pdf", "eps", "svg"};
-				for (String ext : elements) {
+		// 		String[] elements = {"pdf", "eps", "svg"};
+		// 		for (String ext : elements) {
 					
-					Processor pdfProcessor = Processors.get(ext);
-					Document doc = pdfProcessor.getDocument(commands, PageSize.A4);
+		// 			Processor pdfProcessor = Processors.get(ext);
+		// 			Document doc = pdfProcessor.getDocument(commands, PageSize.A4);
 					
-					String pngFile = MessageFormat.format(
-							"{0}_{1,number,0}x{2,number,0}_transparent.{3}", coordFile,
-							windowSizes[0], windowSizes[1], ext);
+		// 			String pngFile = MessageFormat.format(
+		// 					"{0}_{1,number,0}x{2,number,0}_transparent.{3}", coordFile,
+		// 					windowSizes[0], windowSizes[1], ext);
 
-					System.out.println("Preparing " + pngFile + "...");
-					try {
-						doc.writeTo(new FileOutputStream(pngFile));
-					} catch (Exception e) {
-						System.out.println("Could not write vector graphics");
-					}
+		// 			System.out.println("Preparing " + pngFile + "...");
+		// 			try {
+		// 				doc.writeTo(new FileOutputStream(pngFile));
+		// 			} catch (Exception e) {
+		// 				System.out.println("Could not write vector graphics");
+		// 			}
 
-					System.out.println("Done.");
-				}
+		// 			System.out.println("Done.");
+		// 		}
 
 				
-			} catch (IOException e) {
-				System.out.println(MessageFormat.format(
-						"Error processing {0}:\n{1}", e.getMessage()));
-			}
-		}
+		// 	} catch (IOException e) {
+		// 		System.out.println(MessageFormat.format(
+		// 				"Error processing {0}:\n{1}", e.getMessage()));
+		// 	}
+		// }
 	}
 
 	private static void generateTransparent(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,
