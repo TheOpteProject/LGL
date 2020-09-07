@@ -39,7 +39,8 @@ function mylglstaticinternet(){
     threads=2
     . $(which env_parallel.bash)
 
-    env_parallel -P ${threads} -n 2 generategraph ::: \
+    ## They are on separate lines, not argument mashing needed
+    env_parallel -P ${threads} generategraph ::: \
             "bview_2020_09	2000"\
             "bview_2019_09	1935"\
             "bview_2018_09	1861"\
