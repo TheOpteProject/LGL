@@ -77,7 +77,7 @@ public class Viewer2D {
 			}
 			if (args.length > 2) {
 				System.out.println("Loading color file " + args[2]);
-				var colorfile = new File(args[2]);
+				File colorfile = new File(args[2]);
 				frame.loadEdgeColorFile(colorfile);
 			}
 		}

@@ -51,6 +51,13 @@
 #     done
 # }
 
+zcat=zcat # start with normal zcat on path
+
+# if we have gzcat (gnu-version), lets use it
+if hash gzcat 2>/dev/null; then
+	zcat=gzcat
+fi
+
 ## Get the current folder and use it for naming
 folder=$(basename $(pwd))
 asas=${folder}.as_as.ncol
@@ -71,9 +78,12 @@ export LC_ALL=C
 ## awk and awk -- reformat into the format we want
 ## sort -n -- a last numerical sort after reformatting
 
+echo "in $(pwd)"
+echo "zcat $@"
+
 echo "Parsing $@ for ASpath-info (i.e. AS -> AS routing)"
-time (zcat $@ | bgpdump -m - | cut -d '|' -f 7 |\
-	  sed -e 's/[{},]/ /g' | get_neighbors | sort -S1G --parallel=24 | uniq -c |\
+time ($zcat $@ | bgpdump -m - | cut -d '|' -f 7 |\
+	  sed -e 's/[{},]/ /g' | ./get_neigh.sh | sort -S1G --parallel=24 | uniq -c |\
 	  awk '{$1=$1};1' | awk '{print $2 " " $3 " " $1}' | sort -n -S1G --parallel=24 > $asas)
 
 ## rough ooutline mapping prefixes
@@ -89,9 +99,9 @@ time (zcat $@ | bgpdump -m - | cut -d '|' -f 7 |\
 ## sort -n -- a last numerical sort after reformatting
 
 echo "Parsing $@ for prefix-info (i.e. AS -> prefix routing)"
-time (zcat $@ | bgpdump -m - | cut -d '|' -f 6-7 |\
+time ($zcat $@ | bgpdump -m - | cut -d '|' -f 6-7 |\
 	  sed "s/|/ /" | awk -F' ' '{print $1 " " $NF}' | awk '{$1=$1};1' |\
-	  sed -e 's/[{},]/ /g' | get_pairs | sort -S1G --parallel=24 | uniq -c |\
+	  sed -e 's/[{},]/ /g' | ./get_pairs.sh | sort -S1G --parallel=24 | uniq -c |\
 	  awk '{print $2 " " $3 " " $1}' | sort -n -S1G --parallel=24 > $preas)
       
 echo "Combining $asas and $preas into $ncol"
