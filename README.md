@@ -30,6 +30,7 @@ A heap of stuff, in no particular order:
 - perl (5+, I think)
 - Java (8 seems to work)
 - Xserver installed for graphical tools (works well under WSL 2 in Windows)
+- Python 3 (there are bash scripts lying around as well, but the python scripts are 3x faster)
 
 # Installation
 
