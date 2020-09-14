@@ -14,6 +14,9 @@ while read a; do
     prefix=$1
     shift
     for pos; do
-        printf "$prefix $pos\n"
+        ## Double check that we are not repeating ourselves
+        if [ "$prefix" != "$pos" ]; then
+            printf "$prefix $pos\n" ;
+        fi
     done
 done

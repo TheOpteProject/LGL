@@ -13,7 +13,8 @@ export runfolder="../testrun"
  . $(which env_parallel.bash)
 
 # Do for september (9) for the last twenty years (2000..2020)
-env_parallel -P ${threads} -n 1 creategraphfromdate ::: {2000..2020} ::: 9
+env_parallel -P ${threads} ./creategraphfromdate.sh {1} {2} ::: {2000..2020} ::: 09
+#env_parallel -P ${threads} ./creategraphfromdate.sh {1} {2} ::: {2000..2002} ::: 09
 
 ## Also generate nice images to scale (hardcoded)
 
