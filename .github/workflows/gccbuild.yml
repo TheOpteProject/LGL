@@ -11,6 +11,4 @@ jobs:
     - uses: actions/checkout@v1
     - name: "Configure and make (C++)"
       run: |
-        cd src
-        ./configure --with-boost=$BOOST_ROOT
-        make 
+        make -C src all
