@@ -39,7 +39,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: "Install Boost"
-      run: sudo apt install libboost-dev-all
+      run: sudo apt install libboost-all-dev
     - name: make
       run: make
     - name: make install
