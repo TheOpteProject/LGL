@@ -9,8 +9,9 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: "Create a simple script"
+    - name: "Run a simple graph"
       run: |
         cd scripts
-        ./creategraphfromurl.sh http://data.ris.ripe.net/rrc00/2000.09/bview.20000901.0610.gz
+        echo Trying to create graph
+        ./creategraphfromdate.sh 2000 09
 
