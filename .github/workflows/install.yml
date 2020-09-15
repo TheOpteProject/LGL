@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:  
-  gccbuild:
+  gcc-build:
     runs-on: ubuntu-latest
     
     steps:
@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - uses: actions/checkout@v1
     - name: "Make one class-file"
       run: |
         echo "Making one class-file"
@@ -32,8 +33,9 @@ jobs:
      
   build:
     runs-on: ubuntu-latest
-    needs: [java-build, gccbuild]
+    needs: [java-build, gcc-build]
     steps:
+    - uses: actions/checkout@v1
     - name: make
       run: make
     - name: make install
@@ -43,6 +45,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+    - uses: actions/checkout@v1
+    - name: "Install everything"
+      run: |
+        echo Running install
+        make install
     - name: "Run a simple graph"
       run: |
         cd scripts
