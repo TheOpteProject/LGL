@@ -20,3 +20,8 @@ install_perl.log
 **/*.1
 src/autom4te.cache
 testrun/bview_*/
+src/lglbreakup
+src/lglfileconvert
+src/lglayout
+src/lglrebuild
+**/*.pyx
