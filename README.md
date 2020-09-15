@@ -46,19 +46,27 @@ should do the trick in the root directory (feel free to create a Makefile).
 
 If your intention is to graph custom stuff, just hack away. Below is how you quite easily
 can make graphs from bgp-dumps. You need a separate folder for each project, due to design
-in the original LGL library. Below follows an example for a graph for a 2001 Internet. Takes 
+in the original LGL library. Below follows an example for a graph for a 2000 Internet. Takes 
 around 10 minutes on a fairly modern computer (8 threads or so) with a decent Internet connection. 
 
+The oneliner which creates a graph, including bootstrapping, from 2000-09-01:
+    
     prompt$ cd scripts/
-    prompt$ ./create_run.sh internet_2001
-    prompt$ cd ../testrun/internet_2001
+    prompt$ ./creategraphfromdate.sh 2000 09
+    prompt$ # doing magic, and creating a graph
+
+The same thing but step by step (if above fails):
+
+    prompt$ cd scripts/
+    prompt$ ./create_run.sh internet_2000
+    prompt$ cd ../testrun/internet_2000
     prompt$ wget http://data.ris.ripe.net/rrc00/2000.09/bview.20000901.0610.gz
     prompt$ ./bootstrap.sh bview.20000901.0610.gz
     prompt$ # doing magic, and creating a graph
-    prompt$ # wby default generating a 2400x2400 png (change run.sh for different resolution)
+    prompt$ # by default generating a 2400x2400 png (change run.sh for different resolution)
     prompt$ # should be a 'internet_2001.png' in 'testrun/internet_2001' if all went well
     
- Or simply (does basically the same as above):
+ Also possible:
  
     prompt$ cd scripts/
     prompt$ ./creategraphfromurl.sh http://data.ris.ripe.net/rrc00/2000.09/bview.20000901.0610.gz
