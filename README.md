@@ -1,6 +1,7 @@
 # Slightly modified LGL 
 
-[![Build Status](https://teamcity.eskaduren.se/app/rest/builds/buildType:(id:Phdeis_BasicRunLgl)/statusIcon.svg)](https://teamcity.eskaduren.se)
+[![Build Status](https://teamcity.eskaduren.se/app/rest/builds/buildType:(id:Phdeis_BasicRunLgl)/statusIcon.svg)](https://teamcity.eskaduren.se) ![Github build all](https://github.com/flindeberg/LGL/workflows/Install%20and%20testrun%20CI/badge.svg)
+
 
 All files distributed with LGL fall under the terms of 
 the GNU General Public License, and are copyright (c) 2002, 2003 Alex Adai.
