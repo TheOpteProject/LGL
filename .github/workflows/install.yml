@@ -52,6 +52,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: "Install Boost"
       run: sudo apt install libboost-all-dev
+    - name: "Install zsh"
+      run: sudo apt install zsh
     - name: "Install everything"
       run: |
         echo Running install
@@ -61,7 +63,7 @@ jobs:
         cd scripts
         echo Trying to create graph
         ./creategraphfromdate.sh 2000 09
-    - name: Upload Example binary
+    - name: Upload graph image
       uses: actions/upload-artifact@v1
       with:
         name: Upload graph
