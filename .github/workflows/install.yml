@@ -11,7 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+    - name: "Boost"
+      run: sudo apt install libboost-dev-all
     - name: "Configure and make (C++)"
       run: |
         make -C src all
@@ -20,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: "Make one class-file"
       run: |
         echo "Making one class-file"
@@ -35,7 +37,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [java-build, gcc-build]
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+    - name: "Install Boost"
+      run: sudo apt install libboost-dev-all
     - name: make
       run: make
     - name: make install
@@ -45,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: "Install everything"
       run: |
         echo Running install
@@ -55,3 +59,8 @@ jobs:
         cd scripts
         echo Trying to create graph
         ./creategraphfromdate.sh 2000 09
+    - name: Upload Example binary
+      uses: actions/upload-artifact@v1
+      with:
+        name: Upload graph
+        path: testrun/bview_2000_09/bview_2000_09_transparent.png
