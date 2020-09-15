@@ -1,4 +1,4 @@
-name: Install CI
+name: Install and testrun CI
 
 on:
   push:
@@ -6,14 +6,45 @@ on:
   pull_request:
     branches: [ master ]
 
-jobs:
-  build:
-
+jobs:  
+  gccbuild:
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v1
+    - name: "Configure and make (C++)"
+      run: |
+        make -C src all
+        
+  java-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: "Make one class-file"
+      run: |
+        echo "Making one class-file"
+        make -C Java src/ImageMaker/GenerateImages.class
+    - name: "Make jarfiles"
+      run: |
+        echo "Running java jarfiles"
+        make -C Java jarfiles
+        :
+     
+  build:
+    runs-on: ubuntu-latest
+    needs: [java-build, gccbuild]
+    steps:
     - name: make
       run: make
     - name: make install
       run: make install
+      
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: "Run a simple graph"
+      run: |
+        cd scripts
+        echo Trying to create graph
+        ./creategraphfromdate.sh 2000 09
