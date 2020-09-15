@@ -34,11 +34,13 @@ A heap of stuff, in no particular order:
 
 # Installation
 
-As the original LGL, i.e. 
+Use the Makefil, i.e.
 
-    prompt$ ./setup.pl -i
+    prompt$ make 
+    prompt$ make install # local install in $(PROJECTDIR)/bin
 
-should do the trick in the root directory (feel free to create a Makefile).
+should do the trick in the root directory (feel free to improve the magic
+`setup.pl -i` script which does a lot of suspect lifting).
 
 # Making Internet graphs
 
