@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: "Boost"
-      run: sudo apt install libboost-all-all
+      run: sudo apt install libboost-all-dev
     - name: "Configure and make (C++)"
       run: |
         make -C src all
