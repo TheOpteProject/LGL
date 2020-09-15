@@ -9,10 +9,12 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: "Testing a simple script"
-      run: echo Hello, world!
+    - name: "Make one class-file"
+      run: |
+        echo "Making one class-file"
+        make -C Java src/ImageMaker/GenerateImages.class
     - name: "Make jarfiles"
       run: |
         echo "Running java jarfiles"
-        make -C Java/ jarfiles
-        echo "Did it work?"
+        make -C Java jarfiles
+        
