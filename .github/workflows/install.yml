@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: "Boost"
-      run: sudo apt install libboost-dev-all
+      run: sudo apt install libboost-all-all
     - name: "Configure and make (C++)"
       run: |
         make -C src all
@@ -50,6 +50,8 @@ jobs:
     needs: build
     steps:
     - uses: actions/checkout@v2
+    - name: "Install Boost"
+      run: sudo apt install libboost-all-dev
     - name: "Install everything"
       run: |
         echo Running install
