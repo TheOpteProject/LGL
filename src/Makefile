@@ -24,7 +24,7 @@ lglfileconvert: lglfileconvert.o
 	$(CPP) -o lglfileconvert lglfileconvert.o $(LIBPATH) $(LIBS)
 
 install: all
-	mv -f lglrebuild lglbreakup lglayout lglfileconvert ../bin/.
+	cp -f lglrebuild lglbreakup lglayout lglfileconvert ../bin/.
 
 .C.o:
 	$(CPP) $(INCPATH) -c $(CPP_FLAGS) $<
