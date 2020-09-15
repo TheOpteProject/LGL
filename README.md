@@ -1,6 +1,6 @@
 # Slightly modified LGL 
 
-[![Build Status](https://teamcity.eskaduren.se/app/rest/builds/buildType:(id:Phdeis_BasicRunLgl)/statusIcon.svg)](https://teamcity.eskaduren.se) ![Github build all](https://github.com/flindeberg/LGL/workflows/Install%20and%20testrun%20CI/badge.svg)
+[![Build Status](https://teamcity.eskaduren.se/app/rest/builds/buildType:(id:Phdeis_BasicRunLgl)/statusIcon.svg)](https://teamcity.eskaduren.se) ![Github build all](https://github.com/flindeberg/LGL/workflows/Build%20and%20install%20CI/badge.svg) ![Github test all](https://github.com/flindeberg/LGL/workflows/Testrun%20CI/badge.svg)
 
 
 All files distributed with LGL fall under the terms of 

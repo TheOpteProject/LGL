@@ -1,4 +1,4 @@
-name: Install and testrun CI
+name: Build and install CI
 
 on:
   push:
@@ -44,28 +44,3 @@ jobs:
       run: make
     - name: make install
       run: make install
-      
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-    - uses: actions/checkout@v2
-    - name: "Install Boost"
-      run: sudo apt install libboost-all-dev
-    - name: "Install other dependencies"
-      run: |
-        sudo apt install zsh bgpdump xz-utils
-    - name: "Install everything"
-      run: |
-        echo Running install
-        make install
-    - name: "Run a simple graph"
-      run: |
-        cd scripts
-        echo Trying to create graph
-        ./creategraphfromdate.sh 2000 09
-    - name: Upload graph image
-      uses: actions/upload-artifact@v1
-      with:
-        name: Upload graph
-        path: testrun/bview_2000_09/bview_2000_09_transparent.png
