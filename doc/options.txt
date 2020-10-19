@@ -1,0 +1,56 @@
+-x An input file that has the node id followed by the position values.
+
+-a An input file that has the node id followed by the position values, denoting the anchor nodes.
+
+-m An input file that has the node id followed by the mass values.
+
+-t The number of threads to spawn. This is capped by 100. If not provided, the value 1 will be used.
+
+-i The maximum number of iterations. 250000 by default.
+
+-s The Special Spring Constant (the value of k in F=-kx for special interactions). 10 by default.
+
+-k The Casual Spring Constant (the value of k in F=-kx for casual interactions). 10 by default.
+
+-r The neighborhood radius for each particle. It defines the interaction range for casual (generally repulsive) interactions. 1 by default.
+
+-T The time step for each iteration. 0.001 by default. This is used as the time interval of force application on each iteration to determine the position adjustment of a particle.
+
+-S The 'radius' of each node. 0.01 by default.
+
+-M The 'mass' of each node. 1 by default.
+
+-R The radius of the outer perimeter. If not provided, the Nth root of the nodes count will be used, where N is the number of dimensions (either 2 or 3).
+
+-W The write interval. This is the number of iterations between consecutive stats dumps. 0 by default, meaning off.
+
+-z Id of the root node you want to use. If not provided, the root node will be attempted to be determined automatically.
+
+-o Path of the output file. If not provided, "lgl.out" will be used.
+
+-l Write out the edge level map, to a file having path <output-file>.edge_levels .
+   Each time this option is provided, it toggles the prior value of this setting of whether to write out the edge level map or not.
+	The output indicates which 'level' each edge is on. The level is determined as the hop number from the root node. 
+
+-e Output the mst used - the tree used to guide the layout, to a file having path <output-file>.mst.lgl .
+
+-O Use original weights. If this option isn't provided, the weights will be generated from negative adjacent vertex count.
+
+-y Layout the tree only.
+
+-I Don't show layout progress, be quiet (kinda)
+
+-q The equilibrium distance. If two particles are closer to each other than this distance, then they will repulse each other. 0.5 by default.
+
+-E Ellipse factors. The format is one or more real numbers, separated from each other by the 'x' character.
+   Each number indicates the stretching factor to use for the corresponding dimension. If the count of the provided factors is less than the count of dimensions,
+	then the last provided factor will be used as the factor for subsequent dimensions too.
+   This is used to stretch the layout by the given factors, resulting in an ellipse-looking image rather than a circle-looking one.
+
+-u Placement distance, which is the distance you want the next level to be placed with respect to the previous level.
+   If this float value is not given, then a formula calculates the placement distance.
+
+-v Placement radius is a measure of the placement density. If not provided, the value 0.1 will be used.
+
+-L Place the leafs close by. This applies to trees more than graphs.
+   Setting this option will place the child vertices very near the parent vertex if all of its children have none themselves.
