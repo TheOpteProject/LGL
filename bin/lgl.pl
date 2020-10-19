@@ -38,7 +38,7 @@ my $INPUTFILE = shift || '';
 # DEFAULT ARGS IN CASE A CONF FILE IS NOT PROVIDED
 
 # The location of all the lgl executables (The bin directory)
-my $LGLDIR = '/home/adai/src/LGL-1.2/bin';
+my $LGLDIR = '/Users/flindeberg/projects/LGL/bin';
 
 # TMP dir needed by program. All results
 # are stored there (total output directory)
@@ -56,7 +56,7 @@ my $TREELAYOUT = 0;          # Layout the MST only ( 1 or 0 )
 my $USEORIGINALWEIGHTS = 0;  # Use the edge weights for MST ( 1 or 0 )
 my $EDGELEVELMAP = 0;        # Output the level of each edge ( 1 or 0 )
 my $OUTPUTMST = 0;           # File Marker for the MST
-my $THREADCOUNT = 1;         # Number of threads 2 spawn ( positive integer )
+my $THREADCOUNT = 1;         # Number of threads to spawn ( positive integer )
 my $ISSILENT = 0;            # Don't show as much output
 my $PLACEMENTDISTANCE = '';  # Set to a float to activate
 my $PLACEMENTRADIUS = '';    # Set to a float to activate (positive)

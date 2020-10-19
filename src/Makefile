@@ -1,6 +1,6 @@
 CPP=c++
 
-CPP_FLAGS=-Wall -O3 -ftemplate-depth-50 -g
+CPP_FLAGS=-std=c++11 -Wall -O3 -ftemplate-depth=100 -g
 
 SOURCES= lglayout.C calcFuncs.C
 OBJECTS= lglayout.o calcFuncs.o
@@ -23,8 +23,8 @@ lglrebuild: lglrebuild.o calcFuncs.o
 lglfileconvert: lglfileconvert.o
 	$(CPP) -o lglfileconvert lglfileconvert.o $(LIBPATH) $(LIBS)
 
-install:
-	mv -f lglrebuild lglbreakup lglayout lglfileconvert ../bin/.
+install: all
+	cp -f lglrebuild lglbreakup lglayout lglfileconvert ../bin/.
 
 .C.o:
 	$(CPP) $(INCPATH) -c $(CPP_FLAGS) $<
@@ -34,3 +34,5 @@ clean:
 
 tidy:
 	rm -f *.o core lglayout lglbreakup lglrebuild lglfileconvert
+
+.PHONY: all clean tidy

@@ -26,6 +26,7 @@
 # Results are printed to STDOUT.
 
 use strict;
+#use Math::Utils qw(:utility); 
 
 my $infile = shift;
 
@@ -37,6 +38,7 @@ loadEdges( $infile , \%edges );
 my %levels;
 getColorsLevel( \%levels , \%edges );
 
+print STDERR "Printing output\n";
 foreach my $e ( sort keys %edges )
 {
     my ($v1,$v2) = split(/_/,$e);
@@ -69,32 +71,35 @@ sub getColorsLevel
 	print STDERR "All edges are same level. Exiting\n";
 	exit;
     }
-    my ($r,$g,$b) = (1.0,1.0,1.0);
-    my $color = 'b';
-    my $dcolor = 3.0/($max-$min+1);
+    # setup the starting color combo
+    my ($r,$g,$b) = (0.0,0.0,1.0);
+    my $color = 'g'; # <- start color to switch (i.e. gradient)
+    my $dcolor = abs(3.0/($max-$min+1));
+    my ($rd,$gd,$bd) = ($dcolor,$dcolor,-$dcolor); # fix with formulas
+    
     for ( my $i=$min; $i<=$max; $i++ )
     {
 	if ( $color eq 'r' ) {
-	    $r -= $dcolor;
-	    if ( $r <= 0.0 ) {
+	    $r += $rd;
+	    if (($r < 0.0) || ($r > 1.0)) {
 		$r = 0.0;
 		print STDERR "At Limit\n";
 	    }
 	}
 	if ( $color eq 'g' ) {
-	    $g -= $dcolor;
-	    if ( $g <= 0.0 ) {
-		$r += $g;
-		$g = 0.0;
-		$color = 'r';
+	    $g += $gd;
+	    if (($g < 0.0) || ($g > 1.0)) {
+		$b += -($b - 1);
+		$g = 1.0;
+		$color = 'b';
 	    }
 	}
 	if ( $color eq 'b' ) {
-	    $b -= $dcolor;
-	    if ( $b <= 0.0 ) {
+	    $b += $bd;
+	    if (($b < 0.0) || ($b > 1.0)) {
 		$g += $b;
 		$b = 0.0;
-		$color = 'g';
+		$color = 'r';
 	    }
 	}
 	push @{$c->{$i}} , ($r,$g,$b);

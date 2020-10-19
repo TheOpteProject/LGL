@@ -13,3 +13,15 @@ tags
 /testrun/test-June-10/tmp
 /testrun/test-June-10/*.tmp
 /testrun/test-June-10/*.out
+**/*.class
+install_perl.log
+**/*.Po
+**/*.0
+**/*.1
+src/autom4te.cache
+testrun/bview_*/
+src/lglbreakup
+src/lglfileconvert
+src/lglayout
+src/lglrebuild
+**/*.pyx

@@ -75,6 +75,11 @@ public class Viewer2D {
 				System.out.println("Loading coords file " + args[1]);
 				frame.loadCoordsFile(new File(args[1]));
 			}
+			if (args.length > 2) {
+				System.out.println("Loading color file " + args[2]);
+				File colorfile = new File(args[2]);
+				frame.loadEdgeColorFile(colorfile);
+			}
 		}
 	}
 

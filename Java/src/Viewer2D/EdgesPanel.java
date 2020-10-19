@@ -138,6 +138,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	public EdgesPanel(Edge[] edges, Vertex[] vertices, int xWindowSize,
 			int yWindowSize) {
 		super();
+		
 		System.out.println("EdgesPanel()"); // TODO: deleteme
 		this.xWindowSize = xWindowSize;
 		this.yWindowSize = yWindowSize;
@@ -163,7 +164,10 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		vertexColorMap = new HashMap();
 		edgeColor = Color.black;
 		fontColor = Color.blue;
-		backgroundColor = Color.white;
+		// Lets start with transparent
+		//backgroundColor = Color.white;
+		// transparent white
+		backgroundColor = new Color(0f,0f,0f,0f);
 		vertexColor = Color.red;
 
 		// Matrices need for zooming moving etc
@@ -190,21 +194,31 @@ public class EdgesPanel extends JPanel implements MouseListener,
 
 	@Override
 	public void repaint() {
-		System.out.println("repaint()"); // TODO: deleteme
+		//System.out.println("repaint()"); // TODO: deleteme
 		paintImage();
 		super.repaint();
 	}
 	
+	// Paint a bitmap image
 	public void paintImage(BufferedImage bufferedImage) {
 		System.out.println("paintImage(" + bufferedImage + ")");
 		Graphics2D g2 = (Graphics2D) bufferedImage.getGraphics();
 		
 		Rectangle2D.Double rect = new Rectangle2D.Double(0, 0,
 				bufferedImage.getWidth(), bufferedImage.getHeight());
-		// g2.setPaint(backgroundColor); 
+		// g2.setPaint(backgroundColor);
+		System.out.println(" Getting background color '" + backgroundColor + "'");
+		System.out.println(" Getting background color alpha '" + backgroundColor.getTransparency() + "'");
+
 		g2.setColor(backgroundColor);
+		g2.setPaint(backgroundColor);
 		g2.fill(rect);
 	
+		paintImage(g2);
+	}
+
+	/** Used by vector path */
+	private void paintImage(Graphics2D g2){
 		setRenderingHints(g2);
 
 		if (edges != null) {
@@ -218,8 +232,8 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void paintImage() {
-		System.out.println("generateImage() " + paintImage + " "
-				+ bufferedImage);
+		//System.out.println("generateImage() " + paintImage + " "
+		//		+ bufferedImage);
 		// SESS: Sanity check
 		// Seems that inherited constructor calls repaint().
 		// Until I understand why lets keep this check.
@@ -234,7 +248,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void paintNonColoredEdges(Graphics g) {
-		System.out.println("paintNonColoredEdges() " + g);
+		//System.out.println("paintNonColoredEdges() " + g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(edgeColor);
 		for (Edge edge : edges) {
@@ -252,7 +266,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 
 	@SuppressWarnings("unchecked")
 	public void paintColoredEdges(Graphics g) {
-		System.out.println("paintColoredEdges() " + g);
+		//System.out.println("paintColoredEdges() " + g);
 		Graphics2D g2 = (Graphics2D) g;
 		for (Map.Entry<Edge, Color> e : ((Map<Edge, Color>) edgeColorMap)
 				.entrySet()) {
@@ -269,7 +283,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void paintNonColoredVertices(Graphics g) {
-		System.out.println("paintNonColoredVertices() " + g);
+		//System.out.println("paintNonColoredVertices() " + g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(vertexColor);
 
@@ -289,7 +303,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 
 	@SuppressWarnings("unchecked")
 	public void paintColoredVertices(Graphics g) {
-		System.out.println("paintColoredVertices() " + g);
+		//System.out.println("paintColoredVertices() " + g);
 		Graphics2D g2 = (Graphics2D) g;
 		for (Map.Entry<Vertex, Color> e : ((Map<Vertex, Color>) vertexColorMap)
 				.entrySet()) {
@@ -481,10 +495,11 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		if (statusBar != null) {
 			statusBar.setText("Writing " + f.getAbsolutePath() + "...");
 		}
+
 		Graphics2D g = (Graphics2D) getGraphics();
 		if (i == null) {
 			i = g.getDeviceConfiguration().createCompatibleImage(xWindowSize,
-					yWindowSize, BufferedImage.TYPE_INT_RGB);
+					yWindowSize, BufferedImage.TYPE_INT_ARGB);
 		}
 		// TODO: SESS - check is OK
 		paintImage(i);
@@ -498,6 +513,13 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		if (statusBar != null) {
 			statusBar.setText("Done.");
 		}
+	}
+
+
+	public void writeVectorImage(Graphics2D i)
+	{
+		// Just try paint it		
+		paintImage(i);
 	}
 
 	// Produce an image of a given region
