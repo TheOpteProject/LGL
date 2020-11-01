@@ -231,12 +231,21 @@ class Amutex {
  public:
 
    Amutex( const pthread_mutex_t& m ) : mutex_(m) { }
-   Amutex( ) : mutex_() {  }
+   Amutex()
+     : mutex_()
+   {
+     const int err = pthread_mutex_init( &mutex_, nullptr );
+     if ( err != 0 )
+       throw std::runtime_error( "Mutex initialization failed with error code " + std::to_string( err ) );
+   }
 
    void copy( const Amutex& m ) { mutex_=m.mutex_; }
 
    int lock() { 
-     return pthread_mutex_lock(&mutex_); 
+     const int ret = pthread_mutex_lock(&mutex_); 
+     if ( ret )
+       std::cerr << "pthread_mutex_lock returned nonzero: " << ret << '\n';
+     return ret;
    }
 
    int trylock() { 

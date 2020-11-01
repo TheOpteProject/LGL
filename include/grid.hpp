@@ -494,7 +494,8 @@ void _place_particle( Particle& p , Grid& g )
 {
   typename Grid::voxel_type * vox = g.getVoxelFromPosition( p.X() );
   if ( vox == 0 ) { return _placement_error( p , g , "Entry Is Outside Of Grid" ); }
-  vox->lock();
+  if ( vox->lock() != 0 )
+    return _placement_error( p , g , "Failed to acquire lock on voxel" );
   vox->insert( p );
   vox->unlock();
   p.container( vox->index() );
