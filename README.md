@@ -6,7 +6,7 @@
 All files distributed with LGL fall under the terms of 
 the GNU General Public License, and are copyright (c) 2002, 2003 Alex Adai.
 
-Changes dnd updates copyright (c) 2004-2020 Barrett Lyon
+Changes and updates copyright (c) 2004-2020 Barrett Lyon
 
 Addtional changes done in this fork copyright (c) 2019, 2020 Fredrik Lindeberg
 
@@ -98,7 +98,7 @@ A short disclaimer; the graph is only as good as your data. The `bootstrap` scri
 User guide to LGL, helped me figure out some important things:
 http://clairemcwhite.github.io/lgl-guide/
 
-Previous README data:
+LGL README:
 https://github.com/TheOpteProject/LGL/
 
 Getting up to speed on Internet routing:
@@ -242,7 +242,7 @@ code up-to-date.
 - UI fixes for lglview.jar
 - The original code uses Jama, the old classes were included with the software package, we've now changed that to use the JAR from Jama RI.
 
-Cheers 
+Cheers, 
 blyon@opte.org
 
 
