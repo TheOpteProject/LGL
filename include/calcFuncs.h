@@ -95,6 +95,12 @@ bool doesVertexHaveAnyChildren( Graph_t& G, Graph_t::vertex_descriptor v , out_g
 
 EllipseFactors parseEllipseFactors( const std::string& optionStr );
 
+// Attempts to initialize any particle positions that are not initialized yet, by way of interpolation from its neighbors which have initialized positions already, if any.
+// This is done by picking the "center point" of those neighbors' positions to be used as the initial position for a particle that wasn't initialized before.
+// The process continues until either all particles have initial positions properly set, or no further progress can be made (due to isolated and totally uninitialized islands).
+// Also, the progress of the stages and the final accomplishment is printed to stdout.
+void interpolateUninitializedPositions( PCChaperone& chaperone, const Graph_t::boost_graph& g );
+
 //------------------------------------------------
 
 #endif

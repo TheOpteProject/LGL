@@ -24,6 +24,7 @@
 //----------------------------------------------------
 
 #include <iostream>
+#include <algorithm>
 #include <assert.h>
 #include "fixedVec.hpp"
 #include "aPthread.hpp"
@@ -72,6 +73,11 @@ class Particle {
 
   bool isAnchor() const { return isAnchor_; }
   void markAnchor() { isAnchor_ = true; }
+
+  bool isPositionInitialized() const noexcept {
+	  // TODO 'initialize' and compare against a big number instead of 0?
+	  return !std::all_of( X().begin(), X().end(), [] ( float x ) { return x == 0.f; } );
+  }
 
   bool collisionCheck( const Particle_& vp ) const  {
     return ( x.distance(vp.x) <= (radius()+vp.radius()) );

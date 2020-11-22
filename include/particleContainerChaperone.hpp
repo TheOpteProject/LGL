@@ -150,19 +150,19 @@ public:
 						  streams_in[_X_FILE__] >> pos_[jj];
 					  }
 					  pc_[ii].X(pos_);
-					  return 1;
+					  return true;
 				  }
 			  }
-			  PCC_::orderingError(file_in[_X_FILE__]);
+			  // Warn that `id` found in initial coordinates file is not found in the main input file? That could be too noisy in some use cases...
+			  return false;
 		  }
 		  for ( size_type ii=0; ii<dimension; ++ii) {
 			  streams_in[_X_FILE__] >> pos_[ii];
 		  }
 		  p.X(pos_);
-		  return 1;
-	  } else {
-		  return 0;
+		  return true;
 	  }
+	  return false;
   }
 
   bool setXFromAnchors( Particle& p, const std::string& id2check )

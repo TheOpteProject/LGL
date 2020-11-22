@@ -164,6 +164,8 @@ try
   chaperone.initRadius(nodeSizeRadius);
   chaperone.posOutFile( outfile );
   chaperone.initAllParticles(); 
+  if ( initPosFile )
+	  interpolateUninitializedPositions( chaperone, G.boostGraph() );	// without this the_internet's results become unacceptably stretched and ugly
   cout << "Done." << endl;
 
   cout << "Initializing grid and placing particles..." << flush;

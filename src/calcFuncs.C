@@ -566,3 +566,41 @@ EllipseFactors parseEllipseFactors( const std::string& optionStr )
 }
 
 //----------------------------------------------------------
+
+void interpolateUninitializedPositions( PCChaperone& chaperone, const Graph_t::boost_graph& g )
+{
+	std::size_t	num_uninitialized_positions_still, num_uninitialized_positions_before;
+	do {
+		num_uninitialized_positions_before = num_uninitialized_positions_still = 0;
+		for ( std::size_t ii = 0; ii < chaperone.pc_.size(); ++ii ) {
+			if ( !chaperone.pc_[ii].isPositionInitialized() ) {
+				++num_uninitialized_positions_before;
+				std::size_t count_initialized_neighbors = 0;
+				Graph_t::out_edge_iterator eb, ee;
+				for ( tie( eb, ee ) = out_edges( ii, g ); eb != ee; ++eb ) {
+					const auto src = source( *eb, g ), tgt = target( *eb, g );
+					assert( src == ii || tgt == ii );
+					const auto other = src == ii ? tgt : src;
+					if ( chaperone.pc_[other].isPositionInitialized() ) {
+						++count_initialized_neighbors;
+						for ( std::size_t dim = 0; dim < chaperone.pc_[ii].X().size(); ++dim )
+							chaperone.pc_[ii].x[dim] += chaperone.pc_[other].X()[dim];
+					}
+				}
+				if ( count_initialized_neighbors )
+					for ( float &coord : chaperone.pc_[ii].x )
+						coord /= count_initialized_neighbors;
+				else
+					++num_uninitialized_positions_still;
+			}
+		}
+		cout << "\nOut of " << num_uninitialized_positions_before << " uninitialized positions that had remained, "
+			  << num_uninitialized_positions_before - num_uninitialized_positions_still << " have just been interpolated";
+		// until either finished or there is no more progress being made
+	} while ( num_uninitialized_positions_still > 0 && num_uninitialized_positions_still < num_uninitialized_positions_before );
+
+	if ( num_uninitialized_positions_still )
+		cout << "\nThere are " << num_uninitialized_positions_still << " nodes that are disconnected from any nodes which had their positions initialized!" << std::endl;
+	else
+		cout << "\nInterpolation of uninitialized positions completed successfully." << std::endl;
+}

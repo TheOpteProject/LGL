@@ -1,5 +1,9 @@
 tags
+tagsfile
 *.o
+.*.un~
+.*.swp
+.swp
 /bin/lglayout2D
 /bin/lglayout3D
 /bin/lglbreakup
