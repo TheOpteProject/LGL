@@ -154,6 +154,9 @@ public:
 				  }
 			  }
 			  // Warn that `id` found in initial coordinates file is not found in the main input file? That could be too noisy in some use cases...
+			  float ignored;
+			  for ( size_type ii=0; ii<dimension; ++ii)
+				  streams_in[_X_FILE__] >> ignored;
 			  return false;
 		  }
 		  for ( size_type ii=0; ii<dimension; ++ii) {
