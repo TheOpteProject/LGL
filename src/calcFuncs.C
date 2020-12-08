@@ -616,8 +616,13 @@ void interpolateUninitializedPositions( PCChaperone& chaperone, const Graph_t::b
 		// until either finished or there is no more progress being made
 	} while ( num_uninitialized_positions_still > 0 && num_uninitialized_positions_still < num_uninitialized_positions_before );
 
-	if ( num_uninitialized_positions_still )
-		cout << "\nThere are " << num_uninitialized_positions_still << " nodes that are disconnected from any nodes which had their positions initialized!" << std::endl;
+	if ( num_uninitialized_positions_still ) {
+		cout << "\nThere are " << num_uninitialized_positions_still << " nodes that are DISCONNECTED from any nodes which had their positions initialized!\nTHOSE NODES ARE:\n";
+		for ( std::size_t ii = 0; ii < chaperone.pc_.size(); ++ii )
+			if ( !chaperone.pc_[ii].isPositionInitialized() )
+				cout << '\t' << chaperone.pc_[ii].id() << '\n';
+		cout << std::endl;
+	}
 	else
 		cout << "\nInterpolation of uninitialized positions completed successfully." << std::endl;
 }
