@@ -40,73 +40,64 @@ public:
   enum { dimension = Particle::dimension };
   typedef Particle particle_type;
   typedef typename particle_type::precision precision;
-  typedef unsigned int size_type;
-  typedef Particle* iterator;
+  using container_type = std::vector< Particle >;
+  using size_type = typename container_type::size_type;
+  using iterator = typename container_type::iterator;
 
  protected:
-  size_type size_;
-  Particle * particles;
-  precision avg_temp;
-  precision avg_dx;
+  container_type particles_;
+  precision avg_temp = 0;
+  precision avg_dx = 0;
 
  public:
   vector<string> ids; // This will hold the names
 
   void initParticles() {
-    for ( size_type ii=0; ii<size_; ++ii) {
-      particles[ii].index(ii);
-      particles[ii].container(-1);
+    for ( size_type ii=0; ii<size(); ++ii) {
+      particles_[ ii ].index( ii );
     }
-  }
-
-  void initVals() { 
-    size_=0; particles=0;
   }
 
  public:
-  ParticleContainer(){ PC_::initVals(); }
-  ParticleContainer( size_type s ) {
-     PC_::initVals(); PC_::resize(s); PC_::initParticles();
+  ParticleContainer() = default;
+
+  explicit ParticleContainer( size_type s ) {
+     PC_::resize(s); PC_::initParticles();
   }
 
   void resize (size_type s) {
+	  const size_type old_size = size();
     ids.resize(s);
-    if ( particles==0 ) { particles = new Particle[s]; assert(particles); }
-    else {
-      Particle * temp = new Particle[s]; assert(particles);
-      for ( size_type ii=0; ii<size_; ++ii ){ temp[ii]=particles[ii]; }
-      particles=temp; temp=0;
-    }
-    size_=s;
+	 particles_.resize( s );
+	 for ( size_type ii = old_size; ii < s; ++ii ) {
+		 particles_[ii].index( ii );
+		 particles_[ii].container( -1 );
+	 }
+  }
+
+  void erase( size_type index )
+  {
+	  particles_.erase( particles_.begin() + index );
+	  ids.erase( ids.begin() + index );
+	  for ( size_type ii = index; ii < size(); ++ii ) {
+		  particles_[ii].index( ii );
+		  particles_[ii].container( -1 );
+	  }
   }
   
-  iterator begin() { return &particles[0]; }
-  iterator end() { return &particles[size_]; }
+  iterator begin() noexcept { return particles_.begin(); }
+  iterator end() noexcept { return particles_.end(); }
 
   precision temp() const { return avg_temp; }
   precision dx() const { return avg_dx; }
-  size_type size() const { return size_; }
-
-  void copy( const PC_& pc ) {
-    if ( *this == pc ) return;
-    delete [] particles; particles=0; PC_::resize(size_);
-    for ( size_type ii=0; ii<size_; ++ii) {
-      particles[ii]=pc.particles[ii];
-    }
-  }
-
-  PC_& operator= ( const PC_& pc ) { PC_::copy(pc); return *this; }
+  size_type size() const { return particles_.size(); }
 
   bool operator== ( const PC_& pc ) const {
-    if ( pc.size_ != size_ ) return 0;
-    for ( size_type ii=0; ii<size_; ++ii) {
-      if ( particles[ii] != pc.particles[ii] ) return 0;
-    } 
-    return 1;
+	  return particles_ == pc.particles_;
   }
 
   Particle& particle ( size_type entry ) {
-    return particles[entry];
+    return particles_[ entry ];
   }
 
   Particle& operator[] ( size_type entry ) {
@@ -114,14 +105,12 @@ public:
   }
   
   void print( std::ostream& o = std::cout ) const {
-    for (size_type ii=0; ii<size_; ++ii) {
+    for ( size_type ii = 0; ii < size(); ++ii ) {
       o << ids[ii] << '\n'; 
-      particles[ii].print(o);
+      particles_[ ii ].print( o );
     }
   }
   
-  virtual ~ParticleContainer(){ delete [] particles; }
-
 /*    friend std::ostream& operator<< ( std::ostream& o, const PC_& p ); */
 
 };

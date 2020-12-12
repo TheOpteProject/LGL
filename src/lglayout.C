@@ -83,11 +83,12 @@ try
   bool doesWriteLogFile = true;
   bool placeLeafsClose = false;
   bool isSilent = false; // Show progress
+  bool disregardDisconnectedNodes = false;
 
   timer.max(MAXITER);
   timer.timeStep(PART_TIME_STEP);
 
-  while ( (optch = getopt(argc,argv,"x:a:t:m:M:i:s:r:k:T:R:S:W:z:o:leOyu:v:Iq:E:L")) != -1 )
+  while ( (optch = getopt(argc,argv,"x:a:t:m:M:i:s:r:k:T:R:S:W:z:o:leOyu:v:Iq:E:L:D")) != -1 )
     {
       switch (optch) 
         {
@@ -116,6 +117,7 @@ try
 	case 'q': eqDistance = atof(optarg); break;
 	case 'E': ellipseFactors = parseEllipseFactors(optarg); break;
 	case 'L': placeLeafsClose = true; break;
+	case 'D': disregardDisconnectedNodes = true; break;
 	default : cerr << "Bad option -\t" << (char) optch 
 		       << '\n'; exit(EXIT_FAILURE);
         }
@@ -165,7 +167,7 @@ try
   chaperone.posOutFile( outfile );
   chaperone.initAllParticles(); 
   if ( initPosFile )
-	  interpolateUninitializedPositions( chaperone, G.boostGraph() );	// without this the_internet's results become unacceptably stretched and ugly
+	  interpolateUninitializedPositions( chaperone, G.boostGraph(), disregardDisconnectedNodes );	// without this call the_internet's results become unacceptably stretched and ugly
   cout << "Done." << endl;
 
   cout << "Initializing grid and placing particles..." << flush;

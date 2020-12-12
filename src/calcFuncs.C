@@ -567,7 +567,7 @@ EllipseFactors parseEllipseFactors( const std::string& optionStr )
 
 //----------------------------------------------------------
 
-void interpolateUninitializedPositions( PCChaperone& chaperone, const Graph_t::boost_graph& g )
+void interpolateUninitializedPositions( PCChaperone& chaperone, const Graph_t::boost_graph& g, bool remove_disconnected_nodes )
 {
 	std::size_t	num_uninitialized_positions_still, num_uninitialized_positions_before;
 #if 0
@@ -621,6 +621,12 @@ void interpolateUninitializedPositions( PCChaperone& chaperone, const Graph_t::b
 		for ( std::size_t ii = 0; ii < chaperone.pc_.size(); ++ii )
 			if ( !chaperone.pc_[ii].isPositionInitialized() )
 				cout << '\t' << chaperone.pc_[ii].id() << '\n';
+		if ( remove_disconnected_nodes ) {
+			cout << "Removing them from the graph before further processing...\n";
+			for ( std::size_t ii = chaperone.pc_.size(); ii > 0; --ii )
+				if ( !chaperone.pc_[ii - 1].isPositionInitialized() )
+					chaperone.pc_.erase( ii - 1 );
+		}
 		cout << std::endl;
 	}
 	else

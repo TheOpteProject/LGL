@@ -54,3 +54,7 @@
 
 -L Place the leafs close by. This applies to trees more than graphs.
    Setting this option will place the child vertices very near the parent vertex if all of its children have none themselves.
+
+-D Remove from processing the uninitialized-position nodes that are disconnected from the larger graph,
+   even if those nodes are connected to each other between themselves.
+   Currently only supported if the -x option is provided too, otherwise will have no effect.

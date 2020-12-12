@@ -99,7 +99,7 @@ EllipseFactors parseEllipseFactors( const std::string& optionStr );
 // This is done by picking the "center point" of those neighbors' positions to be used as the initial position for a particle that wasn't initialized before.
 // The process continues until either all particles have initial positions properly set, or no further progress can be made (due to isolated and totally uninitialized islands).
 // Also, the progress of the stages and the final accomplishment is printed to stdout.
-void interpolateUninitializedPositions( PCChaperone& chaperone, const Graph_t::boost_graph& g );
+void interpolateUninitializedPositions( PCChaperone& chaperone, const Graph_t::boost_graph& g, bool remove_disconnected_nodes );
 
 //------------------------------------------------
 

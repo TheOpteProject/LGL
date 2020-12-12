@@ -46,7 +46,7 @@ class Particle {
   typedef FixedVec<prec_,dimension> vec_type;
 
  protected:
-  long container_;  // This is the number of the container
+  long container_ = -1;  // This is the number of the container
                     // the particle resides in.
   prec_ radius_; // Particle is spherical/circular
   prec_ mass_;
