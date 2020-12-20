@@ -23,6 +23,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
 
+#include "thread_pool.hpp"
 #include "particleInteractionHandler.hpp"
 #include "calcFuncs.h"
 
@@ -183,6 +184,16 @@ void beginSimulation( ThreadContainer& threads ,
   long threadCount = threads.size();
   unsigned int currentLevel = 1;
 
+  thread_pool threadpool( threadCount );
+  std::vector< std::future< void > > futures;
+  futures.reserve( threadCount );
+
+  const auto wait_for_futures = [&futures] {
+		for ( auto &f : futures )
+			f.get();
+		futures.clear();
+  };
+
   while( currentLevel <= totalLevels ) {
 
     // Place and initialize the next layer of the graph
@@ -199,7 +210,7 @@ void beginSimulation( ThreadContainer& threads ,
     prec_t avgPrevious = 0.0;
     prec_t dx = 10000000.; 
     int iterationCtr = 0; 
-  
+
     do { 
 
       // Repulsive terms
@@ -207,29 +218,33 @@ void beginSimulation( ThreadContainer& threads ,
 	threadArgs[ii].currentLevel = currentLevel;
 	threadArgs[ii].nodeHandler->springConstant( threadArgs[ii].casualSpringConstant );
 	threadArgs[ii].nodeHandler->eqDistance( threadArgs[ii].nbhdRadius );
-	threads[ii].create( calcInteractions , 
-			    static_cast<void *>(&threadArgs[ii]) );
-      } threads.wait();
+	futures.push_back( threadpool.run( calcInteractions , 
+			    static_cast<void *>(&threadArgs[ii]) ) );
+      }
+		wait_for_futures();
 
       // Attractive terms
       for ( long ii=0; ii<threadCount; ++ii ) {
 	threadArgs[ii].nodeHandler->springConstant( threadArgs[ii].specialSpringConstant );
 	threadArgs[ii].nodeHandler->eqDistance( threadArgs[ii].eqDistance );
-	threads[ii].create( onlyEdgeInteractions , 
-			    static_cast<void *>(&threadArgs[ii]) );
-      } threads.wait();
+	futures.push_back( threadpool.run( onlyEdgeInteractions , 
+			    static_cast<void *>(&threadArgs[ii]) ) );
+      }
+		wait_for_futures();
 
       // Integrate for next time step
       for ( long ii=0; ii<threadCount; ++ii ) {
-	threads[ii].create( integrateParticles ,
-			    static_cast<void *>(&threadArgs[ii]) ); 
-      } threads.wait();
+			futures.push_back( threadpool.run( integrateParticles ,
+			    static_cast<void *>(&threadArgs[ii]) ) ); 
+      }
+		wait_for_futures();
       
       // Collect stats for progress
       for ( long ii=0; ii<threadCount; ++ii ) {
-	threads[ii].create( collectEdgeStats , 
-			    static_cast<void *>(&threadArgs[ii]) );
-      } threads.wait();
+	futures.push_back( threadpool.run( collectEdgeStats , 
+			    static_cast<void *>(&threadArgs[ii]) ) );
+      }
+		wait_for_futures();
 
       prec_t dxNew = collectOutput( &threadArgs[0] , chaperone ); 
       if ( ! silentOutput ) {
