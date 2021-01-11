@@ -22,7 +22,7 @@
 //------------------------------------------------
 
 using namespace boost;
-typedef adjacency_list< listS , vecS , directedS > out_graph;
+typedef adjacency_list< vecS, vecS, directedS > out_graph;
 
 //------------------------------------------------
 
