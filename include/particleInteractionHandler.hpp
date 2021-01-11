@@ -51,6 +51,7 @@ public:
   precision timeStep_;
   precision springConstant_;
   precision eqDistance_;
+  precision eqDistanceSquared_ = 0;	// just for optimization
   precision forceConstraint_;
   precision noiseAmplitude_;
   EllipseFactors ellipseFactors_;
@@ -89,7 +90,9 @@ public:
 
   void initVars() {
     timeStep_=0; springConstant_=0;
-    eqDistance_=0; id_=0;
+    eqDistance_ = 0;
+    eqDistanceSquared_ = 0;
+    id_ = 0;
     forceConstraint_=0;
   }
 
@@ -102,7 +105,8 @@ public:
   void copy ( const PIH_& pi ) {
     timeStep_=pi.timeStep_;
     springConstant_=pi.springConstant_;
-    eqDistance_=pi.eqDistance_;
+    eqDistance_ = pi.eqDistance_;
+    eqDistanceSquared_ = pi.eqDistanceSquared_;
     noiseAmplitude_=pi.noiseAmplitude_;
     id_=pi.id_;
   }
@@ -117,7 +121,11 @@ public:
   void springConstant( precision k ) { springConstant_=k; }
 
   precision eqDistance() const { return eqDistance_; }
-  void  eqDistance( precision e )  { eqDistance_=e; }
+  void  eqDistance( precision e )
+  {
+	  eqDistance_ = e;
+	  eqDistanceSquared_ = sqr( e );
+  }
 
   void forceLimit( precision v ) { forceConstraint_=v; }
   precision forceLimit() const { return forceConstraint_; }
@@ -162,8 +170,8 @@ public:
   }
 
   void interaction( Particle& p1 , Particle& p2 ) const {
-    if ( euclideanDistance( p1.X().begin() , p1.X().end() , p2.X().begin() ) <
-	 eqDistance_ ) {
+    if ( euclideanDistanceSquared( p1.X().begin(), p1.X().end(), p2.X().begin() ) <
+	 eqDistanceSquared_ ) {
       springRepulsiveInteraction( p1 , p2 );
     }
   }

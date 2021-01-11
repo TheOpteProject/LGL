@@ -134,14 +134,20 @@ double magnitude( Iterator1 begin , Iterator1 end )
 //-------------------------------------------
 
 template < typename Iterator  >
-double euclideanDistance( Iterator begin1, Iterator end1, Iterator begin2 )
+double euclideanDistanceSquared( Iterator begin1, Iterator end1, Iterator begin2 )
 { 
   double d = 0;
   for ( ; begin1!=end1; ++begin1, ++begin2 ) {
     double dx = *begin2 - *begin1;
     d += dx * dx;
   }
-  return sqrt(d);
+  return d;
+}
+
+template < typename Iterator  >
+double euclideanDistance( Iterator begin1, Iterator end1, Iterator begin2 )
+{ 
+  return sqrt( euclideanDistanceSquared( begin1, end1, begin2 ) );
 }
 
 //-------------------------------------------

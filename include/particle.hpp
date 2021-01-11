@@ -80,7 +80,7 @@ class Particle {
   }
 
   bool collisionCheck( const Particle_& vp ) const  {
-    return ( x.distance(vp.x) <= (radius()+vp.radius()) );
+    return x.distanceSquared( vp.x ) <= sqr( radius() + vp.radius() );
   }
 
   //  void incInteractionCtr( unsigned int i ) { interactionCtr_+=i; }

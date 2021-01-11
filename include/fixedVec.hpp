@@ -28,6 +28,12 @@
 
 //----------------------------------------------------
 
+template < typename T >
+inline auto sqr( T t ) -> decltype( t * t )
+{
+	return t * t;
+}
+
 template < typename prec_ , unsigned int dimension_ >
 class FixedVec {
 
@@ -96,7 +102,7 @@ class FixedVec {
   prec_ magnitudeSquared() const {
     prec_ mag=0;
     for ( size_type ii=0; ii<dimension_; ++ii)
-      mag += orig[ii]*orig[ii];
+      mag += sqr( orig[ii] );
     return mag;
   }
 
@@ -108,7 +114,7 @@ class FixedVec {
     prec_ distance=0;
     for ( size_type ii=0; ii<dimension_; ++ii) {
       prec_ dx = orig[ii]-p[ii]; 
-      distance += dx*dx;
+      distance += sqr( dx );
     } 
     return distance;
   }
