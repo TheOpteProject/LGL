@@ -22,7 +22,7 @@
 #define _VOXEL_HPP_
 
 #include <iostream>
-#include <set>
+#include <unordered_set>
 #include "cube.hpp"
 #include "aPthread.hpp"
 
@@ -38,7 +38,7 @@ class Voxel : public Cube< typename Occupant::precision ,
 {
 
  private:
-  typedef typename std::set< Occupant * > OL_;
+  typedef typename std::unordered_set< Occupant * > OL_;
   typedef Voxel< Occupant > Voxel_;
   typedef Cube< typename Occupant::precision , 
 		Occupant::dimension > Cube_;
