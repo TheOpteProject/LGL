@@ -147,15 +147,17 @@ public:
   precision noiseAmplitude() const { return noiseAmplitude_; }
   
   void addNoise( Particle& p1 ) const {
-    p1.lock();
-    precision factor = 1.0;
+    precision factor = noiseAmplitude_;
+    typename Particle::vec_type noise;
+    constexpr precision divisor = RAND_MAX + 1.0;
+    constexpr int rand_half = ( RAND_MAX + 1u ) / 2;
     for ( unsigned d=0; d<dimension; ++d ) {
-      if ( (((precision)std::rand()) / ((precision)RAND_MAX+1.0)) < .5 ) {
-	factor *= -1;
-      }
-      p1.f[d] += factor * noiseAmplitude_ * (((precision)std::rand()) /
-					     ((precision)RAND_MAX+1.0));
+      if ( std::rand() < rand_half )
+         factor = -factor;
+      noise[d] = factor * (((precision)std::rand()) / divisor);
     }    
+    p1.lock();
+    p1.add2F( noise );
     p1.unlock();
   }
 
@@ -198,7 +200,7 @@ public:
 
     const precision magx1x2 = x1.distance( x2 );
     const precision sepFromIdeal = ( magx1x2 - eqDistance_ );
-    const precision scale = -1.0 * springConstant_ * sepFromIdeal / magx1x2;
+    const precision scale = -springConstant_ * sepFromIdeal / magx1x2;
 
     vec_type f_;
     vec_type fm1_;
@@ -210,7 +212,7 @@ public:
 #endif
       precision f = dx * scale;
       f_[ii] = f;
-      fm1_[ii] = -1.0*f;
+      fm1_[ii] = -f;
     }
 
 //     cout << "d: " << magx1x2 << "\tsep: " << sepFromIdeal << "\tSc: " 
