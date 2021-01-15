@@ -257,7 +257,7 @@ void writeResults( const Mol& m, const EllipseFactors& ellipseFactors, const cha
 bool checkMoleculeAgainstTable( const Mol& m , EDTable& table )
 { 
   typedef Mol::size_type size_type;
-  typedef EDTable::ResultList EL;
+  //typedef EDTable::ResultList EL;
 
   for ( size_type ii=0; ii<m.size(); ++ii )
     {

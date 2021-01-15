@@ -44,7 +44,6 @@ private:
 
   template < typename t1 , typename t2 >
   t2 findEntryInMap( const std::map<t1,t2> * m , const t1& t ) const
-    throw (std::invalid_argument)
   {
     typename std::map<t1,t2>::const_iterator i = m->find( t );
     if ( i == m->end() ) { throw std::invalid_argument("mutualMap Find Failed"); }
@@ -102,12 +101,12 @@ public:
     return i != latter2former.end();
   }
 
-  former findFormer( const latter& l ) const throw (std::invalid_argument)
+  former findFormer( const latter &l ) const
   {
     return findEntryInMap( &latter2former , l );
   }
 
-  latter findLatter( const former& f ) const throw (std::invalid_argument)
+  latter findLatter( const former &f ) const
   {
     return findEntryInMap( &former2latter , f );
   }

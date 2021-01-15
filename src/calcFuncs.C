@@ -62,7 +62,6 @@ void * calcInteractions ( void * arg_ )
 void * integrateParticles ( void * arg_ )
 {
   typedef Graph_t::vertex_iterator Vi;
-  typedef Graph_t::out_edge_iterator Ei;
   //cout << "integrateParticles" << endl;
   ThreadArgs& args = *(static_cast<ThreadArgs*>(arg_));  
   long whichThread = args.whichThread;

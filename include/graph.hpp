@@ -761,7 +761,7 @@ void readLGL( Graph& g , const char * file , typename Graph::weight_type cutoff 
   typedef typename Graph::boost_graph BG;
   typedef typename Graph::vertex_index_map VIM;
   typedef boost::tokenizer< boost::char_separator<char> > tokenizer;
-  typename Graph::weight_type w;
+  typename Graph::weight_type w{};	// value-initializing to avoid non-legit warning on line 804: ‘w’ may be used uninitialized in this function [-Wmaybe-uninitialized]
 
   std::ifstream in( file );
   if ( !in ) { 

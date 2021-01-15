@@ -1,6 +1,6 @@
 CPP=c++
 
-CPP_FLAGS=-std=c++11 -Wall -O3 -ftemplate-depth=100 -g
+CPP_FLAGS=-std=c++11 -Wall -O3 -ftemplate-depth=100 -g -DBOOST_ALLOW_DEPRECATED_HEADERS
 
 SOURCES= lglayout.C calcFuncs.C
 OBJECTS= lglayout.o calcFuncs.o

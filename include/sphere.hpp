@@ -148,12 +148,10 @@ inline void randomPointOnSurface( const Sphere& s ,
 				  typename Sphere::vec_type& r )
 {
 #if 1
-  typedef typename Sphere::vec_type vec_type; 
   uniform_on_sphere_vec( r , s.dimension() );
 #else
   // TODO use this instead of the hand-made code?
   typedef typename boost::hellekalek1995 precision;
-  typedef typename Sphere::vec_type vec_type;  
   precision rr(++randomPointOnSurfaceCall___);
   boost::uniform_on_sphere<> usph( s.dimension() );
   std::vector<double> v = usph( rr );
