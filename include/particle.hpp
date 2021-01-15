@@ -168,8 +168,6 @@ class Particle {
 
 /*    friend std::ostream&  */
 /*      operator<< ( std::ostream& o , const Particle_& p ); */
-
-  virtual ~Particle(){}
 };
 
 //----------------------------------------------------

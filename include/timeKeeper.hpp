@@ -99,8 +99,6 @@ public:
   void operator+= ( prec_ dt ) {
     TK_::increment(dt);
   }
-
-  virtual ~TimeKeeper() { }
 };
 
 //----------------------------------------------------

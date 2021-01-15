@@ -129,8 +129,7 @@ class GridSchedual_MTS {
     }
   }
 
-  virtual ~GridSchedual_MTS() { delete [] voxelList; }
-
+  ~GridSchedual_MTS() { delete [] voxelList; }
 };
 
 //---------------------------------------------------------------------------

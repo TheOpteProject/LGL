@@ -201,8 +201,7 @@ class Grid : public Amutex {
     return *(voxels_+entry);
   }
 
-  virtual ~Grid(){ delete [] voxels_; }
-
+  ~Grid() { delete [] voxels_; }
 };
 
 namespace NbhrVoxelPositions {
@@ -470,8 +469,7 @@ public:
     iterator::copy(g); return *this;
   }
 
-  virtual ~GridIter() { /* Don't delete any voxels */ }
-
+  ~GridIter() { /* Don't delete any voxels */ }
 };
 
 /////////////////////////////////////////////////////////////////////////////

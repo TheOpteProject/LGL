@@ -259,9 +259,6 @@ class Amutex {
    Amutex& operator= ( const Amutex& m ) {
      Amutex::copy(m); return *this;
    }
-
-   virtual ~Amutex() { }
-
 };
 
 //--------------------------------------------------

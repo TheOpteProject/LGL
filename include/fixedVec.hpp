@@ -214,9 +214,6 @@ class FixedVec {
   const prec_& operator[] ( size_type i ) const {
     return orig[i];
   }
-
-  virtual ~FixedVec(){ }
-
 };
 
 //----------------------------------------------------

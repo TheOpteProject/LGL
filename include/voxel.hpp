@@ -117,9 +117,6 @@ class Voxel : public Cube< typename Occupant::precision ,
   const Voxel_& operator= ( const Voxel_& v ) {
     Voxel_::copy(v); return *this;
   }
-
-  virtual ~Voxel(){ }
-
 };
 
 //------------------------------------------------------------

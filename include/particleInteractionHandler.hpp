@@ -278,9 +278,6 @@ public:
   bool operator== ( const PIH_& p ) const {
     return id_==p.id_;
   }
-
-  virtual ~ParticleInteractionHandler() { }
-
 };
 
 //--------------------------------------------- 

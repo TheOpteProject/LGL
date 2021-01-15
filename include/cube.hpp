@@ -91,9 +91,6 @@ class Cube {
   bool operator!= ( const Cube_& c ) const {
     return !(*this==c);
   }
-
-  virtual ~Cube(){ }
-
 };
 
 //------------------------------------------------------------

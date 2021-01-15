@@ -266,10 +266,10 @@ public:
   precision initMass() { return initMass_; }
   precision initRadius() { return radius_; }
 
-  virtual ~ParticleContainerChaperone() {
+  ~ParticleContainerChaperone() {
     for ( int i=0; i<3; ++i ) {
-      if ( file_in[i] ) { delete file_in[i]; }
-      if ( file_out[i] ) { delete file_out[i]; }
+		 delete file_in[i];
+		 delete file_out[i];
     }
   }
 

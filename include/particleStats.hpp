@@ -137,9 +137,6 @@ public:
       << "CollectStatsAt: " << iteration2CollectStats << '\t';
     ParticleStats_::printStats(o);
   }
-
-  virtual ~ParticleStats() { }
-
 };
 
 
