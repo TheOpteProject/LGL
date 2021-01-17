@@ -30,6 +30,7 @@
 #include <cstdlib>
 #include <map>
 #include <stdexcept>
+#include <unordered_map>
 #include <string.h>	// for strdup
 
 #include "particle.hpp"
@@ -62,7 +63,7 @@ public:
   vec_type initVel_;
   vec_type vel_;
   vec_type initPos_;
-  vec_type pos_;
+  std::unordered_map< std::string, vec_type > positions_from_file_;
   precision radius_;
   precision initMass_;
   char * file_in[3];     //  X V M
@@ -140,7 +141,16 @@ public:
   }
 #endif
 
-  bool setXFromFile( Particle& p , const string& id2check= "" ) {
+  bool setXFromFile( Particle &p , const string &id2check ) {
+#if 1
+	  // assuming id2check isn't empty for simplicity of this optimized implementation
+	  assert( !id2check.empty() );
+	  const auto it = positions_from_file_.find( id2check );
+	  if ( it != positions_from_file_.end() ) {
+		  p.X( it->second );
+		  return true;
+	  }
+#else
 	  string id = "";
 	  if ( !streams_in[_X_FILE__].eof() && streams_in[_X_FILE__] >> id ) {
 		  if ( id2check != "" && id2check != id ) {
@@ -165,10 +175,11 @@ public:
 		  p.X(pos_);
 		  return true;
 	  }
+#endif
 	  return false;
   }
 
-  bool setXFromAnchors( Particle& p, const std::string& id2check )
+  bool setXFromAnchors( Particle& p, const std::string& id2check ) const
   {
 	  typename AnchorPositions_t::const_iterator const it = anchorPositions_.find( id2check );
 	  if ( it == anchorPositions_.end() ) 
@@ -218,7 +229,7 @@ public:
     for ( unsigned int jj=0; jj<3; ++jj ) { 
       file_in[jj]=0; file_out[jj]=0; file_out_flag[jj]=0; 
     }
-    vel_=0; initVel_=0; initPos_=0; pos_=0; radius_=0;
+    vel_=0; initVel_=0; initPos_=0; radius_=0;
     initMass_=0; posRange_=0; velRange_=0; randomPos_=0; randomVel_=0;
   }
 
@@ -291,6 +302,21 @@ private:
 			throw std::domain_error( "Anchor file input failed around node '" + id + '\'' );
 	}
 
+	void readXin()
+	{
+		auto &is = streams_in[_X_FILE__];
+		std::string id;
+		vec_type pos;
+		while ( is >> id ) {
+			if ( !readPos( is, pos ) )
+				throw std::domain_error( "Initial position input failed for node '" + id + '\'' );
+			if ( !positions_from_file_.insert( { std::move( id ), pos } ).second )
+				throw std::domain_error( "Node '" + id + "' has already been specified earlier in the positions input file!" );
+		}
+		if ( !is.eof() )
+			throw std::domain_error( "Initial positions file input failed around node '" + id + '\'' );
+	}
+
 	static std::istream &readPos( std::istream &is, vec_type &pos )
 	{
 		for ( size_type ii = 0; ii < dimension; ++ii )
@@ -305,9 +331,10 @@ template < typename Particle >
 void ParticleContainerChaperone<Particle>::initAllParticles() 
 {
   PCC_::openInFiles();
+  readXin();
   size_type nodeCount = pc_.size();
   for ( size_type ii=0; ii<nodeCount; ++ii ) {
-    string id = pc_.ids[ii];
+    const string &id = pc_.ids[ii];
     if ( file_in[_X_FILE__] ) {
       PCC_::setXFromFile(pc_[ii],id);
     } else if ( !PCC_::setXFromAnchors( pc_[ii], id ) ) {
