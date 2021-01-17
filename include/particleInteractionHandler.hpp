@@ -57,6 +57,7 @@ public:
   EllipseFactors ellipseFactors_;
   int id_;
 
+#if 0	// unused function, if becomes used in the future it needs to change to account for Particle::F()[ii] being atomic
   // This encourages pass throughs by giving a boost to whatever
   // direction particles were going in the first place
   void handleCollision( Particle& p1, Particle& p2 ) const {
@@ -87,6 +88,7 @@ public:
     p2.f += f2_;
     p2.unlock();
   }
+#endif
 
   void initVars() {
     timeStep_=0; springConstant_=0;
@@ -156,9 +158,10 @@ public:
          factor = -factor;
       noise[d] = factor * (((precision)std::rand()) / divisor);
     }    
-    p1.lock();
+    // no need to lock because particle's force constituents are atomic
+    //p1.lock();
     p1.add2F( noise );
-    p1.unlock();
+    //p1.unlock();
   }
 
   void ellipseFactors( EllipseFactors ef ) {
@@ -224,17 +227,19 @@ public:
     if ( !p1anchor ) {
        if ( p2anchor )
           f_.scale( 2 );
-       p1.lock();
+       // no need to lock because particle's force constituents are atomic
+       //p1.lock();
        p1.add2F(f_);
-       p1.unlock();
+       //p1.unlock();
     }
 
     if ( !p2anchor ) {
        if ( p1anchor )
           fm1_.scale( 2 );
-       p2.lock();
+       // no need to lock because particle's force constituents are atomic
+       //p2.lock();
        p2.add2F(fm1_);
-       p2.unlock();
+       //p2.unlock();
     }
 
 //    cout << "AFTER" << endl; 

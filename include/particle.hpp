@@ -25,11 +25,12 @@
 
 #include <iostream>
 #include <algorithm>
-#include <assert.h>
 #include "fixedVec.hpp"
 #include "aPthread.hpp"
 #include "fixedVecOperations.hpp"
 #include <string>
+
+#include <boost/atomic.hpp>
 
 //----------------------------------------------------
 
@@ -44,6 +45,9 @@ class Particle {
   enum { dimension = dimension_ };
   typedef prec_ precision;
   typedef FixedVec<prec_,dimension> vec_type;
+  // using boost::atomic instead of std::atomic because the latter doesn't have op+= or fetch_add et al. for floating-point specializations until C++20
+  // TODO C++20: std::atomic
+  typedef FixedVec< boost::atomic< prec_ >, dimension > atomic_vec_type;
 
  protected:
   long container_ = -1;  // This is the number of the container
@@ -59,14 +63,14 @@ class Particle {
  public:
   vec_type x; // position in x,y,z
   //vec_type v; // velocity in x,y,z  
-  vec_type f; // force in x,y,z
+  atomic_vec_type f; // force in x,y,z
 
  public:
   Particle( const Particle_& p){ Particle_::copy(p); }
   Particle(){ Particle_::resetValues(); }
 
   const vec_type& X() const { return x; }
-  const vec_type& F() const { return f; }
+  const atomic_vec_type &F() const { return f; }
 
   const std::string& id() const { return id_; }
   void id( const string& i ) { id_=i; }

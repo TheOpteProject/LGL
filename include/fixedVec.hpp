@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <utility>
 
 //----------------------------------------------------
 
@@ -34,20 +35,20 @@ inline auto sqr( T t ) -> decltype( t * t )
 	return t * t;
 }
 
-template < typename prec_ , unsigned int dimension_ >
+template < typename T, unsigned int dimension_ >
 class FixedVec {
 
  public:
+  using prec_ = decltype( std::declval< T & >() + std::declval< T & >() );	// this handles atomics as well as raw arithmetic types
   typedef prec_ precision;
   typedef unsigned int size_type;
-  typedef prec_ * iterator;
-  typedef const prec_ * const_iterator;
+  typedef T * iterator;
+  typedef const T * const_iterator;
 
  private:
-  typedef FixedVec<prec_,dimension_> Vec_;
+  typedef FixedVec< T, dimension_ > Vec_;
 
- protected:
-  prec_ orig[dimension_];   // The origin
+  T orig[dimension_];   // The origin
   
  public:
   // CONSTRUCTORS
@@ -63,9 +64,10 @@ class FixedVec {
   const_iterator end() const { return &orig[0]+dimension_; }
 
   // MUTATORS
-  void copy( const Vec_& p ) {
+  template < typename U >
+  void copy( const FixedVec< U, dimension_ > &p ) {
     for ( size_type ii=0; ii<dimension_; ++ii)
-      orig[ii]=p.orig[ii];
+      orig[ii] = p[ii];
   }
 
   // OPERATIONS
@@ -102,7 +104,7 @@ class FixedVec {
   prec_ magnitudeSquared() const {
     prec_ mag=0;
     for ( size_type ii=0; ii<dimension_; ++ii)
-      mag += sqr( orig[ii] );
+      mag += sqr( (*this)[ii] );
     return mag;
   }
 
@@ -144,7 +146,7 @@ class FixedVec {
   prec_ dotProduct( const Vec_& v ) const {
     prec_ product=0;
     for ( size_type ii=0; ii<dimension_; ++ii)
-	product += orig[ii]*v.orig[ii];
+		 product += orig[ii] * v[ii];
     return product;
   }
 
@@ -169,18 +171,11 @@ class FixedVec {
     Vec_::copy(p2); return *this;
   }
 
-  Vec_ operator-( const Vec_& p2 ) const {
-    Vec_ temp;
-    for ( size_type ii=0; ii<dimension_; ++ii)
-      temp[ii] = orig[ii] - p2[ii];
-    return temp;
-  }
-
-  Vec_ operator+( const Vec_& p2 ) const {
-    Vec_ temp;
-    for ( size_type ii=0; ii<dimension_; ++ii)
-      temp[ii] = orig[ii] + p2[ii];
-    return temp;
+  template < typename U >
+  Vec_ &operator=( const FixedVec< U, dimension_ > &p2 )
+  {
+    Vec_::copy(p2);
+	 return *this;
   }
 
   void operator-= ( const Vec_& p2 ) {
@@ -188,7 +183,8 @@ class FixedVec {
       orig[ii] -= p2[ii];
   }
   
-  void operator+= ( const Vec_& p2 ) {
+  template < typename U >
+  void operator+=( const FixedVec< U, dimension_ > &p2 ) {
     for ( size_type ii=0; ii<dimension_; ++ii)
       orig[ii] += p2[ii];
   }
@@ -207,11 +203,11 @@ class FixedVec {
     return !( *this == p2 );
   }
 
-  prec_& operator[] ( size_type i ) {
+  T& operator[] ( size_type i ) {
     return orig[i];
   }
 
-  const prec_& operator[] ( size_type i ) const {
+  prec_ operator[] ( size_type i ) const {
     return orig[i];
   }
 };
