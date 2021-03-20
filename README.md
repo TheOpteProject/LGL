@@ -22,7 +22,7 @@ If you use this in your research, please cite (if possible):
 
 # Example output
 
-![The Internet 2003](http://www.opte.org/wp-content/uploads/2014/04/about-img-2.png)
+![The Internet 2003](https://web.archive.org/web/20201121055909if_/http://www.opte.org/wp-content/uploads/2014/04/about-img-2.png)
 
 Example of the Internet using traceroute vs BGP in 2003. 
 
@@ -46,7 +46,7 @@ A heap of stuff, in no particular order:
 
 # Installation
 
-Use the Makefil, i.e.
+Use the Makefile, i.e.
 
     prompt$ make 
     prompt$ make install # local install in $(PROJECTDIR)/bin
