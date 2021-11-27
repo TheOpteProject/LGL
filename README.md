@@ -105,11 +105,11 @@ https://www.noction.com/blog/as-path-and-as-path-prepending
 # Helpful Hints From Past README
 ## Table of contents
 
-  0 Before compiling!
-  I Setup and Installation
- II Other files that come with LGL
-III Expanding LGL
-IV  What's new for 2.0
+0. Before compiling!
+1. Setup and Installation
+2. Other files that come with LGL
+3. Expanding LGL
+4. What's new for 2.0
 
 ## Before compiling!
 
