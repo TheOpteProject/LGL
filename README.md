@@ -1,4 +1,4 @@
-# Large Graph Layout - LGL 
+# Slightly modified LGL 
 
 [![Build Status](https://teamcity.eskaduren.se/app/rest/builds/buildType:(id:Phdeis_BasicRunLgl)/statusIcon.svg)](https://teamcity.eskaduren.se) ![Github build all](https://github.com/flindeberg/LGL/workflows/Build%20and%20install%20CI/badge.svg) ![Github test all](https://github.com/flindeberg/LGL/workflows/Testrun%20CI/badge.svg)
 
@@ -6,23 +6,23 @@
 All files distributed with LGL fall under the terms of 
 the GNU General Public License, and are copyright (c) 2002, 2003 Alex Adai.
 
-Changes and updates copyright (c) 2004-2021 Barrett Lyon
+Changes and updates copyright (c) 2004-2022 Barrett Lyon
 
-Addtional changes done in this fork copyright (c) 2019, 2020 Fredrik Lindeberg
+Addtional changes copyright (c) 2019, 2020 Fredrik Lindeberg
 
 LGL on the web at:  http://www.opte.org/lgl/ 
 
 Much thanks to the Marcotte lab for testing. 
 
 If you use this in your research, please cite (if possible):
+- Lindeberg, Fredrik. “Coordinating the Internet.” Licentiate Thesis, Linköping University, 2019. http://urn.kb.se/resolve?urn=urn:nbn:se:liu:diva-161812.
 - Lyon, Barrett. "The Opte Project." Mapping the Internet, Self, 2004. http://www.opte.org.
 - Adai, Alex T., Shailesh V. Date, Shannon Wieland, and Edward M. Marcotte. “LGL: Creating a Map of Protein Function with an Algorithm for Visualizing Very Large Biological Networks.” Journal of Molecular Biology 340, no. 1 (2004): 179–90. https://doi.org/10.1016/j.jmb.2004.04.047.
-- Lindeberg, Fredrik. “Coordinating the Internet.” Licentiate Thesis, Linköping University, 2019. http://urn.kb.se/resolve?urn=urn:nbn:se:liu:diva-161812.
 
 
 # Example output
 
-![The Internet 2003](http://videobot.ash1.opte.org/content/opte/maps/static/1069646562.LGL.2D.4000x4000.png)
+![The Internet 2003](http://content.opte.org/content/opte/maps/static/1069646562.LGL.2D.700x700.png)
 
 Example of the Internet using traceroute vs BGP in 2003. 
 
@@ -98,18 +98,21 @@ A short disclaimer; the graph is only as good as your data. The `bootstrap` scri
 User guide to LGL, helped me figure out some important things:
 http://clairemcwhite.github.io/lgl-guide/
 
+LGL README:
+https://github.com/TheOpteProject/LGL/
+
 Getting up to speed on Internet routing:
 http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
 https://www.noction.com/blog/as-path-and-as-path-prepending
 
-# Helpful Hints From Past README
+# Old readme
 ## Table of contents
 
-0. Before compiling!
-1. Setup and Installation
-2. Other files that come with LGL
-3. Expanding LGL
-4. What's new for 2.0
+  0 Before compiling!
+  I Setup and Installation
+ II Other files that come with LGL
+III Expanding LGL
+IV  What's new for 2.0
 
 ## Before compiling!
 
@@ -176,137 +179,6 @@ the root bin directory of all the lgl executables (This might be
 program won't run until it is set correctly.
 
 
-## Further Reading
-The software is designed to draw arbitrarily large trees/graphs, so the underlying algorithm has no functions for minimizing edge overlaps or other features specific for trees. Although functions exist for such things, LGL doesn’t have an implementation because the layouts would then not have such scalability. However, there are some tricks for doing layouts with trees.
-
-First you need to do the following:
-Make sure your tree is in a singly connected set. That is, every node is reachable by every other node in the graph by traversing edges. If it isn’t, your layouts will be awkward or undefined.
-
-Make sure your tree is in .lgl format. You have to use the base programs so >only .lgl format will do, and not .ncol or any other format.
-
-Now you can use lglayout2D directly (or lglayout3D) in the “bin” directory of the archive you downloaded and compiled. lglayout2D (or lglayout3D) is designed specifically for layouts of singly connected sets. Running it without arguments gives the argument list. A good option to toy with is -q. This gives the suggested edge distances.  For trees you might want to run it as:
-
-prompt$ lglayout2D -q.05 sample.lgl. # Check your path to lglayout2D
-
-What the -q option does is set the equilibrium distance of the edges. The smaller the q value; the more it draws the nodes closer together so the edge lengths aren’t as long. You can experiment with that side of it. Things that help are coloring the edges based on hierarchy – giving light edge colors to the higher order edges and darker colors for the lower order edges. That is what was done in the gallery file of SCOP. If you run a layout without adjusting the -q option, you may see what I call the hairdryer effect. That happens when all of the edges, in particular those to leaf nodes, are piled on top of each other in layouts.
-
-Another option is to dive into the code; specifically the function placementFormula in calcFuncs.C. That function determines the placement distances for successive layers in the tree. If you feel your tree is getting too compressed, then changing the return value for that function to a much higher number will give the layout “more room”. Undoubtedly, this is probably the least desirable method; not to mention a total hack job, but I have had to do it for certain layouts.
-
-However, for trees with perfectly non-overlapping edges, such as those drawn with phylogenetic programs, you may have to use other programs that are made to view such trees. Those specialized programs will provide clearer layouts. LGL is meant to be generic and can’t provide clearer layouts than software specialized for such layouts.  Another example is visualizing metabolic pathways – there you also have to minimize the edge overlaps and present the layout in a more symmetric manner with specific labels. The obvious drawback of such specialized programs is usually scalability.
-
- 
-## Runtime Options
--r (neighborhood radius) : Determines the size of a voxel, and looks to be related to the “breathing space” for each particle, so I think the larger this value the farther from each other will the particles be.  Default: 1.0
-
--R (outer radius) : Limits the area from which random points will be selected for placing the particles. So I think the larger this value the more area the image will take.  Default -1.0 (A negative value means this value would be calculated from the count of nodes. In case of 2 dimensions, that will be the square root of the count of nodes.)
-
--S (node size radius) : Ignore for now (researching more) Default 10.0
-
--q (equilibrium distance) : Specifies the distance between particles at which point they are considered too close. Quite likely to be useful. Default 0.5
-
--k (casual spring constant), -s (special spring constant) : This look to affect the “force” of repulsion between the particles. The larger the value(s?), the stronger that force will be (the farther the particles will end up from each other). Deafult 10.0
-
--u (placement distance), -v (placement radius) : Ignore for now researching
-
- 
-
-## Viewing Results
-
-Two files are necessary for looking at the results of your layout. The first is the edge file and the second is the coordinates. While these files are the minimum, other types of input are allowable for highlighting your 2D or 3D layout.  Such additions can include coloring the edges, vertices, labeling, and more.
-
-2D
-lglview
-LGLLib.jar is a JAVA application written solely for viewing 2D graphs generated by LGL, although it can view graphs generated by other means if 2D coordinates are available, such as parsing ‘line to’ calls in existing .ps graph files.
-
-Include binaries are compiled with Java 1.6 which contains both Viewer2D and ImageMaker.
-
-LGLLib / ImageViewer
-
-Full viewing library with 2D viewer and image output.  Runtime example:
-
-java -Xmx512m -Xms256m -cp ./LGLLib.jar Viewer2D.Viewer2D
-
-
-ImageMaker (PNG output)
-
-java -Xmx512m -Xms256m -cp ./LGLLib.jar ImageMaker.GenerateImages <params>
-
- 
-
-## Legacy Support
-
-If you prefer or have shell scripts which already uses the previous jars names we have also attaching also ImageMaker.jar and LGLView.jar to support legacy configurations:
-
-java -Xmx512m -Xms256m -jar ./LGLView.jar
-
-java -Xmx512m -Xms256m -jar ./ImageMaker.jar
-
-Please understand that lglview is pretty primitive, and should be considered a work in progress.
-
-Note: -Xmx and -Xms is key to provide enough memory to the JRE.
-
-## 3D
-For viewing 3D graphs, a PERL script, genVrml.pl, is available to generate a VRML file, which is viewable with a VRML browser. The perl script has options for edge and vertex coloring, URL anchoring, text labels, and more.  genVrml.pl uses the VRML module, which is freely available from CPAN. It also requires an internally develped (and not yet documented) module LGLFormatHandler.pm. These are necessary to compile and run the PERL script, so they must be in your PERL @INC path. You don’t have to use or call these modules directly, but the script will.  This script does not generate optimal VRML code, but necessity or interest (or outside advice) could elicit a revision.
-
-For usage of genVrml.pl, just run the script without any arguments and read the output. The command genVrml.pl edges.lgl layout.coords (where edges.lgl is your edge file and layout.coords is a 3D layout) will get some VRML code going and get you started. The output VRML file is always the coords file + ‘.wrl’. So in the short example above, the output file would be layout.coords.wrl.
-
-Large Image Output
-We are attempting to write a version that can output a huge PNG (100k x 100k pixels).  Currently there is a limitation on java.awt.image.Raster: The maximum width x height has to be less than Integer.MAX_VALUE (2147483647) so the maximum square image is 46340 x 46340. Note also that such images will need a lot of RAM since Java’s BufferedImage’s pixels are hold in memory.
-
-Example for utilizing more memory for larger images:
-
-java  -Xms1G -Xmx5G -jar ImageMaker.jar 29200 29200 <files…>
-
-It seems that generating a 46340 x 46340 image will require something like 30G of RAM.
-
- 
-
- 
-
-## File Formats
-
-There are several files involved in creating a graph:  .lgl, .coords, .colors
-
-The .lgl Format
-There are two different file formats that used for the edge files, which are denoted with the file suffixes .lgl (LGL format) and the .ncol format. The .ncol edge files are simple two column files, where two vertices are on each line of the file white space delimited:
-
-vertex2name [optionalWeight]
-vertex1name vertex3name [optionalWeight]
-...
-The graphs here are undirected, and LGL is pretty particular about that. So if you have an edge A <-> B, then you should not have an edge B <-> A. As far as the .ncol file is concerned, you should NOT have:
-
-vertex1name vertex2name
-vertex2name vertex1name
-in the same file, nor should any vertex have an edge to itself.
-
-The second format is the LGL file format (.lgl file suffix). This is yet another graph file format that tries to be as stingy as possible with space, yet keeping the edge file in a human readable (not binary) format.  The format itself is like the following:
-
-# vertex1name
-vertex2name [optionalWeight]
-vertex3name [optionalWeight]
-Here, the first vertex of an edge is preceded with a pound sign ‘#’. Then each vertex that shares an edge with that vertex is listed one per line on subsequent lines. Again, you can’t have directed edges in the file so you should NOT have:
-
-# vertex1name
-vertex2name
-# vertex2name
-vertex1name
-in the same file.
-
-The .colors Format
-The color formatting for input to ImageViewer or ImageMaker is rather tricky:
-
-vertex1 vertex2 R G B
-
-Example:
-
-20067 20067.1 0.172549019608 0.239215686275 0.866666666667
-2631 2631.1 0 0.0078431372549 0.411764705882
-8119 8119.1 0 0.0078431372549 0.411764705882
-To convert RGB, take the single color and divide it by 255.
-
- 
-
-
 ## Other files that come with LGL
 
 A list of important files in the perls dir:
@@ -354,5 +226,23 @@ Let me know of any source code contributions that would make LGL more suitable
 and usable so I can add the code in!
 
 
+## What's new for 2.0
+
+LGL-2.0 is the first new release of LGL in years.  It's the first release by 
+the new LGL team at the Opte Project.  LGL was the baby of Alex Adia and 
+he's been too busy to update things, now we're involved in bringing the 
+code up-to-date. 
+
+2.0 changes include:  
+
+- The code has been ported to boost-1.55
+- Now compiles on modern operating systems
+- LGLView.jar has been updated to work with Java 1.6
+- ImageMaker.jar has been released with the ability to do large resolution (46340 x 46340 pixel output).
+- UI fixes for lglview.jar
+- The original code uses Jama, the old classes were included with the software package, we've now changed that to use the JAR from Jama RI.
+
+Cheers, 
+blyon@opte.org
 
 
