@@ -98,8 +98,6 @@ A short disclaimer; the graph is only as good as your data. The `bootstrap` scri
 User guide to LGL:
 http://clairemcwhite.github.io/lgl-guide/
 
-LGL README:
-
 Getting up to speed on Internet routing:
 http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
 https://www.noction.com/blog/as-path-and-as-path-prepending
@@ -194,13 +192,13 @@ ImageMaker - A JAVA 2D image output tool.
 
 Runtime Example:
 
-java -Djava.awt.headless=true -Xmx20000m -Xms20000m -cp ./LGL-Master/Java/jar/LGLLib.jar ImageMaker.GenerateImages <height> <width> run.lgl run.coords -c run.colors -s 0.01 -l run.labels
+    java -Djava.awt.headless=true -Xmx20000m -Xms20000m -cp ./LGL-Master/Java/jar/LGLLib.jar ImageMaker.GenerateImages <height> <width> run.lgl run.coords -c run.colors -s 0.01 -l run.labels
 
 
 LGLView - A JAVA 2D viewer for looking at the output of lgl.pl. The output of the layout programs is just a set of coordinates.  For looking at 2D 
 coordinates use lglview.jar 
 
-java -Xmx2G -Xms2G -cp ./LGL-master/Java/jar/LGLLib.jar Viewer2D.Viewer2D
+    java -Xmx2G -Xms2G -cp ./LGL-master/Java/jar/LGLLib.jar Viewer2D.Viewer2D
 
 
 Looking at the huge PNG (100k x 100k pixels) java.awt.image.Raster: The 
@@ -222,99 +220,103 @@ File Formats:
 Input format (.ncol)
 The input format to LGL is called .ncol, which is just a space separated list of two connected nodes with an optional third column of weight.
 
-$ cat example.ncol
-node1 node2 [optional weight]
-Key points for formatting the input .ncol
+    $ cat example.ncol
+    node1 node2 [optional weight]
+    Key points for formatting the input .ncol
 
-Each line must be unique
-A node may connect to many other nodes
-A node cannot connect to itself
-If a line is B-A, there cannot also be a line A-B
-There can’t be blank lines
-There can’t be blanks in any column
-No header line
-node1 node2
-node1 node3 # OK
-node1 node2 # Will cause error
-node1 node1 # Will cause error
-node2 node1 # Will cause error
-node3         # Will cause error
+    Each line must be unique
+    A node may connect to many other nodes
+    A node cannot connect to itself
+    If a line is B-A, there cannot also be a line A-B
+    There can’t be blank lines
+    There can’t be blanks in any column
+    No header line
+    node1 node2
+    node1 node3 # OK
+    node1 node2 # Will cause error
+    node1 node1 # Will cause error
+    node2 node1 # Will cause error
+    node3         # Will cause error
               # Trailing blank line will cause error
+
 Coloring format (.colors)
 LGL allows you to color both nodes and edges. In order to color edges, each pairwise edge must have an R G B value. To color individual nodes, each node must have an R G B value. RGB values must be scaled to one 1, so just divide each number of an RGB value by 255. The rules for formatting an .ncol file apply here too, i.e. no blanks, no empty lines, no redundancy, etc.
 
-$ cat example.edge.colors
-node1 node2 1.0 0.5 0.0 
-node3 node4 0.0 1.0 0.8 
-node5 node6 0.1 0.1 1.0
+    $ cat example.edge.colors
+    node1 node2 1.0 0.5 0.0 
+    node3 node4 0.0 1.0 0.8 
+    node5 node6 0.1 0.1 1.0
 
-$ cat example.vertex.colors
-node1 1.0 0.8 0.0 
-node2 1.0 0.5 0.0 
-node3 0.2 0.1 0.8
-node4 0.0 1.0 0.8 
-node5 0.6 0.5 0.5
-node6 0.1 0.1 1.0
+    $ cat example.vertex.colors
+    node1 1.0 0.8 0.0 
+    node2 1.0 0.5 0.0 
+    node3 0.2 0.1 0.8
+    node4 0.0 1.0 0.8 
+    node5 0.6 0.5 0.5
+    node6 0.1 0.1 1.0
+
+
 An LGL workflow
 
 This is any example to make a network with colored nodes and edges. I would begin by making a file of all pairwise edges and their associated traits. It can be difficult to keep .ncol and .color files in sync, and so it will cause fewest headaches to begin with one file containing all the information to create both.
 
-$ echo "Nodes and traits"
-$ cat homology.txt
-node1 node2 source score rank species1 species2
-protein1 protein2 blastp 150 1 mouse human
-protein3 protein4 blastp 50 2 wheat rat
-protein2 protein5 hmmscan 60 3 human human
-Then take the first two columns (minus the header) to create an .ncol file. This is the file used to layout the graph
+    $ echo "Nodes and traits"
+    $ cat homology.txt
+    node1 node2 source score rank species1 species2
+    protein1 protein2 blastp 150 1 mouse human
+    protein3 protein4 blastp 50 2 wheat rat
+    protein2 protein5 hmmscan 60 3 human human
+    Then take the first two columns (minus the header) to create an .ncol file. This is the file used to layout the graph
 
-$ echo "Get node columns, remove header"
-$ awk '{print $1, $2}' homology.txt  | awk '{if(NR>1)print}' > homology.ncol
-$ cat homology.ncol
-protein1 protein2
-protein3 protein4
-protein2 protein5
+    $ echo "Get node columns, remove header"
+    $ awk '{print $1, $2}' homology.txt  | awk '{if(NR>1)print}' > homology.ncol
+    $ cat homology.ncol
+    protein1 protein2
+    protein3 protein4
+    protein2 protein5
 
 Then choose a trait, and create a edge.colors file. I generally select the first two columns, and a trait to color by, then just use sed to replace the trait values with the RGB value I want to color that type of edge by.
 
 In this file, we want to color all edges predicted with the algorithm hmmscan red, and all edges found with blastp blue.
 
-$ echo "Get node columns and trait column"
-$ awk '{print $1, $2, $3}' homology.txt  | awk '{if(NR>1)print}' >  homology_alg.colors.tmp
+    $ echo "Get node columns and trait column"
+    $ awk '{print $1, $2, $3}' homology.txt  | awk '{if(NR>1)print}' >  homology_alg.colors.tmp
 
-$ echo "Replace hmmscan trait with RGB value
-$ sed -i 's/hmmscan/0 1 0/g' homology_alg.colors.tmp
+    $ echo "Replace hmmscan trait with RGB value
+    $ sed -i 's/hmmscan/0 1 0/g' homology_alg.colors.tmp
 
-$ echo "Replace blastp trait with RGB value
-$ sed 's/blastp/0 0 0/g' homology_alg.colors.tmp > homology_algorithm.edge.colors
+    $ echo "Replace blastp trait with RGB value
+    $ sed 's/blastp/0 0 0/g' homology_alg.colors.tmp > homology_algorithm.edge.colors
 
-$ cat homology_algorithm.edge.colors
-protein1 protein2 0 0 0
-protein3 protein4 0 0 0
-protein2 protein5 0 1 0
-I could also color each node by some trait. In this file format, each vertex must have an associated RGB value. In this case, I want to color every human protein red, and proteins from every other species blue.
+    $ cat homology_algorithm.edge.colors
+    protein1 protein2 0 0 0
+    protein3 protein4 0 0 0 
+    protein2 protein5 0 1 0
 
-$ echo "Get first column of nodes and species"
-$ awk '{print $1, $6}' homology.txt  | awk '{if(NR>1)print}'> vertex1_species.tmp
+We could also color each node by some trait. In this file format, each vertex must have an associated RGB value. In this case, we want to color every human protein red, and proteins from every other species blue.
 
-$ Get second column of nodes and species"
-$ awk '{print $2, $7}' homology.txt  | awk '{if(NR>1)print}'> vertex2_species.tmp
+    $ echo "Get first column of nodes and species"
+    $ awk '{print $1, $6}' homology.txt  | awk '{if(NR>1)print}'> vertex1_species.tmp
 
-$ Get unique nodes"
-$ cat vertex1_species.tmp vertex2_species.tmp | sort -u > homology_human.vertex.colors.tmp
+    $ Get second column of nodes and species"
+    $ awk '{print $2, $7}' homology.txt  | awk '{if(NR>1)print}'> vertex2_species.tmp
 
-$ Color human nodes red"
-$ sed -i 's/human/1 0 0/' homology_human.vertex.colors.tmp
+    $ Get unique nodes"
+    $ cat vertex1_species.tmp vertex2_species.tmp | sort -u > homology_human.vertex.colors.tmp
 
-$ Color any other node blue"
-$ sed 's/mouse\|wheat\|rat/0 0 1/' homology_human.vertex.colors.tmp > homology_human.vertex.colors
+    $ Color human nodes red"
+    $ sed -i 's/human/1 0 0/' homology_human.vertex.colors.tmp
 
-$ cat homology.human.vertex.colors
-protein1 0 0 1
-protein3 0 0 1
-protein2 1 0 0
-protein4 0 0 1
-protein5 1 0 0
-Running
+    $ Color any other node blue" 
+    $ sed 's/mouse\|wheat\|rat/0 0 1/' homology_human.vertex.colors.tmp > homology_human.vertex.colors
+
+    $ cat homology.human.vertex.colors
+    protein1 0 0 1
+    protein3 0 0 1
+    protein2 1 0 0
+    protein4 0 0 1
+    protein5 1 0 0 
+    Running
 
 
 # The new labels file format:
@@ -325,14 +327,14 @@ Pixel sizes cannot be in decimal or fractions
 
 Colors will be referenced by their hex values. #000000-#111111
 
-nodename,
-	(name of the node we want to center the shape around)	
-shape,
-	(name of shape: circle or square)
-shape_size,
-	(size of the shape in pixels from center to edge?)
-shape_border_with,
-	(width of the shape in px)
+    nodename,
+    	(name of the node we want to center the shape around)	
+    shape,
+    	(name of shape: circle or square)
+    shape_size,
+    	(size of the shape in pixels from center to edge?)
+    shape_border_with,
+    	(width of the shape in px)
 shape_border_color,
 	(color used for the shape border)
 shape_fill_color,
