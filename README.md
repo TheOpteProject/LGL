@@ -46,7 +46,7 @@ A heap of stuff, in no particular order:
 # Installation
 
 
-# Compling LGL C++ components
+## Compling LGL C++ components
 
     `setup.pl -i` script which does a lot of suspect lifting).
 
@@ -62,7 +62,7 @@ NOTE:  setup.pl has been updated to locate boost, however you may need
        env CPLUS_INCLUDE_PATH=/usr/local/include ./setup.pl -i
 
 
-# Comple Java jar files 
+## Comple Java jar files 
 
 Use the gmake Makefile, i.e. 
 
@@ -124,7 +124,7 @@ the root bin directory of all the lgl executables (This might be
 program won't run until it is set correctly.
 
 
-## Other files that come with LGL
+# Other files that come with LGL
 
 A list of important files in the perls dir:
 
@@ -203,19 +203,19 @@ Usage: ./lgl-exparmental-label/bin/lglayout2D [-x InitPositionFile] [-a AnchorsF
 
 
 
-### Other Files:
+# Other Files:
 
 
 Generating Static Images using LGLLib.jar 
 
-ImageMaker - A JAVA 2D image output tool. 
+##ImageMaker - A JAVA 2D image output tool. 
 
 Runtime Example:
 
     java -Djava.awt.headless=true -Xmx20000m -Xms20000m -cp ./LGL-Master/Java/jar/LGLLib.jar ImageMaker.GenerateImages <height> <width> run.lgl run.coords -c run.colors -s 0.01 -l run.labels
 
 
-LGLView - A JAVA 2D viewer for looking at the output of lgl.pl. The output of the layout programs is just a set of coordinates.  For looking at 2D 
+##LGLView - A JAVA 2D viewer for looking at the output of lgl.pl. The output of the layout programs is just a set of coordinates.  For looking at 2D 
 coordinates use lglview.jar 
 
     java -Xmx2G -Xms2G -cp ./LGL-master/Java/jar/LGLLib.jar Viewer2D.Viewer2D
@@ -235,10 +235,11 @@ An example of a larger output would be:
     Java - Directory and source code of all JAVA programs.  See README in the JAVA dir.
 
 
-File Formats:
+#File Formats:
 (Thank you to Claire McWhite for this tutorial) 
 
 ##Input format (.lgl)
+
 The input format to LGL is called .ncol, which is just a space separated list of two connected nodes with an optional third column of weight.
 
     $ cat example.lgl
@@ -261,6 +262,7 @@ The input format to LGL is called .ncol, which is just a space separated list of
               # Trailing blank line will cause error
 
 ##Coloring format (.colors)
+
 LGL allows you to color both nodes and edges. In order to color edges, each pairwise edge must have an R G B value. To color individual nodes, each node must have an R G B value. RGB values must be scaled to one 1, so just divide each number of an RGB value by 255. The rules for formatting an .ncol file apply here too, i.e. no blanks, no empty lines, no redundancy, etc.
 
     $ cat example.edge.colors
@@ -414,22 +416,10 @@ The Opte Project was able to use lglayout2D to create a full animation in 10k us
 LGL will read the previous file and start with those coordinates rather than starting from scratch. This technique allows nodes to stay in nearly the same place creating another frame generated from the previous.
 
 
-
-
-
-
-
-
-## Expanding LGL
+# Expanding LGL
 
 The most obvious way to expand LGL is to add support for your type of edge file to LGLFormatHandler.pm.  Just add a method to read in your file type, update 
 the 'loadFromFile' method to recognize your file suffix, and that should be it.
-
-
-
-
-
-
 
 
 # Making Internet graphs
