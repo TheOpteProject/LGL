@@ -140,7 +140,7 @@ Their documentation will be added here in the near future, or they may not
 be carried in the future.
 
 
-# lglayout2D
+## lglayout2D
 
 Usage: ./lgl-exparmental-label/bin/lglayout2D [-x InitPositionFile] [-a AnchorsFile]
         [-t ThreadCount] [-m InitMassFile] [-i IterationMax] 
@@ -203,13 +203,10 @@ Usage: ./lgl-exparmental-label/bin/lglayout2D [-x InitPositionFile] [-a AnchorsF
 
 
 
-# Other Files:
-
-
-Generating Static Images using LGLLib.jar 
-
 ## ImageMaker
 ### A JAVA 2D image output tool. 
+
+Generating Static Images using LGLLib.jar 
 
 Runtime Example:
 
@@ -264,7 +261,7 @@ The input format to LGL is called .ncol, which is just a space separated list of
     node3         # Will cause error
               # Trailing blank line will cause error
 
-##Coloring format (.colors)
+## Coloring format (.colors)
 
 LGL allows you to color both nodes and edges. In order to color edges, each pairwise edge must have an R G B value. To color individual nodes, each node must have an R G B value. RGB values must be scaled to one 1, so just divide each number of an RGB value by 255. The rules for formatting an .ncol file apply here too, i.e. no blanks, no empty lines, no redundancy, etc.
 
