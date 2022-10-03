@@ -29,3 +29,4 @@ src/lglfileconvert
 src/lglayout
 src/lglrebuild
 **/*.pyx
+.DS_Store
