@@ -55,6 +55,8 @@ public class VertexFitter {
 	original.location( manipulation.times( original.location() ) );
     }
 
+  
+
     // This is to add a manipulation to the 'to do' list.
     // This permits composite manipulations
     public void addManipulation( Transformer manip )

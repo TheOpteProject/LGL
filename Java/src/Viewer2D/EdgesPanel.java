@@ -22,6 +22,7 @@ package Viewer2D;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -31,9 +32,12 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -48,6 +52,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import Jama.Matrix;
+import java.awt.BasicStroke;
+import Viewer2D.Label;
+import java.awt.AlphaComposite;
+import java.awt.FontFormatException;
 
 /**
  * <b>SESS - 2014.05.13:</b>
@@ -64,6 +72,8 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	private Edge[] edges;
 	private Vertex[] vertices;
 
+	private HashMap<Object,Object> labels;
+
 	private int xWindowSize, yWindowSize;
 
 	private VertexFitter fitter;
@@ -74,6 +84,8 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	private JTextField statusBar;
 
 	private Font font;
+
+	private HashMap<Fontid,Font> fontMap;
 
 	// These are hashes relating edge/vertex id
 	// to specific info
@@ -135,7 +147,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		paintImage = true;
 	}
 
-	public EdgesPanel(Edge[] edges, Vertex[] vertices, int xWindowSize,
+	public EdgesPanel(Edge[] edges, Vertex[] vertices, HashMap labels, int xWindowSize,
 			int yWindowSize) {
 		super();
 		
@@ -145,6 +157,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		this.setPreferredSize(new Dimension(xWindowSize, yWindowSize));
 		this.edges = edges;
 		this.vertices = vertices;
+		this.labels = labels;
 
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -162,6 +175,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		// These are the default colors
 		edgeColorMap = new HashMap();
 		vertexColorMap = new HashMap();
+		fontMap = new HashMap();
 		edgeColor = Color.black;
 		fontColor = Color.blue;
 		// Lets start with transparent
@@ -228,6 +242,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 			paintColoredEdges(g2);
 			paintVertices(g2);
 			paintIds(g2);
+			paintLabels(g2);
 		}
 	}
 
@@ -321,6 +336,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 					2 * vertexRadius));
 		}
 	}
+
 
 	public void paintComponent(Graphics g) {
 		System.out.println("paintComponent() " + g);
@@ -669,6 +685,144 @@ public class EdgesPanel extends JPanel implements MouseListener,
 						.get(0, 0), (int) vertices[ii].location().get(1, 0));
 			}
 		}
+	}
+
+	private class Fontid
+	{
+		String filename;
+		float size;
+
+		Fontid(String f, float s)
+		{
+			filename = f;
+			size = s;
+
+		}
+        public boolean equals(Object o) {
+			return ((Fontid)o).filename == this.filename &&  ((Fontid)o).size == this.size ;
+	   }
+	   public int hashCode() {
+		return  filename.hashCode()+(int)(size*10);
+	  }
+
+	}
+ 
+	private  Font getFont(String ttffile, float size) 
+	{
+		Font f = font;
+		Fontid id = new Fontid(ttffile,size);
+		if (fontMap.containsKey(id))
+		{
+			return fontMap.get(id);
+		}
+
+		try {
+		  f = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(ttffile)).deriveFont(size);
+		  fontMap.put(id,f);
+		} catch (FontFormatException ffe) {
+		System.out.println("Tried to load a bad font...");
+		ffe.printStackTrace();
+	    } 
+		catch (FileNotFoundException e) {
+			System.out.println("could not open file"+ ttffile);
+			e.printStackTrace();
+			} 
+	   catch (IOException ioe) {
+				System.out.println("I have no idea what went wrong");
+				ioe.printStackTrace();
+			   }
+
+		return f;
+	}
+
+	private void drawStringWithBackground(Graphics2D g,String text, int x, int y, Color bgcolor, Color textcolor)
+	{
+		
+		//g.setFont(new Font())
+		//Font.createFont(Font.TRUETYPE_FONT, new FileInputStream("font.ttf"));
+		FontMetrics fm = g.getFontMetrics();
+		Rectangle2D rect = fm.getStringBounds(text, g);
+
+		g.setColor(bgcolor);
+		g.fillRect(x,
+				   y - fm.getAscent(),
+				   (int) rect.getWidth(),
+				   (int) rect.getHeight());
+
+		g.setColor(textcolor);
+		g.drawString(text, x, y);
+
+
+	}
+
+	public void paintLabels(Graphics2D g)
+	{
+		if (vertices == null) {
+			return;
+		}
+		if (labels == null) {
+			return;
+		}
+        labels.forEach((k,v) -> { //System.out.println("Key = "
+                //+ k + ", Value = " + v);
+            //System.out.println("key: " + name);
+			//Label l =  labels.get(name);
+			Label l = (Label)v;
+			Vertex vertex = (Vertex) k;
+			g.setColor(l.linecolor);
+			g.setStroke(new BasicStroke(l.linesize*1.0f));
+			double rad = (90-l.lineangle)/360*2*Math.PI;
+			double xdiff = l.linelength * Math.cos(rad);
+			double ydiff = -l.linelength * Math.sin(rad);
+			double xstart = vertex.location().get(0, 0);
+			double ystart =  vertex.location().get(1, 0);
+			double xend = xstart+xdiff;
+			double yend = ystart+ydiff;
+			g.draw(new Line2D.Double(xstart,ystart,xend, yend));
+
+			if (l.shape.equals("circle"))
+			{
+				double radius = l.shapesize;
+				//g.setColor(l.shapefillcolor);
+				//g.fillOval(x, y, width, height);
+                //Shape theCircle = new Ellipse2D.Double(xstart - radius, ystart - radius, 2.0 * radius, 2.0 * radius);
+
+				//BasicStroke dashed =new BasicStroke(3.0f,BasicStroke.CAP_BUTT,BasicStroke.JOIN_MITER,10.0f);
+				BasicStroke stroke1 =new BasicStroke(l.shapeborderwidth);
+    			Ellipse2D.Double circle = new Ellipse2D.Double(xstart - radius, ystart - radius, 2.0 * radius, 2.0 * radius);
+    			Ellipse2D.Double circleBorder = new Ellipse2D.Double(xstart - radius, ystart - radius, 2.0 * radius, 2.0 * radius);
+    			g.setColor(l.shapefillcolor);
+    			//g2.setRenderingHints(hints);
+    			g.fill(circle);
+    			//Composite oldComposite=g.getComposite();
+    			//g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0));        
+    			g.setColor(l.shapebordercolor);
+    			g.setStroke(stroke1);
+    			g.draw(circleBorder);
+    			//g2.setComposite(oldComposite);
+			}
+			if (!l.toptext.isEmpty())
+			{
+				g.setFont(getFont(l.toptextttf,l.toptextsize));
+				drawStringWithBackground(g,l.toptext, (int)xend, (int)yend, l.topbgfillcolor, l.toptextcolor);
+			}
+			if (!l.bottomtext.isEmpty())
+			{
+				double xend2 = xend;
+				double yend2 = yend;
+				if (!l.toptext.isEmpty())
+				{
+					FontMetrics fm = g.getFontMetrics();
+					Rectangle2D rect = fm.getStringBounds(l.bottomtext, g);
+					yend2+=rect.getHeight();
+				}
+				g.setFont(getFont(l.bottomtextttf,l.bottomtextsize));
+				drawStringWithBackground(g,l.bottomtext, (int)xend, (int)yend2, l.bottombgfillcolor, l.bottomtextcolor);
+			}
+		
+		
+		});
+
 	}
 
 	public void paintVertices(Graphics g) {

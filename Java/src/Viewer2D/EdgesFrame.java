@@ -75,6 +75,10 @@ public class EdgesFrame extends JFrame {
 	private Edge[] edges;
 	private Vertex[] vertices;
 
+	private HashMap labels;
+
+	private double labelScale;
+
 	private EdgesPanel panel; // Has the edges drawn
 	private JTextField statusBar; // Shows highlighted/user info
 
@@ -148,7 +152,7 @@ public class EdgesFrame extends JFrame {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		panel = new EdgesPanel(edges, vertices, windowSizes[0], windowSizes[1]);
+		panel = new EdgesPanel(edges, vertices, labels,windowSizes[0], windowSizes[1]);
 		panel.setBackground(backgroundColor);
 
 		setMenuBars();
@@ -170,6 +174,8 @@ public class EdgesFrame extends JFrame {
 		setLocation((screen.width - width) / 2, (screen.height - height) / 2);
 		setResizable(true);
 		setVisible(true);
+		labels = new HashMap<>();
+		labelScale = 1;
 	}
 
 	private JFileChooser fileChooser;
@@ -823,7 +829,7 @@ public class EdgesFrame extends JFrame {
 			panel.setFont(font);
 			panel.setMoveStepSize(moveStepSize);
 			panel.setZoomStepSize(zoomStepSize);
-			formatter = new FormatVertex(vertices, edgesio.getStats(),
+			formatter = new FormatVertex(vertices, labels,labelScale,edgesio.getStats(),
 					windowSizes, threads);
 			panel.setFormatter(formatter);
 			panel.fitData();

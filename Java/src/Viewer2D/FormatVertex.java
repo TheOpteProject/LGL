@@ -19,6 +19,8 @@
 
 package Viewer2D;
 
+import java.util.HashMap;
+
 public class FormatVertex {
 	private Vertex[] vertices;
 	private VertexStats stats;
@@ -26,15 +28,20 @@ public class FormatVertex {
 	private int threadCount;
 	private static int DIMENSION = Vertex.DIMENSION;
 	private VertexFitter fitter;
+	private HashMap<Vertex,Label> labels;
+	double scaleBy;
+	double scaleCorrectionLabels;
 
 	// CONSTRUCTORS
-	public FormatVertex(Vertex[] e, VertexStats stats, int[] wSizes,
+	public FormatVertex(Vertex[] e, HashMap<Vertex,Label> labels,double scaleLabels,VertexStats stats, int[] wSizes,
 			int threads2use) {
 		vertices = e;
 		this.stats = stats;
 		windowSizes = wSizes;
 		threadCount = threads2use;
+		this.labels =  labels;
 		fitter = new VertexFitter();
+		this.scaleCorrectionLabels =  scaleLabels;
 	}
 
 	// MUTATORS
@@ -127,6 +134,7 @@ public class FormatVertex {
 		}
 		Transformer transformer = new Transformer();
 		transformer.scale(.99 * scale);
+		scaleBy = .99 * scale;
 		fitter.addManipulation(transformer);
 	}
 
@@ -140,6 +148,16 @@ public class FormatVertex {
 			manip.setVertexStats(stats); // Fix this if threading (race cond.)
 			manip.run();
 		}
+		labels.forEach((k,v) -> {
+			Label l = (Label)v;
+			Vertex vertex = (Vertex) k;
+			l.linelength =(int) (l.linelength * scaleBy * scaleCorrectionLabels);
+			//l.linesize =(int) (l.linesize *  scaleBy * scaleCorrectionLabels);
+			l.bottomtextsize = (int) (l.bottomtextsize *  scaleBy * scaleCorrectionLabels);
+			l.toptextsize = (int) (l.toptextsize *  scaleBy * scaleCorrectionLabels);
+			l.shapesize =  (int) (l.shapesize *  scaleBy * scaleCorrectionLabels);
+
+			});
 	}
 
 }

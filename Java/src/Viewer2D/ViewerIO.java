@@ -63,11 +63,24 @@ public class ViewerIO {
 	private HashMap vertexColorMap;
 	private Vector edgesV;
 	private Vector verticesV;
+	private HashMap labelMap;
+	private double scalingLabel;
 
 	public ViewerIO(File filename) throws FileNotFoundException, IOException {
 		file = filename;
 		edgeColorMap = new HashMap();
 		vertexColorMap = new HashMap();
+		labelMap = new HashMap();
+		scalingLabel = 1;
+	}
+
+	public void setLabelScale(double scale)
+	{
+		this.scalingLabel = scale;
+	}
+
+	public double getLabelScale() {
+		return this.scalingLabel;
 	}
 
 	// TODO: SESS - should move to "utils" class?
@@ -240,6 +253,79 @@ public class ViewerIO {
 		}
 	}
 
+	public void loadLabelFile(File f) throws IOException,FileNotFoundException {
+		if (edges == null || vertices == null) {
+			return;
+		}
+		labelMap.clear();
+		fileio = new FileInputHandler(f.getAbsolutePath());
+		fileio.setDelimeters(",");
+		while (fileio.readNextLine()) {
+			int s = fileio.getTokenCount();
+			if (s != 21) {
+				throw new IOException("number of fields are not correct in the file");
+			}
+			
+			int index = 0;
+			String id = fileio.getToken(index++);
+			String shape = fileio.getToken(index++);
+			int shapesize = fileio.getTokenAsInt(index++);
+			int shapeboarderwidth = fileio.getTokenAsInt(index++);
+			Color shapebordercolor = readColorRGBHex(index++);
+		
+			Color shapefillcolor = readColorRGBHexAlpha(index++);
+			index++;
+			double shapefillopacity = 0;//fileio.getTokenAsDouble(index++);
+			int linesize = fileio.getTokenAsInt(index++);
+			int linelength = fileio.getTokenAsInt(index++);
+			double lineangle =  fileio.getTokenAsDouble(index++);
+			Color linecolor = readColorRGBHex(index++);
+			
+			String toptextttf = fileio.getToken(index++);
+			int toptextsize = fileio.getTokenAsInt(index++);
+			Color toptextcolor = readColorRGBHex(index++);
+			Color topbgfillcolor =readColorRGBHex(index++);
+
+			String bottomtextttf = fileio.getToken(index++);
+			int bottomtextsize = fileio.getTokenAsInt(index++);
+			Color bottomtextcolor = readColorRGBHex(index++);
+			Color bottombgfillcolor =readColorRGBHex(index++);
+
+			String toptext = fileio.getToken(index++);
+			String bottomtext = fileio.getToken(index++);
+
+			Object o = vertexIdMap.get(id);
+			if (o == null) {
+				System.out.println("Undefined Vertex: " + id);
+				continue;
+			}
+			Label l = new Label(shape,
+								shapesize ,
+								shapeboarderwidth ,
+								shapebordercolor,
+								shapefillcolor ,
+								shapefillopacity ,
+								linesize ,
+								linelength ,
+								lineangle ,
+								linecolor,
+								toptextttf,
+								toptextsize ,
+								toptextcolor ,
+								topbgfillcolor ,
+								bottomtextttf ,
+								bottomtextsize ,
+								bottomtextcolor ,
+								bottombgfillcolor ,
+								toptext,
+								bottomtext);
+			labelMap.put((Vertex) o,l);
+
+		}
+
+	}
+	  
+
 	// //////////////////////////////////////////////////////////
 	// ACCESSORS
 	// //////////////////////////////////////////////////////////
@@ -255,6 +341,11 @@ public class ViewerIO {
 	public Vertex[] getVertices() {
 		return vertices;
 	}
+
+	public HashMap getLabels() {
+		return labelMap;
+	}
+
 
 	public HashMap getEdgeColorMap() {
 		return edgeColorMap;
@@ -345,6 +436,21 @@ public class ViewerIO {
 		return new Color((float) r, (float) g, (float) b);
 	}
 
+	private Color readColorRGBHex(int index) {
+		String hex = fileio.getToken(index);
+		int code = Integer.parseInt(hex,16);  
+		
+		return new Color((float) (code >> 16)/255, (float) ((code >> 8) & 255)/255, (float) (code & 255)/255);
+	}
+
+	private Color readColorRGBHexAlpha(int index) {
+		String hex = fileio.getToken(index++);
+		int code = Integer.parseInt(hex,16);  
+		float alpha = (float) fileio.getTokenAsDouble(index);
+		return new Color((float) (code >> 16)/255, (float) ((code >> 8) & 255)/255, (float) (code & 255)/255,alpha/100);
+	}
+
+
 	private void tidyNewVerticesAndEdges() {
 		// This just loads the edges into an array and out of the
 		// vector
@@ -363,4 +469,6 @@ public class ViewerIO {
 		}
 		verticesV.clear();
 	}
+
+	
 }

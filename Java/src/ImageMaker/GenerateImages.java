@@ -51,6 +51,27 @@ public class GenerateImages {
 	public static Color EDGE_COLOR = Color.white;
 	public static String EDGE_COLOR_FILE = "color_file";
 
+	static void loadLabels(String labelFile,ViewerIO verterIO)
+	{
+		if (!labelFile.isEmpty())
+		{
+			System.out.println("Loading label file: " + labelFile + "...");
+			try {
+				verterIO.loadLabelFile(new File(labelFile));
+				
+			} catch (java.io.FileNotFoundException e) {
+				System.out.println(e.getMessage());
+			} catch (java.io.IOException e) {
+				System.out.println(e.getMessage());
+				System.exit(1);
+			}
+			System.out.println("Labels loading complete.");
+
+		}
+
+
+	}
+
 	public static void main(String[] args) {
 		boolean loadedEdgeColors = false;
 		if (args.length == 0) {
@@ -68,16 +89,41 @@ public class GenerateImages {
 		String edgeFile = args[2];
 		String edgeColorFile = EDGE_COLOR_FILE;
 		List<String> coordFiles = new ArrayList<String>();
+		String labelFile = "";
 		boolean colorFileSwitch = false;
+		boolean labelFileSwitch = false;
+		boolean scaleSwitch = false;
+		double scaling = 1;
+		boolean wasLabel = false;
 		for (int i = 3; i < args.length; i++) {
 			String arg = args[i];
 			if ("-c".equals(arg)) {
 				colorFileSwitch = true;
 				continue;
 			}
+			if ("-l".equals(arg)) {
+				labelFileSwitch = true;
+				continue;
+			}
+			if ("-s".equals(arg)) {
+				scaleSwitch = true;
+				continue;
+			}
+			if (scaleSwitch) {
+				scaleSwitch = false;
+				scaling = Double.parseDouble(arg);
+				continue;
+			}
+			if (labelFileSwitch) {
+				labelFile = arg;
+				labelFileSwitch = false;
+				wasLabel = true;
+				continue;
+			}
 			if (colorFileSwitch) {
 				edgeColorFile = arg;
-				break;
+				colorFileSwitch = false;
+				continue;
 			}
 			coordFiles.add(arg);
 		}
@@ -94,6 +140,7 @@ public class GenerateImages {
 			System.out.println(e.getMessage());
 			System.exit(1);
 		}
+		verterIO.setLabelScale(scaling);
 		System.out.println("Trying to load edge color file: " + edgeColorFile
 				+ "...");
 		try {
@@ -108,11 +155,13 @@ public class GenerateImages {
 		}
 		System.out.println("Edges loading complete.");
 
-		generateDark(loadedEdgeColors, windowSizes, coordFiles, verterIO);
+		
 
-		generateLight(loadedEdgeColors, windowSizes, coordFiles, verterIO);
+		generateDark(loadedEdgeColors, windowSizes, coordFiles, labelFile, verterIO);
 
-		generateTransparent(loadedEdgeColors, windowSizes, coordFiles, verterIO);
+		generateLight(loadedEdgeColors, windowSizes, coordFiles, labelFile,verterIO);
+
+		generateTransparent(loadedEdgeColors, windowSizes, coordFiles, labelFile,verterIO);
 		
 		// System.out.println("Going for vector graphics (currently broken)");
 		// // Lets process coords files
@@ -176,10 +225,12 @@ public class GenerateImages {
 		// }
 	}
 
-	private static void generateTransparent(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,
+	private static void generateTransparent(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,String labelFile,
 			ViewerIO verterIO) {
+		loadLabels(labelFile,verterIO);
 		System.out.println("Going for transparent");
 		// Lets process coords files
+		
 		for (String coordFile : coordFiles) {
 			try {
 				System.out.println("Loading " + coordFile + "...");
@@ -190,11 +241,11 @@ public class GenerateImages {
 						windowSizes[0], windowSizes[1]);
 				System.out.println("Preparing " + pngFile + "...");
 				FormatVertex formatter = new FormatVertex(
-						verterIO.getVertices(), verterIO.getStats(),
+						verterIO.getVertices(),  verterIO.getLabels(), verterIO.getLabelScale(),verterIO.getStats(),
 						windowSizes, 1);
 
 				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
-						verterIO.getVertices(), windowSizes[0], windowSizes[1]);
+						verterIO.getVertices(),  verterIO.getLabels(), windowSizes[0], windowSizes[1]);
 
 				if (loadedEdgeColors)
 					panel.addEdgeColors(verterIO.getEdgeColorMap());
@@ -220,10 +271,12 @@ public class GenerateImages {
 		}
 	}
 
-	private static void generateLight(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,
+	private static void generateLight(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,String labelFile,
 			ViewerIO verterIO) {
+		loadLabels(labelFile,verterIO);
 		System.out.println("Going for light");
 		// Lets process coords files
+		
 		for (String coordFile : coordFiles) {
 			try {
 				System.out.println("Loading " + coordFile + "...");
@@ -234,11 +287,11 @@ public class GenerateImages {
 						windowSizes[0], windowSizes[1]);
 				System.out.println("Preparing " + pngFile + "...");
 				FormatVertex formatter = new FormatVertex(
-						verterIO.getVertices(), verterIO.getStats(),
+						verterIO.getVertices(),  verterIO.getLabels(), verterIO.getLabelScale(),verterIO.getStats(),
 						windowSizes, 1);
 
 				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
-						verterIO.getVertices(), windowSizes[0], windowSizes[1]);
+						verterIO.getVertices(),  verterIO.getLabels(), windowSizes[0], windowSizes[1]);
 
 				if (loadedEdgeColors)
 					panel.addEdgeColors(verterIO.getEdgeColorMap());
@@ -264,8 +317,9 @@ public class GenerateImages {
 		}
 	}
 
-	private static void generateDark(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,
+	private static void generateDark(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,String labelFile,
 			ViewerIO verterIO) {
+		loadLabels(labelFile,verterIO);
 		System.out.println("Going for dark");
 		// Lets process coords files
 		for (String coordFile : coordFiles) {
@@ -278,11 +332,11 @@ public class GenerateImages {
 						windowSizes[0], windowSizes[1]);
 				System.out.println("Preparing " + pngFile + "...");
 				FormatVertex formatter = new FormatVertex(
-						verterIO.getVertices(), verterIO.getStats(),
+						verterIO.getVertices(),  verterIO.getLabels(),verterIO.getLabelScale(), verterIO.getStats(),
 						windowSizes, 1);
 
 				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
-						verterIO.getVertices(), windowSizes[0], windowSizes[1]);
+						verterIO.getVertices(), verterIO.getLabels(), windowSizes[0], windowSizes[1]);
 
 				if (loadedEdgeColors)
 					panel.addEdgeColors(verterIO.getEdgeColorMap());

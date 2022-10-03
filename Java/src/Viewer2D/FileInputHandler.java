@@ -56,8 +56,8 @@ public class FileInputHandler {
 	}
 
 	// MUTATORS
-	public void setDelimeters(String delimiters) {
-		this.delimeters = delimeters;
+	public void setDelimeters(String delimiters_) {
+		this.delimeters = delimiters_;
 	}
 
 	// ACCESSORS

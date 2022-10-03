@@ -10,7 +10,7 @@ jar/%.jar: $(CLASS)
 jarfiles: jar/ImageMaker.jar jar/LGLLib.jar jar/LGLView.jar
 
 %.class : %.java
-	javac -cp lib/Jama-1.0.3.jar:lib/VectorGraphics2D-0.13.jar src/Viewer2D/*.java src/ImageMaker/*.java	
+	javac -cp lib/Jama-1.0.3.jar:lib/VectorGraphics2D-0.13.jar -cp src src/Viewer2D/*.java src/ImageMaker/*.java	
 
 all: $(CLASS)
 

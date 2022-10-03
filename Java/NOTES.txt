@@ -8,9 +8,6 @@ java -Xmx512m -Xms256m -cp ./LGLLib.jar Viewer2D.Viewer2D
 
 java -Xmx512m -Xms256m -cp ./LGLLib.jar ImageMaker.GenerateImages
 
-java -Xmx512m -Xms256m -jar ./LGLView.jar
-
-java -Xmx512m -Xms256m -jar ./ImageMaker.jar
 
 *****
 
