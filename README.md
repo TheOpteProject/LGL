@@ -208,14 +208,17 @@ Usage: ./lgl-exparmental-label/bin/lglayout2D [-x InitPositionFile] [-a AnchorsF
 
 Generating Static Images using LGLLib.jar 
 
-## ImageMaker - A JAVA 2D image output tool. 
+## ImageMaker
+### A JAVA 2D image output tool. 
 
 Runtime Example:
 
     java -Djava.awt.headless=true -Xmx20000m -Xms20000m -cp ./LGL-Master/Java/jar/LGLLib.jar ImageMaker.GenerateImages <height> <width> run.lgl run.coords -c run.colors -s 0.01 -l run.labels
 
 
-## LGLView - A JAVA 2D viewer for looking at the output of lgl.pl. The output of the layout programs is just a set of coordinates.  For looking at 2D 
+## LGLView 
+### A JAVA 2D viewer for looking and reviewing .lgl, .coord, .color, and .label files. 
+
 coordinates use lglview.jar 
 
     java -Xmx2G -Xms2G -cp ./LGL-master/Java/jar/LGLLib.jar Viewer2D.Viewer2D
