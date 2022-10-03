@@ -45,8 +45,6 @@ A heap of stuff, in no particular order:
 
 # Installation
 
-Use the Makefil, i.e.
-
 
 # Compling LGL C++ components
 
@@ -66,6 +64,8 @@ NOTE:  setup.pl has been updated to locate boost, however you may need
 
 # Comple Java jar files 
 
+Use the gmake Makefile, i.e. 
+
     prompt$ make 
     prompt$ make install # local install in $(PROJECTDIR)/bin
 
@@ -82,10 +82,10 @@ call them.
 
 # Additional reading
 
-User guide to LGL:
+##User guide to LGL:
 http://clairemcwhite.github.io/lgl-guide/
 
-Getting up to speed on Internet routing:
+##Getting up to speed on Internet routing:
 http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
 https://www.noction.com/blog/as-path-and-as-path-prepending
 
@@ -186,7 +186,7 @@ Usage: ./lgl-exparmental-label/bin/lglayout2D [-x InitPositionFile] [-a AnchorsF
 
             -q      Equilibrium distance.
 
-            -E      Ellipse factors.
+            -E      Ellipse factors. (Force the layout to be more of an ellipse -E 1x1.2) 
 
             -u      Placement distance is the distance you want
                     the next level to be placed with respect to
@@ -200,7 +200,6 @@ Usage: ./lgl-exparmental-label/bin/lglayout2D [-x InitPositionFile] [-a AnchorsF
                     near the parent vertex if all of its children have none themselves.
 
             -o      Read a previously created coordinates file to start processing level processing. This technique is used for animations. 
-
 
 
 
@@ -239,10 +238,10 @@ An example of a larger output would be:
 File Formats:
 (Thank you to Claire McWhite for this tutorial) 
 
-Input format (.ncol)
+##Input format (.lgl)
 The input format to LGL is called .ncol, which is just a space separated list of two connected nodes with an optional third column of weight.
 
-    $ cat example.ncol
+    $ cat example.lgl
     node1 node2 [optional weight]
     Key points for formatting the input .ncol
 
@@ -261,7 +260,7 @@ The input format to LGL is called .ncol, which is just a space separated list of
     node3         # Will cause error
               # Trailing blank line will cause error
 
-Coloring format (.colors)
+##Coloring format (.colors)
 LGL allows you to color both nodes and edges. In order to color edges, each pairwise edge must have an R G B value. To color individual nodes, each node must have an R G B value. RGB values must be scaled to one 1, so just divide each number of an RGB value by 255. The rules for formatting an .ncol file apply here too, i.e. no blanks, no empty lines, no redundancy, etc.
 
     $ cat example.edge.colors
@@ -278,7 +277,72 @@ LGL allows you to color both nodes and edges. In order to color edges, each pair
     node6 0.1 0.1 1.0
 
 
-An LGL workflow
+## The new labels file format (.labels)
+
+The flat file will have single line entries for the configuration of each label with a \n at the end.
+
+Pixel sizes cannot be in decimal or fractions 
+
+Colors will be referenced by their hex values. #000000-#111111
+
+    nodename,
+    	(name of the node we want to center the shape around)	
+    shape,
+    	(name of shape: circle or square)
+    shape_size,
+    	(size of the shape in pixels from center to edge?)
+    shape_border_with,
+    	(width of the shape in px)
+    shape_border_color,
+    	(color used for the shape border)
+    shape_fill_color,
+    	(color used to fill the shape)
+    shape_fill_opacity,
+    	(opacity for the fill of the shape)
+    line_size,
+    	(width of line in px)
+    line_length,
+    	(length of line in px)
+    line_angle,
+    	(direction of the line off the shape edge)
+    line_color,
+    	(color of the line off the shape)
+    top_text_ttf,
+    	(filename for ttf font)
+    top_text_size,
+     	(text size)
+    top_text_color,
+     	(text color for upper text)
+    top_bg_fill_color 
+    	(color used for text background)
+    bottom_text_ttf,
+    	(filename for ttf font)
+    bottom_text_size,
+     	(text size)
+    bottom_text_color,
+    	(text color for upper text)
+    bottom_bg_fill_color
+    	(color used for text background)
+    top_text
+    	(text string for top label)
+    Bottom_text
+    	(text string for bottom label)
+
+
+Example of a label in the input config file:
+
+
+    174,circle,20,2,000000,000000,100,5,25,30,000000,file.ttf,25,FFFFFF,000000,file.ttf,50,FFFFFF,000000,COGENT COMMUNICATIONS,GLOBAL NETWORK
+    5413,circle,20,2,000000,00FF00,20,5,125,100,000000,C:\Program Files\Wondershare\Wondershare Filmora (CPC)\Fonts\ARIALUNI.TTF,30,FF0000,000000,C:\Program Files\Wondershare\Wondershare Filmora (CPC)\Fonts\ARIALUNI.TTF,30,FFFFFF,000000,COGENT COMMUNICATIONS,GLOBAL NETWORK
+
+
+Command line example:
+
+    java -Djava.awt.headless=true -Xmx20000m -Xms20000m -cp ./LGL-master/Java/jar/LGLLib.jar ImageMaker.GenerateImages 5000 5000 <file.lgl> <file.coords> -c <file.colors> -l <file.labels> -s <scale ex: 0.1>
+
+
+
+#An LGL workflow
 
 This is any example to make a network with colored nodes and edges. I would begin by making a file of all pairwise edges and their associated traits. It can be difficult to keep .ncol and .color files in sync, and so it will cause fewest headaches to begin with one file containing all the information to create both.
 
@@ -352,68 +416,6 @@ LGL will read the previous file and start with those coordinates rather than sta
 
 
 
-# The new labels file format:
-
-The flat file will have single line entries for the configuration of each label with a \n at the end.
-
-Pixel sizes cannot be in decimal or fractions 
-
-Colors will be referenced by their hex values. #000000-#111111
-
-    nodename,
-    	(name of the node we want to center the shape around)	
-    shape,
-    	(name of shape: circle or square)
-    shape_size,
-    	(size of the shape in pixels from center to edge?)
-    shape_border_with,
-    	(width of the shape in px)
-    shape_border_color,
-    	(color used for the shape border)
-    shape_fill_color,
-    	(color used to fill the shape)
-    shape_fill_opacity,
-    	(opacity for the fill of the shape)
-    line_size,
-    	(width of line in px)
-    line_length,
-    	(length of line in px)
-    line_angle,
-    	(direction of the line off the shape edge)
-    line_color,
-    	(color of the line off the shape)
-    top_text_ttf,
-    	(filename for ttf font)
-    top_text_size,
-     	(text size)
-    top_text_color,
-     	(text color for upper text)
-    top_bg_fill_color 
-    	(color used for text background)
-    bottom_text_ttf,
-    	(filename for ttf font)
-    bottom_text_size,
-     	(text size)
-    bottom_text_color,
-    	(text color for upper text)
-    bottom_bg_fill_color
-    	(color used for text background)
-    top_text
-    	(text string for top label)
-    Bottom_text
-    	(text string for bottom label)
-
-
-Example of a label in the input config file:
-
-
-    174,circle,20,2,000000,000000,100,5,25,30,000000,file.ttf,25,FFFFFF,000000,file.ttf,50,FFFFFF,000000,COGENT COMMUNICATIONS,GLOBAL NETWORK
-    5413,circle,20,2,000000,00FF00,20,5,125,100,000000,C:\Program Files\Wondershare\Wondershare Filmora (CPC)\Fonts\ARIALUNI.TTF,30,FF0000,000000,C:\Program Files\Wondershare\Wondershare Filmora (CPC)\Fonts\ARIALUNI.TTF,30,FFFFFF,000000,COGENT COMMUNICATIONS,GLOBAL NETWORK
-
-
-Command line example:
-
-    java -Djava.awt.headless=true -Xmx20000m -Xms20000m -cp ./LGL-master/Java/jar/LGLLib.jar ImageMaker.GenerateImages 5000 5000 <file.lgl> <file.coords> -c <file.colors> -l <file.labels> -s <scale ex: 0.1>
 
 
 
