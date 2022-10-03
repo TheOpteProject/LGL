@@ -38,7 +38,6 @@ A heap of stuff, in no particular order:
 - A C++ compiler
 - - Boost library required (I should have fixed version issues, but I have not future proofed it)
 - bgpdump (https://bitbucket.org/ripencc/bgpdump/wiki/Home)
-- - Seems broken in Debian distros, so compile from source if needed
 - perl (5+, I think)
 - Java (8 seems to work)
 - Xserver installed for graphical tools (works well under WSL 2 in Windows)
@@ -48,81 +47,11 @@ A heap of stuff, in no particular order:
 
 Use the Makefil, i.e.
 
-    prompt$ make 
-    prompt$ make install # local install in $(PROJECTDIR)/bin
 
-should do the trick in the root directory (feel free to improve the magic
-`setup.pl -i` script which does a lot of suspect lifting).
+# Compling LGL C++ components
 
-# Making Internet graphs
+    `setup.pl -i` script which does a lot of suspect lifting).
 
-If your intention is to graph custom stuff, just hack away. Below is how you quite easily
-can make graphs from bgp-dumps. You need a separate folder for each project, due to design
-in the original LGL library. Below follows an example for a graph for a 2000 Internet. Takes 
-around 10 minutes on a fairly modern computer (8 threads or so) with a decent Internet connection. 
-
-The oneliner which creates a graph, including bootstrapping, from 2000-09-01:
-    
-    prompt$ cd scripts/
-    prompt$ ./creategraphfromdate.sh 2000 09
-    prompt$ # doing magic, and creating a graph
-    prompt$ # arguments to creategraphfromdate are year and month
-    prompt$ # and the scipt lacks proper error handling
-
-The same thing but step by step (if above fails):
-
-    prompt$ cd scripts/
-    prompt$ ./create_run.sh internet_2000
-    prompt$ cd ../testrun/internet_2000
-    prompt$ wget http://data.ris.ripe.net/rrc00/2000.09/bview.20000901.0610.gz
-    prompt$ ./bootstrap.sh bview.20000901.0610.gz
-    prompt$ # doing magic, and creating a graph
-    prompt$ # by default generating a 2400x2400 png (change run.sh for different resolution)
-    prompt$ # should be a 'internet_2001.png' in 'testrun/internet_2001' if all went well
-    
- Also possible:
- 
-    prompt$ cd scripts/
-    prompt$ ./creategraphfromurl.sh http://data.ris.ripe.net/rrc00/2000.09/bview.20000901.0610.gz
-    prompt$ # wait for magic, by default generating a 2400x2400 png (change run.sh for different resolution)
-    prompt$ # should be a 'view.20000901.0610.png' in 'testrun/bview.20000901.0610' if all went well
- 
-Replace the bview-file with a more recent one for a larger and newer network network. Coloring is
-set in `perls/colorEdgesBasedOnLevel.pl`, currently a mix of greenish and bluish tints going on white
-at the edges. 
-
-A short disclaimer; the graph is only as good as your data. The `bootstrap` script works for generating interesting graphs. Are they 100% correct? I don't know, you are welcome to check and improve the code! There might be BGP-quirks I do not know of, even though I catch the vast majority of bgp announcements. 
-
-# Additional reading
-
-User guide to LGL:
-http://clairemcwhite.github.io/lgl-guide/
-
-Getting up to speed on Internet routing:
-http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
-https://www.noction.com/blog/as-path-and-as-path-prepending
-
-
-## Before compiling!
-
-Firstly, LGL will probably only compile with the GNU compilers. It was tested 
-on Debian 1x, FreeBSD 9.x and CentOS, but it should compile OK on other Linux 
-distributions. For other operating systems you are on your own. Good Luck :-)
-
-You must have the following Perl modules in your @INC path to run LGL:
-
-ParseConfigFile.pm
-LGLFormatHandler.pm
-
-These files are in the ./perls directory.  You don't have to know anything 
-about these modules, and you won't have to use them directly but lgl.pl will 
-call them.
-
-## Setup and installation
-
-To compile LGL change to the same directory as setup.pl and type:
-
-    prompt$ ./setup.pl -i
 
 This will compile 2D and 3D versions of LGL and put the resulting binaries 
 in the ./bin directory. Afterwards you can move them whereever you want.
@@ -133,6 +62,33 @@ NOTE:  setup.pl has been updated to locate boost, however you may need
        detection does not work:
 
        env CPLUS_INCLUDE_PATH=/usr/local/include ./setup.pl -i
+
+
+# Comple Java jar files 
+
+    prompt$ make 
+    prompt$ make install # local install in $(PROJECTDIR)/bin
+
+
+You must have the following Perl modules in your @INC path to run LGL:
+
+    ParseConfigFile.pm
+    LGLFormatHandler.pm
+
+These files are in the ./perls directory.  You don't have to know anything 
+about these modules, and you won't have to use them directly but lgl.pl will 
+call them.
+
+
+# Additional reading
+
+User guide to LGL:
+http://clairemcwhite.github.io/lgl-guide/
+
+Getting up to speed on Internet routing:
+http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
+https://www.noction.com/blog/as-path-and-as-path-prepending
+
 
 After all is compiled and done you can run LGL by the driver script lgl.pl as:
 
@@ -183,6 +139,71 @@ Other files might be included as well, but they are not necessary for LGL.
 Their documentation will be added here in the near future, or they may not 
 be carried in the future.
 
+
+# lglayout2D
+
+Usage: ./lgl-exparmental-label/bin/lglayout2D [-x InitPositionFile] [-a AnchorsFile]
+        [-t ThreadCount] [-m InitMassFile] [-i IterationMax] 
+        [-s] [-r nbhdRadius] [-T timeStep] [-S nodeSizeRadius]
+        [-k casualSpringConstant] [-s specialSpringConstant]
+        [-e] [-l] [-y] [-q EQ Distance] [-u placementDistance]
+        [-E ellipseFactors] [-v placementRadius] [-L] nodeFile.lgl
+
+
+        -[mx]    A file that has the node id followed by
+                the initial values.
+
+            -t      The number of threads to spawn.
+                    This is capped by the processor count.
+    
+            -i      The maximum number of iterations.
+    
+            -r      The neighborhood radius for each particle. It
+                    defines the interaction range for casual (generally
+                    repulsive) interactions
+
+            -T      The time step for each iteration
+
+            -S      The 'radius' of each node.
+
+            -M      The 'mass' of each node.
+
+            -R      The radius of the outer perim.
+
+            -W      The write interval.
+
+            -z      Root node you want to use.
+
+            -l      Write out the edge level map.
+
+            -e      Output the mst used.
+
+            -O      Use original weights.
+
+            -y      Layout the tree only.
+
+            -I      Don't show layout progress, be quiet (kinda)
+
+            -q      Equilibrium distance.
+
+            -E      Ellipse factors.
+
+            -u      Placement distance is the distance you want
+                    the next level to be placed with respect to
+                    the previous level. If this float value is not
+                    given a formula calculates the placement distance.
+
+            -v      Placement radius is a measure of the placement density
+
+            -L      Place the leafs close by. This applies to trees more than
+                    graphs. Setting this option will place the child vertices very
+                    near the parent vertex if all of its children have none themselves.
+
+            -o      Read a previously created coordinates file to start processing level processing. This technique is used for animations. 
+
+
+
+
 ### Other Files:
 
 
@@ -216,6 +237,7 @@ An example of a larger output would be:
 
 
 File Formats:
+(Thank you to Claire McWhite for this tutorial) 
 
 Input format (.ncol)
 The input format to LGL is called .ncol, which is just a space separated list of two connected nodes with an optional third column of weight.
@@ -319,6 +341,17 @@ We could also color each node by some trait. In this file format, each vertex mu
     Running
 
 
+# Pre-seeding animation technique 
+
+The Opte Project was able to use lglayout2D to create a full animation in 10k using this new pre-seeding technique:
+
+    ./LGL-master/bin/lglayout2D -D -t 56 -x <filename for the previous frame coords file> -o <run.coords> -E1x1.2 run.lgl
+
+LGL will read the previous file and start with those coordinates rather than starting from scratch. This technique allows nodes to stay in nearly the same place creating another frame generated from the previous.
+
+
+
+
 # The new labels file format:
 
 The flat file will have single line entries for the configuration of each label with a \n at the end.
@@ -335,51 +368,52 @@ Colors will be referenced by their hex values. #000000-#111111
     	(size of the shape in pixels from center to edge?)
     shape_border_with,
     	(width of the shape in px)
-shape_border_color,
-	(color used for the shape border)
-shape_fill_color,
-	(color used to fill the shape)
-shape_fill_opacity,
-	(opacity for the fill of the shape)
-line_size,
-	(width of line in px)
-line_length,
-	(length of line in px)
-line_angle,
-	(direction of the line off the shape edge)
-line_color,
-	(color of the line off the shape)
-top_text_ttf,
-	(filename for ttf font)
-top_text_size,
-	(text size)
-top_text_color,
-	(text color for upper text)
-top_bg_fill_color
-	(color used for text background)
-bottom_text_ttf,
-	(filename for ttf font)
-bottom_text_size,
-	(text size)
-bottom_text_color,
-	(text color for upper text)
-bottom_bg_fill_color
-	(color used for text background)
-top_text
-	(text string for top label)
-Bottom_text
-	(text string for bottom label)
+    shape_border_color,
+    	(color used for the shape border)
+    shape_fill_color,
+    	(color used to fill the shape)
+    shape_fill_opacity,
+    	(opacity for the fill of the shape)
+    line_size,
+    	(width of line in px)
+    line_length,
+    	(length of line in px)
+    line_angle,
+    	(direction of the line off the shape edge)
+    line_color,
+    	(color of the line off the shape)
+    top_text_ttf,
+    	(filename for ttf font)
+    top_text_size,
+     	(text size)
+    top_text_color,
+     	(text color for upper text)
+    top_bg_fill_color 
+    	(color used for text background)
+    bottom_text_ttf,
+    	(filename for ttf font)
+    bottom_text_size,
+     	(text size)
+    bottom_text_color,
+    	(text color for upper text)
+    bottom_bg_fill_color
+    	(color used for text background)
+    top_text
+    	(text string for top label)
+    Bottom_text
+    	(text string for bottom label)
+
 
 Example of a label in the input config file:
 
 
-174,circle,20,2,000000,000000,100,5,25,30,000000,file.ttf,25,FFFFFF,000000,file.ttf,50,FFFFFF,000000,COGENT COMMUNICATIONS,GLOBAL NETWORK
-5413,circle,20,2,000000,00FF00,20,5,125,100,000000,C:\Program Files\Wondershare\Wondershare Filmora (CPC)\Fonts\ARIALUNI.TTF,30,FF0000,000000,C:\Program Files\Wondershare\Wondershare Filmora (CPC)\Fonts\ARIALUNI.TTF,30,FFFFFF,000000,COGENT COMMUNICATIONS,GLOBAL NETWORK
+    174,circle,20,2,000000,000000,100,5,25,30,000000,file.ttf,25,FFFFFF,000000,file.ttf,50,FFFFFF,000000,COGENT COMMUNICATIONS,GLOBAL NETWORK
+    5413,circle,20,2,000000,00FF00,20,5,125,100,000000,C:\Program Files\Wondershare\Wondershare Filmora (CPC)\Fonts\ARIALUNI.TTF,30,FF0000,000000,C:\Program Files\Wondershare\Wondershare Filmora (CPC)\Fonts\ARIALUNI.TTF,30,FFFFFF,000000,COGENT COMMUNICATIONS,GLOBAL NETWORK
 
 
 Command line example:
 
-java -Djava.awt.headless=true -Xmx20000m -Xms20000m -cp ./LGL-master/Java/jar/LGLLib.jar ImageMaker.GenerateImages 5000 5000 <file.lgl> <file.coords> -c <file.colors> -l <file.labels> -s <scale ex: 0.1>
+    java -Djava.awt.headless=true -Xmx20000m -Xms20000m -cp ./LGL-master/Java/jar/LGLLib.jar ImageMaker.GenerateImages 5000 5000 <file.lgl> <file.coords> -c <file.colors> -l <file.labels> -s <scale ex: 0.1>
 
 
 
@@ -388,3 +422,50 @@ java -Djava.awt.headless=true -Xmx20000m -Xms20000m -cp ./LGL-master/Java/jar/LG
 
 The most obvious way to expand LGL is to add support for your type of edge file to LGLFormatHandler.pm.  Just add a method to read in your file type, update 
 the 'loadFromFile' method to recognize your file suffix, and that should be it.
+
+
+
+
+
+
+
+
+# Making Internet graphs
+
+If your intention is to graph custom stuff, just hack away. Below is how you quite easily
+can make graphs from bgp-dumps. You need a separate folder for each project, due to design
+in the original LGL library. Below follows an example for a graph for a 2000 Internet. Takes 
+around 10 minutes on a fairly modern computer (8 threads or so) with a decent Internet connection. 
+
+The oneliner which creates a graph, including bootstrapping, from 2000-09-01:
+    
+    prompt$ cd scripts/
+    prompt$ ./creategraphfromdate.sh 2000 09
+    prompt$ # doing magic, and creating a graph
+    prompt$ # arguments to creategraphfromdate are year and month
+    prompt$ # and the scipt lacks proper error handling
+
+The same thing but step by step (if above fails):
+
+    prompt$ cd scripts/
+    prompt$ ./create_run.sh internet_2000
+    prompt$ cd ../testrun/internet_2000
+    prompt$ wget http://data.ris.ripe.net/rrc00/2000.09/bview.20000901.0610.gz
+    prompt$ ./bootstrap.sh bview.20000901.0610.gz
+    prompt$ # doing magic, and creating a graph
+    prompt$ # by default generating a 2400x2400 png (change run.sh for different resolution)
+    prompt$ # should be a 'internet_2001.png' in 'testrun/internet_2001' if all went well
+    
+ Also possible:
+ 
+    prompt$ cd scripts/
+    prompt$ ./creategraphfromurl.sh http://data.ris.ripe.net/rrc00/2000.09/bview.20000901.0610.gz
+    prompt$ # wait for magic, by default generating a 2400x2400 png (change run.sh for different resolution)
+    prompt$ # should be a 'view.20000901.0610.png' in 'testrun/bview.20000901.0610' if all went well
+ 
+Replace the bview-file with a more recent one for a larger and newer network network. Coloring is
+set in `perls/colorEdgesBasedOnLevel.pl`, currently a mix of greenish and bluish tints going on white
+at the edges. 
+
+A short disclaimer; the graph is only as good as your data. The `bootstrap` script works for generating interesting graphs. Are they 100% correct? I don't know, you are welcome to check and improve the code! There might be BGP-quirks I do not know of, even though I catch the vast majority of bgp announcements. 
+
