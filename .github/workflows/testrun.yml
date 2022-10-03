@@ -20,13 +20,3 @@ jobs:
       run: |
         echo Running install
         make install
-    - name: "Run a simple graph"
-      run: |
-        cd scripts
-        echo Trying to create graph
-        ./creategraphfromdate.sh 2000 09
-    - name: Upload graph image
-      uses: actions/upload-artifact@v1
-      with:
-        name: Upload graph
-        path: testrun/bview_2000_09/bview_2000_09_transparent.png
