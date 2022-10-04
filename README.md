@@ -38,24 +38,24 @@ Internet using traceroute vs BGP in 2003, Barrett Lyon, MoMA
 A heap of stuff, in no particular order:
 
 - A C++ compiler
-- - Boost library required (I should have fixed version issues, but I have not future proofed it)
+  - Boost library required (I should have fixed version issues, but I have not future proofed it)
 - bgpdump (https://bitbucket.org/ripencc/bgpdump/wiki/Home)
 - Also see bgpscanner (Works with threads and is faster than bgpdump) 
-- - https://blog.apnic.net/2018/11/29/new-mrt-bgp-reader-six-times-faster-than-its-predecessors/
+  - https://blog.apnic.net/2018/11/29/new-mrt-bgp-reader-six-times-faster-than-its-predecessors/
 - perl (5+, I think)
 - Java (openjdk version "11.0.16" 2022-07-19)
 - Xserver installed for graphical tools (works well under WSL 2 in Windows)
-- - Graphical tools also work on anything with Java.
+  - Graphical tools also work on anything with Java.
 - Python 3 (there are bash scripts lying around as well, but the python scripts are 3x faster)
-- - Only used for example scripts 
+  - Only used for example scripts 
 
 # Additional reading
 
 - User guide to LGL:
   - http://clairemcwhite.github.io/lgl-guide/
 - Getting up to speed on Internet routing:
- - http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
- - https://www.noction.com/blog/as-path-and-as-path-prepending
+  - http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
+  - https://www.noction.com/blog/as-path-and-as-path-prepending
 
 
 # Installation
