@@ -390,7 +390,8 @@ public class GenerateImages {
 				System.out.println("Loading " + coordFile + "...");
 				verterIO.loadVertexCoords(new File(coordFile));
 				VertexStats stat = verterIO.getStats();
-				System.out.println("min x:" +stat.min(0)+" max x:"+stat.max(0));
+				stat.print();
+				//System.out.println("min x:" +stat.min(0)+" max x:"+stat.max(0));
 
 				String pngFile = MessageFormat.format(
 						"{0}_{1,number,0}x{2,number,0}_dark.png", coordFile,

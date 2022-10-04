@@ -358,7 +358,10 @@ public class ViewerIO {
 			
 
 			if (linesize == null)
+			{
 				linecolor = null;
+				linesize = 0;
+			}	
 			if (lineangle ==null || linelength== null )
 			{
 			  //toptext = "";

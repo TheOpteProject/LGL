@@ -130,7 +130,10 @@ public class FileInputHandler {
 				tokens.addElement(o);
 				lastissep = false;
 				if (tokenizer.hasMoreTokens()) 
+				{
 					tokenizer.nextElement();
+					lastissep = true;
+				}	
 			}	
 			  
 		}
