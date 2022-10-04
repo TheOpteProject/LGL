@@ -92,12 +92,11 @@ call them.
 
 # Additional reading
 
-## User guide to LGL:
-http://clairemcwhite.github.io/lgl-guide/
-
-## Getting up to speed on Internet routing:
-http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
-https://www.noction.com/blog/as-path-and-as-path-prepending
+- User guide to LGL:
+-  - http://clairemcwhite.github.io/lgl-guide/
+- Getting up to speed on Internet routing:
+- - http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
+- - https://www.noction.com/blog/as-path-and-as-path-prepending
 
 
 After all is compiled and done you can run LGL by the driver script lgl.pl as:
