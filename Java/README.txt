@@ -3,7 +3,7 @@
 All files distributed with LGL fall under the terms of the
 GNU General Public License, and are copyright (c) 2002,2003 Alex Adai.
 
-Updated 2022 Barrett Lyon and The Opte Project Team 
+Updated 2014 Barrett Lyon and The Opte Project Team 
 
 LGL on the web at: http://bioinformatics.icmb.utexas.edu/lgl
 
@@ -25,10 +25,13 @@ $JAVABINPATH. This variable is only important for the compilation process.
 ######################################
 # I
 
-Run make in the root directory of the package. That should build the 3 .jar files.
+Change in to the same directory that this README is in and run ./build.sh
+
+This should produce 3 .jar files
 
 LGLLib.jar - The full viewer library that can produce images or do the GUI 
 viewer. 
+
 
 For backwards compatibility the older files are also produced:
 

@@ -30,6 +30,7 @@ import java.util.List;
 
 import Viewer2D.EdgesPanel;
 import Viewer2D.FormatVertex;
+import Viewer2D.VertexStats;
 import Viewer2D.ViewerIO;
 import de.erichseifert.vectorgraphics2d.Document;
 import de.erichseifert.vectorgraphics2d.Processor;
@@ -326,6 +327,8 @@ public class GenerateImages {
 			try {
 				System.out.println("Loading " + coordFile + "...");
 				verterIO.loadVertexCoords(new File(coordFile));
+				VertexStats stat = verterIO.getStats();
+				System.out.println("min x:" +stat.min(0)+" max x:"+stat.max(0));
 
 				String pngFile = MessageFormat.format(
 						"{0}_{1,number,0}x{2,number,0}_dark.png", coordFile,

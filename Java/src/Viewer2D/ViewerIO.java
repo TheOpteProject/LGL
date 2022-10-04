@@ -269,30 +269,70 @@ public class ViewerIO {
 			int index = 0;
 			String id = fileio.getToken(index++);
 			String shape = fileio.getToken(index++);
-			int shapesize = fileio.getTokenAsInt(index++);
-			int shapeboarderwidth = fileio.getTokenAsInt(index++);
+			Integer shapesize = fileio.getTokenAsInt(index++);
+			Integer shapeboarderwidth = fileio.getTokenAsInt(index++);
+
+			
+			  
 			Color shapebordercolor = readColorRGBHex(index++);
 		
 			Color shapefillcolor = readColorRGBHexAlpha(index++);
 			index++;
 			double shapefillopacity = 0;//fileio.getTokenAsDouble(index++);
-			int linesize = fileio.getTokenAsInt(index++);
-			int linelength = fileio.getTokenAsInt(index++);
-			double lineangle =  fileio.getTokenAsDouble(index++);
+			if (shapesize == null || shapeboarderwidth == null || shapebordercolor == null || shapefillcolor == null)
+			{
+				shapesize = 0;
+				shapeboarderwidth = 0;
+				shape = "";
+			}
+
+
+			Integer linesize = fileio.getTokenAsInt(index++);
+			Integer linelength = fileio.getTokenAsInt(index++);
+			Double lineangle =  fileio.getTokenAsDouble(index++);
 			Color linecolor = readColorRGBHex(index++);
+
+			
+
 			
 			String toptextttf = fileio.getToken(index++);
-			int toptextsize = fileio.getTokenAsInt(index++);
+			Integer toptextsize = fileio.getTokenAsInt(index++);
 			Color toptextcolor = readColorRGBHex(index++);
 			Color topbgfillcolor =readColorRGBHex(index++);
 
 			String bottomtextttf = fileio.getToken(index++);
-			int bottomtextsize = fileio.getTokenAsInt(index++);
+			Integer bottomtextsize = fileio.getTokenAsInt(index++);
 			Color bottomtextcolor = readColorRGBHex(index++);
 			Color bottombgfillcolor =readColorRGBHex(index++);
 
 			String toptext = fileio.getToken(index++);
 			String bottomtext = fileio.getToken(index++);
+
+			if (toptextttf.isEmpty() || toptextsize== null || toptextcolor == null || topbgfillcolor==null)
+			{
+				toptext = "";
+				toptextsize = 0;
+			}	
+
+			if (bottomtextttf.isEmpty()  || bottomtextsize== null || bottomtextcolor == null || bottombgfillcolor==null)
+			{
+				bottomtext = "";
+				bottomtextsize = 0;
+			}	
+
+			
+
+			if (linesize == null)
+				linecolor = null;
+			if (lineangle ==null || linelength== null )
+			{
+			  //toptext = "";
+			  //bottomtext = "";
+			  lineangle = 0.0;
+			  linelength = 0;	
+			}
+
+			
 
 			Object o = vertexIdMap.get(id);
 			if (o == null) {
@@ -438,16 +478,32 @@ public class ViewerIO {
 
 	private Color readColorRGBHex(int index) {
 		String hex = fileio.getToken(index);
-		int code = Integer.parseInt(hex,16);  
-		
-		return new Color((float) (code >> 16)/255, (float) ((code >> 8) & 255)/255, (float) (code & 255)/255);
+		try
+		{
+			int code = Integer.parseInt(hex,16);  
+			
+			return new Color((float) (code >> 16)/255, (float) ((code >> 8) & 255)/255, (float) (code & 255)/255);
+		}
+		catch (NumberFormatException nfe) {
+			return null;
+		}
 	}
 
 	private Color readColorRGBHexAlpha(int index) {
 		String hex = fileio.getToken(index++);
-		int code = Integer.parseInt(hex,16);  
-		float alpha = (float) fileio.getTokenAsDouble(index);
-		return new Color((float) (code >> 16)/255, (float) ((code >> 8) & 255)/255, (float) (code & 255)/255,alpha/100);
+		try
+		{
+			int code = Integer.parseInt(hex,16);  
+			Double d = fileio.getTokenAsDouble(index);
+			if (d==null)
+				return null;
+			float alpha = (float) d.floatValue();
+			return new Color((float) (code >> 16)/255, (float) ((code >> 8) & 255)/255, (float) (code & 255)/255,alpha/100);
+		}
+		catch (NumberFormatException nfe) {
+			return null;
+		}
+
 	}
 
 

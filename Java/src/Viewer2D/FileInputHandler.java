@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -82,12 +83,24 @@ public class FileInputHandler {
 		return true;
 	}
 
-	public double getTokenAsDouble(int i) {
-		return Double.parseDouble((String) tokens.elementAt(i));
+	public Double getTokenAsDouble(int i) {
+		try
+		{
+			return Double.parseDouble((String) tokens.elementAt(i));
+		}
+		catch (NumberFormatException nfe) {
+			return null;
+		}
 	}
 
-	public int getTokenAsInt(int i) {
+	public Integer getTokenAsInt(int i) {
+		try
+		{
 		return Integer.parseInt((String) tokens.elementAt(i));
+		}
+	    catch (NumberFormatException nfe) {
+			return null;
+		}
 	}
 
 	public void print() {
@@ -100,10 +113,29 @@ public class FileInputHandler {
 		if (text == null) {
 			return;
 		}
-		tokenizer = new StringTokenizer(text, delimeters);
+		tokenizer = new StringTokenizer(text, delimeters,true);
+
+		//String[] stringArr ;
+		//tokens = new Vector( Arrays.asList(text.split(delimeters)));
+		boolean lastissep = false;
 		while (tokenizer.hasMoreTokens()) {
-			tokens.addElement(tokenizer.nextElement());
+			Object o = tokenizer.nextElement();
+			if (((String)(o)).equals(delimeters))
+			{
+				tokens.addElement("");
+				lastissep = true;
+			}
+			else
+			{
+				tokens.addElement(o);
+				lastissep = false;
+				if (tokenizer.hasMoreTokens()) 
+					tokenizer.nextElement();
+			}	
+			  
 		}
+		if (lastissep)
+			tokens.addElement("");
 	}
 
 }

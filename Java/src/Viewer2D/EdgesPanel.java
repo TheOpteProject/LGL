@@ -769,8 +769,11 @@ public class EdgesPanel extends JPanel implements MouseListener,
 			//Label l =  labels.get(name);
 			Label l = (Label)v;
 			Vertex vertex = (Vertex) k;
-			g.setColor(l.linecolor);
-			g.setStroke(new BasicStroke(l.linesize*1.0f));
+			if (l.linesize!=0 && l.linecolor != null)
+			{
+				g.setColor(l.linecolor);
+				g.setStroke(new BasicStroke(l.linesize*1.0f));
+			}
 			double rad = (90-l.lineangle)/360*2*Math.PI;
 			double xdiff = l.linelength * Math.cos(rad);
 			double ydiff = -l.linelength * Math.sin(rad);
@@ -778,7 +781,8 @@ public class EdgesPanel extends JPanel implements MouseListener,
 			double ystart =  vertex.location().get(1, 0);
 			double xend = xstart+xdiff;
 			double yend = ystart+ydiff;
-			g.draw(new Line2D.Double(xstart,ystart,xend, yend));
+			if (l.linesize!=0 && l.linecolor != null)
+				g.draw(new Line2D.Double(xstart,ystart,xend, yend));
 
 			if (l.shape.equals("circle"))
 			{
@@ -815,6 +819,10 @@ public class EdgesPanel extends JPanel implements MouseListener,
 					FontMetrics fm = g.getFontMetrics();
 					Rectangle2D rect = fm.getStringBounds(l.bottomtext, g);
 					yend2+=rect.getHeight();
+				}
+				else
+				{
+					
 				}
 				g.setFont(getFont(l.bottomtextttf,l.bottomtextsize));
 				drawStringWithBackground(g,l.bottomtext, (int)xend, (int)yend2, l.bottombgfillcolor, l.bottomtextcolor);
