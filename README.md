@@ -49,6 +49,15 @@ A heap of stuff, in no particular order:
 - Python 3 (there are bash scripts lying around as well, but the python scripts are 3x faster)
 - - Only used for example scripts 
 
+# Additional reading
+
+- User guide to LGL:
+-  - http://clairemcwhite.github.io/lgl-guide/
+- Getting up to speed on Internet routing:
+- - http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
+- - https://www.noction.com/blog/as-path-and-as-path-prepending
+
+
 # Installation
 
 
@@ -88,15 +97,6 @@ You must have the following Perl modules in your @INC path to run LGL:
 These files are in the ./perls directory.  You don't have to know anything 
 about these modules, and you won't have to use them directly but lgl.pl will 
 call them.
-
-
-# Additional reading
-
-- User guide to LGL:
--  - http://clairemcwhite.github.io/lgl-guide/
-- Getting up to speed on Internet routing:
-- - http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
-- - https://www.noction.com/blog/as-path-and-as-path-prepending
 
 
 After all is compiled and done you can run LGL by the driver script lgl.pl as:
