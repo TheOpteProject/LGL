@@ -74,6 +74,8 @@ Use the gmake Makefile, i.e.
     prompt$ make install # local install in $(PROJECTDIR)/bin
 
 
+## Configure Perl 
+
 You must have the following Perl modules in your @INC path to run LGL:
 
     ParseConfigFile.pm
