@@ -22,9 +22,13 @@ If you use this in your research, please cite (if possible):
 
 # Example output
 
+![Holding Space](https://raw.githubusercontent.com/clairemcwhite/clairemcwhite.github.io/master/images/homology_graph.jfif)
+
+Protein Homology Graph, Edward Marcotte and Alex Adai, MoMA
+
 ![The Internet 2003](http://content.opte.org/content/opte/maps/static/1069646562.LGL.2D.700x700.png)
 
-Example of the Internet using traceroute vs BGP in 2003. 
+Internet using traceroute vs BGP in 2003, Barrett Lyon, MoMA
 
 
 ![Image of the Internet](https://raw.githubusercontent.com/flindeberg/LGL/master/resources/images/internet_2016.png)
@@ -82,7 +86,7 @@ call them.
 
 # Additional reading
 
-##User guide to LGL:
+## User guide to LGL:
 http://clairemcwhite.github.io/lgl-guide/
 
 ##Getting up to speed on Internet routing:
