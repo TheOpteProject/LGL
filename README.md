@@ -10,11 +10,9 @@ Changes and updates copyright (c) 2004-2022 Barrett Lyon
 
 LGL on the web at:  http://www.opte.org/
 
-Much thanks to the Marcotte lab for testing. 
 
 If you use this in your research, please cite (if possible):
 - Lyon, Barrett. "The Opte Project." Mapping the Internet, Self, 2003-2022. http://www.opte.org.
-- Lindeberg, Fredrik. “Coordinating the Internet.” Licentiate Thesis, Linköping University, 2019. http://urn.kb.se/resolve?urn=urn:nbn:se:liu:diva-161812.
 - Adai, Alex T., Shailesh V. Date, Shannon Wieland, and Edward M. Marcotte. “LGL: Creating a Map of Protein Function with an Algorithm for Visualizing Very Large Biological Networks.” Journal of Molecular Biology 340, no. 1 (2004): 179–90. https://doi.org/10.1016/j.jmb.2004.04.047.
 
 
@@ -88,6 +86,7 @@ Use the gmake Makefile, i.e.
 
 
 ## Configure Perl 
+(If you intend to use these scrips)
 
 You must have the following Perl modules in your @INC path to run LGL:
 
