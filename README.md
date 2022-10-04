@@ -295,11 +295,18 @@ LGL also now supports colors in hex values and is backward compatible with the p
 
 ## The new labels file format (.labels)
 
-The flat file will have single line entries for the configuration of each label with a \n at the end.
+LGL now supports labels! It's a flat file with single line entries for the configuration of each label with a \n at the end.
 
 Pixel sizes cannot be in decimal or fractions 
 
 Colors will be referenced by their hex values. 000000-111111 (Do not include the #)
+
+
+![Holding Space](http://content.opte.org/content/labels-example.jpg)
+
+Example of image generated with labels. 
+
+## Format:
 
     nodename,
     	(name of the node we want to center the shape around)	
