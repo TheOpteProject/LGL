@@ -324,7 +324,7 @@ Colors will be referenced by their hex values. 000000-111111 (Do not include the
     line_color,
     	(color of the line off the shape)
     top_text_ttf,
-    	(filename for ttf font)
+    	(full path filename for ttf font)
     top_text_size,
      	(text size)
     top_text_color,
@@ -332,7 +332,7 @@ Colors will be referenced by their hex values. 000000-111111 (Do not include the
     top_bg_fill_color 
     	(color used for text background)
     bottom_text_ttf,
-    	(filename for ttf font)
+    	(full path filename for ttf font)
     bottom_text_size,
      	(text size)
     bottom_text_color,
@@ -349,7 +349,6 @@ Example of a label in the input config file:
 
 
     174,circle,20,2,000000,000000,100,5,25,30,000000,file.ttf,25,FFFFFF,000000,file.ttf,50,FFFFFF,000000,COGENT COMMUNICATIONS,GLOBAL NETWORK
-    5413,circle,20,2,000000,00FF00,20,5,125,100,000000,C:\Program Files\Wondershare\Wondershare Filmora (CPC)\Fonts\ARIALUNI.TTF,30,FF0000,000000,C:\Program Files\Wondershare\Wondershare Filmora (CPC)\Fonts\ARIALUNI.TTF,30,FFFFFF,000000,COGENT COMMUNICATIONS,GLOBAL NETWORK
 
 
 Command line example:
@@ -448,7 +447,7 @@ The most obvious way to expand LGL is to add support for your type of edge file 
 the 'loadFromFile' method to recognize your file suffix, and that should be it.
 
 
-# Making Internet graphs
+# Example of Internet graphs
 
 ![Image of the Internet](https://raw.githubusercontent.com/flindeberg/LGL/master/resources/images/internet_2016.png)
 
