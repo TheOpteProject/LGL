@@ -146,6 +146,8 @@ be carried in the future.
 
 ## lglayout2D
 
+This is the core of LGL and generates the coords file for image generation. 
+
 Usage: ./lgl-exparmental-label/bin/lglayout2D [-x InitPositionFile] [-a AnchorsFile]
         [-t ThreadCount] [-m InitMassFile] [-i IterationMax] 
         [-s] [-r nbhdRadius] [-T timeStep] [-S nodeSizeRadius]
@@ -216,15 +218,6 @@ Runtime Example:
 
     java -Djava.awt.headless=true -Xmx20000m -Xms20000m -cp ./LGL-Master/Java/jar/LGLLib.jar ImageMaker.GenerateImages <height> <width> run.lgl run.coords -c run.colors -s 0.01 -l run.labels
 
-
-## LGLView 
-### A JAVA 2D viewer for looking and reviewing .lgl, .coord, .color, and .label files. 
-
-coordinates use lglview.jar 
-
-    java -Xmx2G -Xms2G -cp ./LGL-master/Java/jar/LGLLib.jar Viewer2D.Viewer2D
-
-
 Looking at the huge PNG (100k x 100k pixels) java.awt.image.Raster: The 
 maximum width x height has to be less than Integer.MAX_VALUE (2147483647) so 
 the maximum square image is 46340 x 46340. Note also that such images will 
@@ -232,11 +225,24 @@ need a lot of RAM since Java's BufferedImage's pixels are hold in memory.
 
 An example of a larger output would be: 
 
-    java  -Xms1G -Xmx5G -jar ImageMaker.jar 29200 29200 <files...>
+    EOL: java  -Xms1G -Xmx5G -jar ImageMaker.jar 29200 29200 <files...>
+        
 
-    LGLView.jar - The full package that combines LGLView and ImageMaker.
+## LGLView 
+### A JAVA 2D viewer for looking and reviewing .lgl, .coord, .color, and .labels files. 
 
-    Java - Directory and source code of all JAVA programs.  See README in the JAVA dir.
+coordinates use LGLLib.jar 
+
+    java -Xmx2G -Xms2G -cp ./LGL-master/Java/jar/LGLLib.jar Viewer2D.Viewer2D
+
+
+## LGLView.jar
+### The full package that combines LGLView and ImageMaker.
+
+
+## Java
+### Directory and source code of all JAVA programs.  See README in the JAVA dir.
+
 
 
 # File Formats:
