@@ -18,6 +18,9 @@ If you use this in your research, please cite (if possible):
 - Adai, Alex T., Shailesh V. Date, Shannon Wieland, and Edward M. Marcotte. “LGL: Creating a Map of Protein Function with an Algorithm for Visualizing Very Large Biological Networks.” Journal of Molecular Biology 340, no. 1 (2004): 179–90. https://doi.org/10.1016/j.jmb.2004.04.047.
 
 
+Note: Most of the Perl contained in this package is no longer maintained. The Java and C++ components are modernized. 
+
+
 # Example output
 
 ![Holding Space](https://raw.githubusercontent.com/clairemcwhite/clairemcwhite.github.io/master/images/homology_graph.jfif)
