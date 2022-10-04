@@ -47,7 +47,9 @@ A heap of stuff, in no particular order:
 
 ## Compling LGL C++ components
 
-    `setup.pl -i` script which does a lot of suspect lifting).
+    prompt$ setup.pl -i
+    
+    This script which does a lot of suspect lifting.
 
 
 This will compile 2D and 3D versions of LGL and put the resulting binaries 
@@ -61,7 +63,7 @@ NOTE:  setup.pl has been updated to locate boost, however you may need
        env CPLUS_INCLUDE_PATH=/usr/local/include ./setup.pl -i
 
 
-## Comple Java jar files 
+## Compile Java jar files 
 
 Use the gmake Makefile, i.e. 
 
@@ -84,7 +86,7 @@ call them.
 ## User guide to LGL:
 http://clairemcwhite.github.io/lgl-guide/
 
-##Getting up to speed on Internet routing:
+## Getting up to speed on Internet routing:
 http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
 https://www.noction.com/blog/as-path-and-as-path-prepending
 
@@ -235,7 +237,7 @@ An example of a larger output would be:
 
 
 # File Formats:
-(Thank you to Claire McWhite for this tutorial) 
+(Thank you to Claire McWhite for major parts of this tutorial) 
 
 ## Input format (.lgl)
 
@@ -264,10 +266,20 @@ The input format to LGL is called .ncol, which is just a space separated list of
 
 LGL allows you to color both nodes and edges. In order to color edges, each pairwise edge must have an R G B value. To color individual nodes, each node must have an R G B value. RGB values must be scaled to one 1, so just divide each number of an RGB value by 255. The rules for formatting an .ncol file apply here too, i.e. no blanks, no empty lines, no redundancy, etc.
 
+LGL also now supports colors in hex values and is backward compatible with the previous RGB format.
+
     $ cat example.edge.colors
     node1 node2 1.0 0.5 0.0 
     node3 node4 0.0 1.0 0.8 
     node5 node6 0.1 0.1 1.0
+    
+    or
+    
+    $ cat example2.edge.colors
+    node1 node2 FFFFFF FFFFFF FFFFFF 
+    node3 node4 0.0 1.0 0.8 
+    node5 node6 0.1 0.1 1.0
+
 
     $ cat example.vertex.colors
     node1 1.0 0.8 0.0 
@@ -284,7 +296,7 @@ The flat file will have single line entries for the configuration of each label 
 
 Pixel sizes cannot be in decimal or fractions 
 
-Colors will be referenced by their hex values. #000000-#111111
+Colors will be referenced by their hex values. 000000-111111 (Do not include the #)
 
     nodename,
     	(name of the node we want to center the shape around)	
