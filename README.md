@@ -52,10 +52,10 @@ A heap of stuff, in no particular order:
 # Additional reading
 
 - User guide to LGL:
--  - http://clairemcwhite.github.io/lgl-guide/
+  - http://clairemcwhite.github.io/lgl-guide/
 - Getting up to speed on Internet routing:
-- - http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
-- - https://www.noction.com/blog/as-path-and-as-path-prepending
+ - http://networkingbodges.blogspot.com/2019/04/a-real-full-internet-table-in-lab.html
+ - https://www.noction.com/blog/as-path-and-as-path-prepending
 
 
 # Installation
