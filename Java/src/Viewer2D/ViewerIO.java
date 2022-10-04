@@ -65,6 +65,10 @@ public class ViewerIO {
 	private Vector verticesV;
 	private HashMap labelMap;
 	private double scalingLabel;
+	private double customMinX;
+	private double customMaxX;
+	private double customMinY;
+	private double customMaxY;
 
 	public ViewerIO(File filename) throws FileNotFoundException, IOException {
 		file = filename;
@@ -72,12 +76,43 @@ public class ViewerIO {
 		vertexColorMap = new HashMap();
 		labelMap = new HashMap();
 		scalingLabel = 1;
+		customMinX = 0;
+		customMaxX = 0;
+		customMinY = 0;
+		customMaxY = 0;
+
 	}
 
 	public void setLabelScale(double scale)
 	{
 		this.scalingLabel = scale;
 	}
+
+	public void setMinMaxXY(double minx, double miny,double maxx, double maxy)
+	{
+		customMinX = minx;
+		customMaxX = maxx;
+		customMinY = miny;
+		customMaxY = maxy;
+
+	}
+
+	public double getMinX() {
+		return customMinX;
+	}
+
+	public double getMaxX() {
+		return customMaxX;
+	}
+
+	public double getMinY() {
+		return customMinY;
+	}
+
+	public double getMaxY() {
+		return customMaxY;
+	}
+
 
 	public double getLabelScale() {
 		return this.scalingLabel;

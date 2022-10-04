@@ -829,7 +829,7 @@ public class EdgesFrame extends JFrame {
 			panel.setFont(font);
 			panel.setMoveStepSize(moveStepSize);
 			panel.setZoomStepSize(zoomStepSize);
-			formatter = new FormatVertex(vertices, labels,labelScale,edgesio.getStats(),
+			formatter = new FormatVertex(vertices, labels,labelScale,0,0,0,0,false,edgesio.getStats(),
 					windowSizes, threads);
 			panel.setFormatter(formatter);
 			panel.fitData();

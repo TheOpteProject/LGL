@@ -96,6 +96,17 @@ public class GenerateImages {
 		boolean scaleSwitch = false;
 		double scaling = 1;
 		boolean wasLabel = false;
+		boolean wasMin = false;
+		boolean wasMax = false;
+		boolean minSwitch = false;
+		boolean maxSwitch = false;
+		double minX = 0;
+		double maxX = 0;
+		double minY = 0;
+		double maxY = 0;
+
+		boolean alignmentCenter = false;
+		boolean alignSwitch = false;
 		for (int i = 3; i < args.length; i++) {
 			String arg = args[i];
 			if ("-c".equals(arg)) {
@@ -110,9 +121,54 @@ public class GenerateImages {
 				scaleSwitch = true;
 				continue;
 			}
+			if ("-m".equals(arg)) {
+				minSwitch = true;
+				continue;
+			}
+			if ("-a".equals(arg)) {
+				alignSwitch  = true;
+				continue;
+			}
+			if ("-M".equals(arg)) {
+				maxSwitch = true;
+				continue;
+			}
 			if (scaleSwitch) {
 				scaleSwitch = false;
 				scaling = Double.parseDouble(arg);
+				continue;
+			}
+			if (minSwitch) {
+				minSwitch = false;
+				wasMin = true;
+				String [] a = arg.split(",");
+				if (a.length!=2)
+				{
+					System.out.println("Error:-m requires exactly 2 coordinates");
+					System.exit(1);
+
+				}
+				minX = Double.parseDouble(a[0]);
+				minY = Double.parseDouble(a[1]);
+				continue;
+			}
+			if (maxSwitch) {
+				maxSwitch = false;
+				wasMax = true;
+				String [] a = arg.split(",");
+				if (a.length!=2)
+				{
+					System.out.println("Error:-M requires exactly 2 coordinates");
+					System.exit(1);
+				}
+				maxX = Double.parseDouble(a[0]);
+				maxY = Double.parseDouble(a[1]);
+				continue;
+			}
+			if (alignSwitch) {
+				alignSwitch = false;
+				if (arg.equals("center"))
+					alignmentCenter = true;
 				continue;
 			}
 			if (labelFileSwitch) {
@@ -142,6 +198,12 @@ public class GenerateImages {
 			System.exit(1);
 		}
 		verterIO.setLabelScale(scaling);
+		if (wasMax ^ wasMin)
+		{
+			System.out.println("Error:Both -m and -M need to be used at the same time, one of them is missing");
+			System.exit(1);
+		}
+		verterIO.setMinMaxXY(minX,minY,maxX,maxY);
 		System.out.println("Trying to load edge color file: " + edgeColorFile
 				+ "...");
 		try {
@@ -158,11 +220,11 @@ public class GenerateImages {
 
 		
 
-		generateDark(loadedEdgeColors, windowSizes, coordFiles, labelFile, verterIO);
+		generateDark(loadedEdgeColors, windowSizes, coordFiles, labelFile, alignmentCenter,verterIO);
 
-		generateLight(loadedEdgeColors, windowSizes, coordFiles, labelFile,verterIO);
+		generateLight(loadedEdgeColors, windowSizes, coordFiles, labelFile,alignmentCenter,verterIO);
 
-		generateTransparent(loadedEdgeColors, windowSizes, coordFiles, labelFile,verterIO);
+		generateTransparent(loadedEdgeColors, windowSizes, coordFiles, labelFile,alignmentCenter,verterIO);
 		
 		// System.out.println("Going for vector graphics (currently broken)");
 		// // Lets process coords files
@@ -226,7 +288,7 @@ public class GenerateImages {
 		// }
 	}
 
-	private static void generateTransparent(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,String labelFile,
+	private static void generateTransparent(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,String labelFile,boolean alignmentCenter,
 			ViewerIO verterIO) {
 		loadLabels(labelFile,verterIO);
 		System.out.println("Going for transparent");
@@ -242,7 +304,7 @@ public class GenerateImages {
 						windowSizes[0], windowSizes[1]);
 				System.out.println("Preparing " + pngFile + "...");
 				FormatVertex formatter = new FormatVertex(
-						verterIO.getVertices(),  verterIO.getLabels(), verterIO.getLabelScale(),verterIO.getStats(),
+						verterIO.getVertices(),  verterIO.getLabels(), verterIO.getLabelScale(),verterIO.getMinX(),verterIO.getMinY(),verterIO.getMaxX(),verterIO.getMaxY(),alignmentCenter,verterIO.getStats(),
 						windowSizes, 1);
 
 				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
@@ -272,7 +334,7 @@ public class GenerateImages {
 		}
 	}
 
-	private static void generateLight(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,String labelFile,
+	private static void generateLight(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,String labelFile,boolean alignmentCenter,
 			ViewerIO verterIO) {
 		loadLabels(labelFile,verterIO);
 		System.out.println("Going for light");
@@ -288,7 +350,7 @@ public class GenerateImages {
 						windowSizes[0], windowSizes[1]);
 				System.out.println("Preparing " + pngFile + "...");
 				FormatVertex formatter = new FormatVertex(
-						verterIO.getVertices(),  verterIO.getLabels(), verterIO.getLabelScale(),verterIO.getStats(),
+						verterIO.getVertices(),  verterIO.getLabels(), verterIO.getLabelScale(),verterIO.getMinX(),verterIO.getMinY(),verterIO.getMaxX(),verterIO.getMaxY(),alignmentCenter, verterIO.getStats(),
 						windowSizes, 1);
 
 				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
@@ -318,7 +380,7 @@ public class GenerateImages {
 		}
 	}
 
-	private static void generateDark(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,String labelFile,
+	private static void generateDark(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,String labelFile,boolean alignmentCenter,
 			ViewerIO verterIO) {
 		loadLabels(labelFile,verterIO);
 		System.out.println("Going for dark");
@@ -335,7 +397,7 @@ public class GenerateImages {
 						windowSizes[0], windowSizes[1]);
 				System.out.println("Preparing " + pngFile + "...");
 				FormatVertex formatter = new FormatVertex(
-						verterIO.getVertices(),  verterIO.getLabels(),verterIO.getLabelScale(), verterIO.getStats(),
+						verterIO.getVertices(),  verterIO.getLabels(),verterIO.getLabelScale(), verterIO.getMinX(),verterIO.getMinY(),verterIO.getMaxX(),verterIO.getMaxY(), alignmentCenter,verterIO.getStats(),
 						windowSizes, 1);
 
 				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
@@ -368,7 +430,7 @@ public class GenerateImages {
 	public static void message() {
 		System.out
 				.println("Arguments:\n\n"
-						+ "\t<width> <height> <edges file> <coords file1> <coords file2>... [-c <colors file> ]\n\n"
+						+ "\t<width> <height> <edges file> <coords file1> <coords file2>... [-c <colors file> ] [-l <labels file>] [-m minx,miny -M -maxx,maxy] [-a center]\n\n"
 						+ "If no colors file specified program will try to load file named \""
 						+ EDGE_COLOR_FILE + "\".\n"
 						+ "By default edges are white. flindeberg mod");

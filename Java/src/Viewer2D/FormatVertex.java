@@ -29,11 +29,16 @@ public class FormatVertex {
 	private static int DIMENSION = Vertex.DIMENSION;
 	private VertexFitter fitter;
 	private HashMap<Vertex,Label> labels;
-	double scaleBy;
-	double scaleCorrectionLabels;
+	private double scaleBy;
+	private double scaleCorrectionLabels;
+	private double minX, maxX;
+	private double minY, maxY;
+	boolean aligncenter;
 
 	// CONSTRUCTORS
-	public FormatVertex(Vertex[] e, HashMap<Vertex,Label> labels,double scaleLabels,VertexStats stats, int[] wSizes,
+	public FormatVertex(Vertex[] e, HashMap<Vertex,Label> labels,double scaleLabels,double minX, double minY,double maxX,double maxY,
+	boolean aligncenter,
+			VertexStats stats, int[] wSizes,
 			int threads2use) {
 		vertices = e;
 		this.stats = stats;
@@ -42,6 +47,11 @@ public class FormatVertex {
 		this.labels =  labels;
 		fitter = new VertexFitter();
 		this.scaleCorrectionLabels =  scaleLabels;
+		this.minX = minX;
+		this.maxX = maxX;
+		this.minY = minY;
+		this.maxY = maxY;
+		this.aligncenter = aligncenter;
 	}
 
 	// MUTATORS
@@ -115,9 +125,23 @@ public class FormatVertex {
 
 	private void translationIssues() {
 		double[] offsets = new double[DIMENSION];
-		for (int d = 0; d < DIMENSION; ++d) {
-			offsets[d] -= stats.min(d);
+		if (aligncenter)
+		{
+			for (int d = 0; d < DIMENSION; ++d) {
+				offsets[d]  =windowSizes[d]/2/scaleBy- stats.avg(d) ; 
+			}
+
 		}
+		else
+
+			for (int d = 0; d < DIMENSION; ++d) {
+				if (d==0 && minX!=0 && maxX!=0)
+					offsets[d] -= minX;
+				else if (d==1 && minY!=0 && maxY!=0)
+					offsets[d] -= minY;
+				else
+					offsets[d] -= stats.min(d);
+			}
 		Transformer transformer = new Transformer();
 		transformer.move(offsets);
 		// Add this job to the list
@@ -125,7 +149,13 @@ public class FormatVertex {
 	}
 
 	private void scalingIssues() {
-		double scale = windowSizes[0] / stats.span(0);
+		double scale;
+		if (minX!=0 && maxX!=0)
+			scale = windowSizes[0] / ( maxX-minX);
+		else
+			scale = windowSizes[0] / stats.span(0);
+
+
 		for (int d = 1; d < DIMENSION; ++d) {
 			double newScale = windowSizes[d] / stats.span(d);
 			if (newScale < scale) {
