@@ -227,7 +227,10 @@ Runtime Example:
     -c <colors file>
     -s Scale for labels
     -l <labels file>
-
+    -M max of x and y (to control scale and zoom)
+    -m min of x and y (to control scale and zoom)
+    -a center (align the mean of the image to the center of the window)
+    
 Looking at the huge PNG (100k x 100k pixels) java.awt.image.Raster: The 
 maximum width x height has to be less than Integer.MAX_VALUE (2147483647) so 
 the maximum square image is 46340 x 46340. Note also that such images will 
