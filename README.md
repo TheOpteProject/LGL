@@ -8,7 +8,7 @@ the GNU General Public License, and are copyright (c) 2002, 2003 Alex Adai.
 
 Changes and updates copyright (c) 2004-2022 Barrett Lyon
 
-LGL on the web at:  http://www.opte.org/lgl/ 
+LGL on the web at:  http://www.opte.org/
 
 Much thanks to the Marcotte lab for testing. 
 
@@ -18,7 +18,7 @@ If you use this in your research, please cite (if possible):
 - Adai, Alex T., Shailesh V. Date, Shannon Wieland, and Edward M. Marcotte. “LGL: Creating a Map of Protein Function with an Algorithm for Visualizing Very Large Biological Networks.” Journal of Molecular Biology 340, no. 1 (2004): 179–90. https://doi.org/10.1016/j.jmb.2004.04.047.
 
 
-Note: Most of the Perl contained in this package is no longer maintained. The Java and C++ components are modernized. 
+Note: Most of the Perl contained in this package is no longer maintained. The Java and C++ components are "mostly" modernized. 
 
 
 # Example output
@@ -40,10 +40,14 @@ A heap of stuff, in no particular order:
 - A C++ compiler
 - - Boost library required (I should have fixed version issues, but I have not future proofed it)
 - bgpdump (https://bitbucket.org/ripencc/bgpdump/wiki/Home)
+- Also see bgpscanner (Works with threads and is faster than bgpdump) 
+- - https://blog.apnic.net/2018/11/29/new-mrt-bgp-reader-six-times-faster-than-its-predecessors/
 - perl (5+, I think)
-- Java (8 seems to work)
+- Java (openjdk version "11.0.16" 2022-07-19)
 - Xserver installed for graphical tools (works well under WSL 2 in Windows)
+- - Graphical tools also work on anything with Java.
 - Python 3 (there are bash scripts lying around as well, but the python scripts are 3x faster)
+- - Only used for example scripts 
 
 # Installation
 
