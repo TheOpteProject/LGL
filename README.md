@@ -230,8 +230,9 @@ Runtime Example:
     -m x,y (min of x and y to control scale and zoom. Not required)
     -a center (not required, align the mean of the image to the center of the window)
     
-    To use the -M and -m features you can get the min and max values from rendering the largest graph in your series. 
-    You can use the largest graph's min/max values on the smallest series to keep perspective rather than a fit-to-screen zoom.
+To use the -M and -m features you can get the min and max values from rendering the largest 
+graph in your series. You can use the largest graph's min/max values on the smallest series 
+to keep perspective rather than a fit-to-screen zoom.
     
 Looking at the huge PNG (100k x 100k pixels) java.awt.image.Raster: The 
 maximum width x height has to be less than Integer.MAX_VALUE (2147483647) so 
