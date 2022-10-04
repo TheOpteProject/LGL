@@ -217,6 +217,10 @@ Generating Static Images using LGLLib.jar
 Runtime Example:
 
     java -Djava.awt.headless=true -Xmx20000m -Xms20000m -cp ./LGL-Master/Java/jar/LGLLib.jar ImageMaker.GenerateImages <height> <width> run.lgl run.coords -c run.colors -s 0.01 -l run.labels
+    
+    -c <colors file>
+    -s Scale for labels
+    -l <labels file>
 
 Looking at the huge PNG (100k x 100k pixels) java.awt.image.Raster: The 
 maximum width x height has to be less than Integer.MAX_VALUE (2147483647) so 
@@ -225,8 +229,8 @@ need a lot of RAM since Java's BufferedImage's pixels are hold in memory.
 
 An example of a larger output would be: 
 
-    EOL: java  -Xms1G -Xmx5G -jar ImageMaker.jar 29200 29200 <files...>
-        
+    java -Djava.awt.headless=true -Xmx5G -Xms5G -cp ./LGL-Master/Java/jar/LGLLib.jar ImageMaker.GenerateImages 29200 29200 <files...>
+
 
 ## LGLView 
 ### A JAVA 2D viewer for looking and reviewing .lgl, .coord, .color, and .labels files. 
