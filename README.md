@@ -231,6 +231,9 @@ Runtime Example:
     -m x,y (min of x and y to control scale and zoom. Not required)
     -a center (not required, align the mean of the image to the center of the window)
     
+    To use the -M and -m features you can get the min and max values from rendering the largest graph in your series. 
+    You can use the largest graph's min/max values on the smallest series to keep perspective rather than a fit-to-screen zoom.
+    
 Looking at the huge PNG (100k x 100k pixels) java.awt.image.Raster: The 
 maximum width x height has to be less than Integer.MAX_VALUE (2147483647) so 
 the maximum square image is 46340 x 46340. Note also that such images will 
@@ -320,6 +323,7 @@ Pixel sizes cannot be in decimal or fractions
 
 Colors will be referenced by their hex values. 000000-111111 (Do not include the #)
 
+NULL values will delete the segment of the label: shape, line, text1, text2 
 
 ![Holding Space](http://content.opte.org/content/labels-example.jpg)
 
