@@ -152,7 +152,7 @@ public class EdgesFrame extends JFrame {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		panel = new EdgesPanel(edges, vertices, labels,windowSizes[0], windowSizes[1]);
+		panel = new EdgesPanel(edges, vertices, new HashMap(),windowSizes[0], windowSizes[1]);
 		panel.setBackground(backgroundColor);
 
 		setMenuBars();
@@ -340,6 +340,27 @@ public class EdgesFrame extends JFrame {
 			}
 		});
 		fileMenu.add(reload);
+
+		// load labels
+
+		JMenuItem labelMenu = new JMenuItem("Load labels");
+		labelMenu.setMnemonic('L');
+		labelMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (vertexCheck()) {
+					JFileChooser chooser = getFileChooser();
+					int returnVal = chooser.showOpenDialog(EdgesFrame.this);
+					if (returnVal == JFileChooser.APPROVE_OPTION) {
+						loadLabelFile(chooser.getSelectedFile());
+					}
+				}
+			}
+		});
+		fileMenu.add(labelMenu);
+
+
+
+
 
 		// APPLICATION EXIT
 		JMenuItem exit = new JMenuItem("Exit");
@@ -798,6 +819,23 @@ public class EdgesFrame extends JFrame {
 			edgesio.loadVertexColorFile(f);
 			// Update the panel with the new colors
 			panel.addVertexColors(edgesio.getVertexColorMap());
+			panel.repaint();
+		} catch (FileNotFoundException ee) {
+			JOptionPane.showMessageDialog(null, "File Not Found", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		} catch (IOException ee) {
+			JOptionPane.showMessageDialog(null, "IO Error: Check File Format",
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	public void  loadLabelFile(File f) {
+		System.out.println("Loading Label File " + f.getAbsolutePath());
+		try {
+			edgesio.loadLabelFile(f);
+			// Update the panel with tlabels
+			panel.addLabels(edgesio.getLabels());
+			panel.setPaintImage();
 			panel.repaint();
 		} catch (FileNotFoundException ee) {
 			JOptionPane.showMessageDialog(null, "File Not Found", "Error",

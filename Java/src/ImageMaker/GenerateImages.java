@@ -218,13 +218,21 @@ public class GenerateImages {
 		}
 		System.out.println("Edges loading complete.");
 
+		generate("dark with labels","dark_withlabels",true,Color.BLACK,loadedEdgeColors, windowSizes, coordFiles, labelFile, alignmentCenter,verterIO); 
+
+
+		generate("dark without labels","dark_nolabels",false,Color.BLACK,loadedEdgeColors, windowSizes, coordFiles, "", alignmentCenter,verterIO); 
+
+		generate("light","light",false,Color.white,loadedEdgeColors, windowSizes, coordFiles, labelFile, alignmentCenter,verterIO);
 		
+		generate("transparent","transparent",false,new Color(0f,0f,0f,0f),loadedEdgeColors, windowSizes, coordFiles, labelFile, alignmentCenter,verterIO);
 
-		generateDark(loadedEdgeColors, windowSizes, coordFiles, labelFile, alignmentCenter,verterIO);
 
-		generateLight(loadedEdgeColors, windowSizes, coordFiles, labelFile,alignmentCenter,verterIO);
+		//generateDark(loadedEdgeColors, windowSizes, coordFiles, labelFile, alignmentCenter,verterIO);
 
-		generateTransparent(loadedEdgeColors, windowSizes, coordFiles, labelFile,alignmentCenter,verterIO);
+		//generateLight(loadedEdgeColors, windowSizes, coordFiles, labelFile,alignmentCenter,verterIO);
+
+		//generateTransparent(loadedEdgeColors, windowSizes, coordFiles, labelFile,alignmentCenter,verterIO);
 		
 		// System.out.println("Going for vector graphics (currently broken)");
 		// // Lets process coords files
@@ -288,113 +296,31 @@ public class GenerateImages {
 		// }
 	}
 
-	private static void generateTransparent(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,String labelFile,boolean alignmentCenter,
+
+
+
+	private static void generate(String displayname,String name,boolean showStat,Color background,boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,String labelFile,boolean alignmentCenter,
 			ViewerIO verterIO) {
-		loadLabels(labelFile,verterIO);
-		System.out.println("Going for transparent");
-		// Lets process coords files
+		if (!labelFile.isEmpty())
+			loadLabels(labelFile,verterIO);
+		else
+			verterIO.clearLabels();
 		
-		for (String coordFile : coordFiles) {
-			try {
-				System.out.println("Loading " + coordFile + "...");
-				verterIO.loadVertexCoords(new File(coordFile));
-
-				String pngFile = MessageFormat.format(
-						"{0}_{1,number,0}x{2,number,0}_transparent.png", coordFile,
-						windowSizes[0], windowSizes[1]);
-				System.out.println("Preparing " + pngFile + "...");
-				FormatVertex formatter = new FormatVertex(
-						verterIO.getVertices(),  verterIO.getLabels(), verterIO.getLabelScale(),verterIO.getMinX(),verterIO.getMinY(),verterIO.getMaxX(),verterIO.getMaxY(),alignmentCenter,verterIO.getStats(),
-						windowSizes, 1);
-
-				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
-						verterIO.getVertices(),  verterIO.getLabels(), windowSizes[0], windowSizes[1]);
-
-				if (loadedEdgeColors)
-					panel.addEdgeColors(verterIO.getEdgeColorMap());
-
-				panel.showVertices(true);
-				panel.setVisibilityTest(true);
-				panel.setFormatter(formatter);
-				panel.setEdgeColor(EDGE_COLOR);
-				panel.setVertexColor(Color.white);
-				panel.setBackgroundColor(new Color(0f,0f,0f,0f));
-
-				BufferedImage bufferedImage = new BufferedImage(windowSizes[0],
-						windowSizes[1], BufferedImage.TYPE_INT_ARGB);
-				
-				// Now the image has to be fitted to the given region
-				panel.fitData();
-				panel.writeImage(pngFile, bufferedImage);
-				System.out.println("Done.");
-			} catch (IOException e) {
-				System.out.println(MessageFormat.format(
-						"Error processing {0}:\n{1}", e.getMessage()));
-			}
-		}
-	}
-
-	private static void generateLight(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,String labelFile,boolean alignmentCenter,
-			ViewerIO verterIO) {
-		loadLabels(labelFile,verterIO);
-		System.out.println("Going for light");
-		// Lets process coords files
-		
-		for (String coordFile : coordFiles) {
-			try {
-				System.out.println("Loading " + coordFile + "...");
-				verterIO.loadVertexCoords(new File(coordFile));
-
-				String pngFile = MessageFormat.format(
-						"{0}_{1,number,0}x{2,number,0}_light.png", coordFile,
-						windowSizes[0], windowSizes[1]);
-				System.out.println("Preparing " + pngFile + "...");
-				FormatVertex formatter = new FormatVertex(
-						verterIO.getVertices(),  verterIO.getLabels(), verterIO.getLabelScale(),verterIO.getMinX(),verterIO.getMinY(),verterIO.getMaxX(),verterIO.getMaxY(),alignmentCenter, verterIO.getStats(),
-						windowSizes, 1);
-
-				EdgesPanel panel = new EdgesPanel(verterIO.getEdges(),
-						verterIO.getVertices(),  verterIO.getLabels(), windowSizes[0], windowSizes[1]);
-
-				if (loadedEdgeColors)
-					panel.addEdgeColors(verterIO.getEdgeColorMap());
-
-				panel.showVertices(true);
-				panel.setVisibilityTest(true);
-				panel.setFormatter(formatter);
-				panel.setEdgeColor(EDGE_COLOR);
-				panel.setVertexColor(Color.white);
-				panel.setBackgroundColor(Color.white);
-
-				BufferedImage bufferedImage = new BufferedImage(windowSizes[0],
-						windowSizes[1], BufferedImage.TYPE_INT_ARGB);
-				
-				// Now the image has to be fitted to the given region
-				panel.fitData();
-				panel.writeImage(pngFile, bufferedImage);
-				System.out.println("Done.");
-			} catch (IOException e) {
-				System.out.println(MessageFormat.format(
-						"Error processing {0}:\n{1}", e.getMessage()));
-			}
-		}
-	}
-
-	private static void generateDark(boolean loadedEdgeColors, int[] windowSizes, List<String> coordFiles,String labelFile,boolean alignmentCenter,
-			ViewerIO verterIO) {
-		loadLabels(labelFile,verterIO);
-		System.out.println("Going for dark");
+			
+		System.out.println("Going for "+displayname);
 		// Lets process coords files
 		for (String coordFile : coordFiles) {
 			try {
 				System.out.println("Loading " + coordFile + "...");
 				verterIO.loadVertexCoords(new File(coordFile));
+
 				VertexStats stat = verterIO.getStats();
-				stat.print();
+				if (showStat)
+					stat.print();
 				//System.out.println("min x:" +stat.min(0)+" max x:"+stat.max(0));
 
 				String pngFile = MessageFormat.format(
-						"{0}_{1,number,0}x{2,number,0}_dark.png", coordFile,
+						"{0}_{1,number,0}x{2,number,0}_"+name+".png", coordFile,
 						windowSizes[0], windowSizes[1]);
 				System.out.println("Preparing " + pngFile + "...");
 				FormatVertex formatter = new FormatVertex(
@@ -412,7 +338,7 @@ public class GenerateImages {
 				panel.setFormatter(formatter);
 				panel.setEdgeColor(EDGE_COLOR);
 				panel.setVertexColor(Color.white);
-				panel.setBackgroundColor(Color.BLACK);
+				panel.setBackgroundColor(background);
 
 				BufferedImage bufferedImage = new BufferedImage(windowSizes[0],
 						windowSizes[1], BufferedImage.TYPE_INT_ARGB);
@@ -427,6 +353,8 @@ public class GenerateImages {
 			}
 		}
 	}
+
+	
 
 	public static void message() {
 		System.out

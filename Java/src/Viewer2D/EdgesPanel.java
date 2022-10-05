@@ -392,6 +392,10 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		vertexColorMap.putAll(h);
 	}
 
+	public void addLabels(HashMap h) {
+        labels.putAll(h);
+	}
+
 	public void clearAllEdgeColors() {
 		edgeColorMap.clear();
 	}
@@ -743,11 +747,14 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		FontMetrics fm = g.getFontMetrics();
 		Rectangle2D rect = fm.getStringBounds(text, g);
 
-		g.setColor(bgcolor);
-		g.fillRect(x,
-				   y - fm.getAscent(),
-				   (int) rect.getWidth(),
-				   (int) rect.getHeight());
+		if (bgcolor!=null)
+		{
+			g.setColor(bgcolor);
+			g.fillRect(x,
+					y - fm.getAscent(),
+					(int) rect.getWidth(),
+					(int) rect.getHeight());
+		}
 
 		g.setColor(textcolor);
 		g.drawString(text, x, y);

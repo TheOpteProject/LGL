@@ -288,6 +288,11 @@ public class ViewerIO {
 		}
 	}
 
+	public void clearLabels()
+	{
+		labelMap.clear();
+	}
+
 	public void loadLabelFile(File f) throws IOException,FileNotFoundException {
 		if (edges == null || vertices == null) {
 			return;
@@ -343,13 +348,14 @@ public class ViewerIO {
 			String toptext = fileio.getToken(index++);
 			String bottomtext = fileio.getToken(index++);
 
-			if (toptextttf.isEmpty() || toptextsize== null || toptextcolor == null || topbgfillcolor==null)
+			
+			if (toptextttf.isEmpty() || toptextsize== null || toptextcolor == null)
 			{
 				toptext = "";
 				toptextsize = 0;
 			}	
 
-			if (bottomtextttf.isEmpty()  || bottomtextsize== null || bottomtextcolor == null || bottombgfillcolor==null)
+			if (bottomtextttf.isEmpty()  || bottomtextsize== null || bottomtextcolor == null)
 			{
 				bottomtext = "";
 				bottomtextsize = 0;
