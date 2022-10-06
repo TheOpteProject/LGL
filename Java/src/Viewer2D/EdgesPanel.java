@@ -20,6 +20,7 @@
 package Viewer2D;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -30,6 +31,10 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
+
+import java.awt.event.MouseWheelEvent;
+
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Ellipse2D;
@@ -56,6 +61,9 @@ import java.awt.BasicStroke;
 import Viewer2D.Label;
 import java.awt.AlphaComposite;
 import java.awt.FontFormatException;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.Image;
 
 /**
  * <b>SESS - 2014.05.13:</b>
@@ -66,7 +74,7 @@ import java.awt.FontFormatException;
  * </ul>
  */
 public class EdgesPanel extends JPanel implements MouseListener,
-		MouseMotionListener {
+		MouseMotionListener, MouseWheelListener {
 	private static final long serialVersionUID = -765273216020721560L;
 
 	private Edge[] edges;
@@ -115,12 +123,28 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	// Default font color
 	private Color fontColor;
 
+	enum modes
+	{
+		nomode,
+		handmode,
+		magnifiermode
+	
+
+	}
+
+	private modes mode;
+	private boolean handtouch = false;
+
+	private Cursor cursorMagnifier;
+
 	private double x1, y1, x2, y2;
 	private Matrix mins, maxs;
 	private Matrix inverted;
 
 	private BufferedImage bufferedImage;
 	private boolean paintImage;
+
+	ModeChanged modeChange;
 
 	protected BufferedImage getBufferedImage() {
 		if (bufferedImage == null) {
@@ -134,6 +158,12 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	// public void setBufferedImage(BufferedImage bufferedImage) {
 	// this.bufferedImage = bufferedImage;
 	// }
+
+	public interface ModeChanged {  
+		//declare abstract method  
+		void onChange(modes m);  
+	}  
+	 
 
 	public boolean isPaintImage() {
 		return paintImage;
@@ -161,6 +191,8 @@ public class EdgesPanel extends JPanel implements MouseListener,
 
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		addMouseWheelListener(this);
+	
 
 		// By default don't draw ids
 		idsIncluded = false;
@@ -187,6 +219,14 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		// Matrices need for zooming moving etc
 		mins = new Matrix(2, 1);
 		maxs = new Matrix(2, 1);
+		mode = modes.nomode;
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		String sep = System.getProperty("file.separator");
+		String workingdir = System.getProperty("user.dir");
+		//System.out.println("Working Directory = " + System.getProperty("user.dir"));
+		Image image = toolkit.getImage(workingdir+sep+"Java/src/Viewer2D"+sep+"icons8-magnifier-67_32x32.png");
+	
+		cursorMagnifier = toolkit.createCustomCursor(image , new Point(0,0), "magnifier");
 	}
 
 	// -------------------------------------------------------
@@ -1067,6 +1107,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		}
 	}
 
+
 	public void zoomIn(VertexFitter f) {
 		if (edges == null) {
 			return;
@@ -1079,10 +1120,36 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		setPaintImage();
 	}
 
+	public void zoomIn2(VertexFitter f) {
+		if (edges == null) {
+			return;
+		}
+		Transformer trans = new Transformer();
+		trans.scale(1/zoomStepSize);
+		f.addManipulation(trans);
+		setPaintImage();
+	}
+
+	public void zoomOut2(VertexFitter f) {
+		if (edges == null) {
+			return;
+		}
+
+		Transformer trans = new Transformer();
+		trans.scale(zoomStepSize);
+		f.addManipulation(trans);
+		setPaintImage();
+	}
+
 	public void zoomOut(VertexFitter f) {
 		if (edges == null) {
 			return;
 		}
+
+		/*mins.set(0, 0, -zoomStepSize * xWindowSize);
+		mins.set(1, 0, -zoomStepSize * yWindowSize);
+		maxs.set(0, 0, xWindowSize + zoomStepSize * xWindowSize);
+		maxs.set(1, 0, yWindowSize + zoomStepSize * yWindowSize);*/
 
 		mins.set(0, 0, -zoomStepSize * xWindowSize);
 		mins.set(1, 0, -zoomStepSize * yWindowSize);
@@ -1092,23 +1159,62 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		zoomPrep(f);
 	}
 
+	public void handMode()
+	{
+       mode = modes.handmode;
+	   setCursor(new Cursor(Cursor.HAND_CURSOR));
+	   
+	}
+
+	modes getMode()
+	{
+      return mode;
+
+	}
+
+	public void  magnifierMode()
+	{
+		mode = modes.magnifiermode;
+	   setCursor(cursorMagnifier);
+	  
+
+	}
+
+	public void noMode()
+	{
+       mode = modes.nomode;
+	   setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+	}
+
 	public void zoom2Point(double x, double y) {
 		if (edges == null) {
 			return;
 		}
 		VertexFitter f = new VertexFitter();
+		move2Point(-x, -y, f);
+		zoomIn2(f);
 		move2Point(x, y, f);
-		zoomIn(f);
+		
+
+		//move2Point(-x, -y, f);
+		//move2Point(-2*x/zoomStepSize, -2*y/zoomStepSize, f);
 		applyFit(f);
 	}
+
+
 
 	public void zoomOutFromPoint(double x, double y) {
 		if (edges == null) {
 			return;
 		}
 		VertexFitter f = new VertexFitter();
+		//move2Point(x, y, f);
+		//zoomOut(f);
+		move2Point(-x, -y, f);
+		zoomOut2(f);
 		move2Point(x, y, f);
-		zoomOut(f);
+
+
 		applyFit(f);
 	}
 
@@ -1118,7 +1224,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		double spany = maxs.get(1, 0) - mins.get(1, 0);
 		// Scale to fit new range
 		scales[0] = xWindowSize / spanx;
-		scales[1] = yWindowSize / spany;
+		scales[1] = xWindowSize / spanx;//yWindowSize / spany;
 		Transformer trans = new Transformer();
 		trans.scale(scales);
 		f.addManipulation(trans);
@@ -1214,8 +1320,8 @@ public class EdgesPanel extends JPanel implements MouseListener,
 			return;
 		}
 		double[] moves = new double[2];
-		moves[0] = -x + xWindowSize * .5;
-		moves[1] = -y + yWindowSize * .5;
+		moves[0] = -x;// + xWindowSize * .5;
+		moves[1] = -y; //+ yWindowSize * .5;
 		Transformer trans = new Transformer();
 		trans.move(moves);
 		f.addManipulation(trans);
@@ -1251,6 +1357,14 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	// -----------------------------------------------------
 
 	public void mousePressed(MouseEvent e) {
+		if (mode == modes.handmode)
+		{
+			x1 = e.getX();
+			y1 = e.getY();
+			handtouch  = true;
+			System.out.println("click");
+		}
+		else
 		if (zoomRegion || idRegion) {
 			x1 = e.getX();
 			y1 = e.getY();
@@ -1260,6 +1374,10 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void mouseReleased(MouseEvent e) {
+		if (mode == modes.handmode && handtouch)
+		{
+			handtouch = false;
+		}
 		if (zoomRegion || idRegion) {
 			x2 = e.getX();
 			y2 = e.getY();
@@ -1282,6 +1400,44 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void mouseDragged(MouseEvent e) {
+		if (mode == modes.handmode && handtouch)
+		{
+			if (edges == null) {
+				return;
+			}
+			System.out.println("updating" +  e.getX());
+			double x2 = e.getX();
+			double y2 = e.getY();
+		
+		
+				double ymove = y2-y1;
+
+				double xmove = x2-x1;
+		
+				mins.set(0, 0, xmove);
+				mins.set(1, 0, ymove);
+				maxs.set(0, 0, xmove+ xWindowSize);
+				maxs.set(1, 0, ymove + yWindowSize);
+		
+				VertexFitter f = new VertexFitter();
+				movePrep(f);
+				applyFit(f);
+				setPaintImage(); // TODO: move inside panel.xxxx()?
+				repaint();
+			
+		
+			
+		
+				/*double move = moveStepSize * yWindowSize;
+		
+				mins.set(0, 0, move);
+				mins.set(1, 0, 0);
+				maxs.set(0, 0, xWindowSize + move);
+				maxs.set(1, 0, yWindowSize);*/
+		   x1 = x2;
+		   y1 = y2;
+			
+		}
 		if (zoomRegion || idRegion) {
 			statusBar.setText("Highlighting region from (" + x1 + "," + y1
 					+ ") to (" + e.getX() + "," + e.getY() + ")");
@@ -1289,6 +1445,18 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void mouseClicked(MouseEvent e) {
+
+		if (mode==modes.magnifiermode)
+		{
+			x1 = e.getX();
+			y1 = e.getY();
+			
+			zoom2Point(x1, y1);
+			setPaintImage();
+			repaint();
+			
+		}
+
 		if (zoomPoint) {
 			x1 = e.getX();
 			y1 = e.getY();
@@ -1297,11 +1465,13 @@ public class EdgesPanel extends JPanel implements MouseListener,
 				statusBar.setText(statusMessage + ": Zooming to (" + x1 + ","
 						+ y1 + ")");
 				zoom2Point(x1, y1);
+				setPaintImage();
 				repaint();
 			} else if (SwingUtilities.isRightMouseButton(e)) {
 				statusBar.setText(statusMessage + ": Zooming out from (" + x1
 						+ "," + y1 + ")");
 				zoomOutFromPoint(x1, y1);
+				setPaintImage();
 				repaint();
 			} else {
 				statusBar
@@ -1311,6 +1481,10 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void mouseMoved(MouseEvent e) {
+
+		//System.out.println(e.getX()+" "+e.getY());
+ 
+
 	}
 
 	public void mouseEntered(MouseEvent e) {
@@ -1318,5 +1492,51 @@ public class EdgesPanel extends JPanel implements MouseListener,
 
 	public void mouseExited(MouseEvent e) {
 	}
+
+	public void mouseWheelMoved(MouseWheelEvent e) {
+
+		if (mode==modes.magnifiermode)
+		{
+			int notches = e.getWheelRotation();
+			x1 = e.getX();
+			y1 = e.getY();
+			if (notches < 0) 
+				{
+					
+					zoom2Point(x1, y1);
+					setPaintImage();
+					repaint();
+					/*VertexFitter f = new VertexFitter();
+					zoomIn(f);
+					applyFit(f);
+					setPaintImage(); // TODO: move inside panel.xxxx()?
+					repaint();*/
+				}
+			else
+			{
+				zoomOutFromPoint(x1, y1);
+				setPaintImage();
+				repaint();
+				/*VertexFitter f = new VertexFitter();
+				zoomOut(f);
+				applyFit(f);
+				setPaintImage(); // TODO: move inside panel.xxxx()?
+				repaint();*/
+
+			}
+
+		}
+		String message;
+		/*int notches = e.getWheelRotation();
+		if (notches < 0) {
+			message = "Mouse wheel moved UP "
+						 + -notches + " notch(es)\n";
+		} else {
+			message = "Mouse wheel moved DOWN "
+						 + notches + " notch(es)\n";
+		}
+		System.out.println(message);*/
+		
+	 }
 
 }
