@@ -21,22 +21,29 @@ package Viewer2D;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -48,6 +55,10 @@ import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.KeyStroke;
+
+import Viewer2D.EdgesPanel.modes;
 
 /**
  * <b>SESS - 2014.05.11:</b>
@@ -66,7 +77,7 @@ import javax.swing.JTextField;
 // TODO: SESS - Also show "working, please wait..."
 // TODO: SESS - When edges panel should repaint is repainting this frame
 // should be only the edges panel
-public class EdgesFrame extends JFrame {
+public class EdgesFrame extends JFrame implements KeyListener {
 	private static final long serialVersionUID = 1099866981814538683L;
 
 	static final int FRAME_WIDTH = 1024;
@@ -123,6 +134,11 @@ public class EdgesFrame extends JFrame {
 	private Color fontColor, vertexColor, edgeColor, backgroundColor;
 
 	private int STATUSBAR_Y;
+	
+
+	JToggleButton hand;
+
+	JToggleButton magnifier;
 
 	public EdgesFrame(String title, int x, int y) {
 		super(title);
@@ -132,7 +148,7 @@ public class EdgesFrame extends JFrame {
 		STATUSBAR_Y = 50;
 
 		moveStepSize = .2;
-		zoomStepSize = .2;
+		zoomStepSize = .8;
 
 		windowSizes = new int[2];
 		windowSizes[0] = x;
@@ -156,7 +172,10 @@ public class EdgesFrame extends JFrame {
 		panel.setBackground(backgroundColor);
 
 		setMenuBars();
+		hand = new JToggleButton("Hand");
+		magnifier = new JToggleButton("Magnifier");
 		setButtons();
+		addKeyListener(this);
 
 		JScrollPane scrollPane = new JScrollPane(panel);
 		container.add(scrollPane, BorderLayout.CENTER);
@@ -176,6 +195,36 @@ public class EdgesFrame extends JFrame {
 		setVisible(true);
 		labels = new HashMap<>();
 		labelScale = 1;
+		/*ActionListener okListener = new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+				System.out.println("2");
+            }
+        };
+		getRootPane().registerKeyboardAction(okListener,
+		KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
+		JComponent.WHEN_IN_FOCUSED_WINDOW);*/
+		//KeyStroke k = .getKeyStroke(' ' );
+		//k.getKeyStroke(keyChar, onKeyRelease)
+	
+
+		panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(' ' ), "SPACE");
+	
+		panel.getActionMap().put("SPACE", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				//do nothing
+			 
+				if (panel.getMode()!=modes.handmode)
+				{
+					setMode(modes.handmode);
+				}
+				else
+					setMode(modes.nomode);
+			}
+		});
+		
+	
 	}
 
 	private JFileChooser fileChooser;
@@ -460,6 +509,8 @@ public class EdgesFrame extends JFrame {
 				if (zoomHighlighted.isSelected()) {
 					panel.prepZoomPoint(true);
 					statusMessage = "Enabled Zoom Point";
+					setMode(modes.nomode);
+					
 				} else {
 					panel.prepZoomPoint(false);
 					statusMessage = "Disabled Zoom Point";
@@ -478,6 +529,7 @@ public class EdgesFrame extends JFrame {
 				if (zoomRegion.isSelected()) {
 					panel.prepZoomRegion(true);
 					statusMessage = "Enabled Zoom Region";
+					setMode(modes.nomode);
 				} else {
 					panel.prepZoomRegion(false);
 					statusMessage = "Disabled Zoom Region";
@@ -898,6 +950,60 @@ public class EdgesFrame extends JFrame {
 	 */
 	private JPanel buttonsPanel;
 
+	private void resetZooms()
+	{
+		panel.prepZoomPoint(false);
+		panel.prepZoomRegion(false);
+		zoomHighlighted.setSelected(false);
+		zoomRegion.setSelected(false);
+	}
+
+	private void inactiveButton(JToggleButton b)
+	{
+		b.setContentAreaFilled(true);
+		b.setForeground(new JButton().getForeground());
+		b.setSelected(false);
+
+	}
+
+	private void setMode(modes mode)
+	{
+		if (mode==modes.handmode)
+		{
+			panel.handMode();
+			resetZooms();
+			magnifier.setSelected(false);
+			inactiveButton(magnifier);
+			hand.setContentAreaFilled(false);
+			hand.setOpaque(true);
+			hand.setForeground(Color.green);
+
+		}
+
+	
+
+		if (mode==modes.magnifiermode)
+		{
+			panel.magnifierMode();
+			resetZooms();
+			hand.setSelected(false);
+			inactiveButton(hand);
+			magnifier.setContentAreaFilled(false);
+			magnifier.setOpaque(true);
+			magnifier.setForeground(Color.green);
+		}
+
+		if (mode==modes.nomode)
+		{
+			inactiveButton(hand);
+			inactiveButton(magnifier);
+			panel.noMode();
+
+		}
+
+		
+	}
+
 	private void setButtons() {
 		buttonsPanel = new JPanel();
 		((FlowLayout) buttonsPanel.getLayout()).setAlignment(FlowLayout.LEFT);
@@ -913,7 +1019,7 @@ public class EdgesFrame extends JFrame {
 		});
 		buttonsPanel.add(undo);
 
-		JButton zoomIn = new JButton("In");
+		/*JButton zoomIn = new JButton("In");
 		zoomIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				VertexFitter f = new VertexFitter();
@@ -935,9 +1041,60 @@ public class EdgesFrame extends JFrame {
 				panel.repaint();
 			}
 		});
-		buttonsPanel.add(zoomOut);
+		buttonsPanel.add(zoomOut);*/
 
-		JButton moveup = new JButton("Up");
+
+		
+		hand.setContentAreaFilled(false);
+		hand.setOpaque(true);
+		hand.setBackground(Color.black);
+		
+		
+		//hand.setContentAreaFilled(false);
+		hand.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(hand.getModel().isSelected());
+				if (hand.getModel().isSelected())
+				{
+					setMode(modes.handmode);
+				}	
+				else
+				{
+					setMode(modes.nomode);
+				
+					//hand.setSelected(false);
+				}
+				
+			}
+		});
+		buttonsPanel.add(hand);
+
+
+		
+		magnifier.setContentAreaFilled(false);
+		magnifier.setOpaque(true);
+		magnifier.setBackground(Color.black);
+			
+		
+		//magnifier.setContentAreaFilled(false);
+		magnifier.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(magnifier.getModel().isSelected());
+				if (magnifier.getModel().isSelected())
+				{
+					setMode(modes.magnifiermode);
+				}	
+				else
+				{
+					setMode(modes.nomode);
+					//hand.setSelected(false);
+				}
+				
+			}
+		});
+		buttonsPanel.add(magnifier);
+
+		/*JButton moveup = new JButton("Up");
 		moveup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				panel.moveUp();
@@ -975,7 +1132,7 @@ public class EdgesFrame extends JFrame {
 				panel.repaint();
 			}
 		});
-		buttonsPanel.add(moveright);
+		buttonsPanel.add(moveright);*/
 
 		JButton fit = new JButton("Fit");
 		fit.addActionListener(new ActionListener() {
@@ -1041,6 +1198,23 @@ public class EdgesFrame extends JFrame {
 		showVertices.setSelected(false);
 		buttonsPanel.add(showVertices);
 	}
+
+	public void keyTyped(KeyEvent e) {
+      //  Sys(e, "KEY TYPED: ");
+    }
+
+    /** Handle the key-pressed event from the text field. */
+    public void keyPressed(KeyEvent e) {
+		System.out.println(e.getKeyChar());
+		if (e.getKeyChar()==' ')
+		 System.out.println("yes");
+       // displayInfo(e, "KEY PRESSED: ");
+    }
+
+    /** Handle the key-released event from the text field. */
+    public void keyReleased(KeyEvent e) {
+       // displayInfo(e, "KEY RELEASED: ");
+    }
 
 	class StyleHandler implements ItemListener {
 		public void itemStateChanged(ItemEvent e) {
