@@ -129,14 +129,31 @@ public class VertexStats {
 
 	public void print() {
 		System.out.println("\tS T A T S");
-		System.out.println("Mins: ");
-		mins.print(4, 2);
-		System.out.println("Maxs: ");
-		maxs.print(4, 2);
+		System.out.print("Mins: ");
+		String [] names = {"x:","y:","z:"};
+		for (int i = 0; i < DIMENSION;i++)
+		{
+			System.out.print(names[i]+" "+mins.get(i,0));
+			
+			if (i!=DIMENSION)
+			System.out.print(" ");
+		}
+		System.out.println();
+		//mins.print(4, 2);
+		System.out.print("Maxs: ");
+		//maxs.print(4, 2);
+		for (int i = 0; i < DIMENSION;i++)
+		{
+			System.out.print(names[i]+" "+maxs.get(i,0));
+			
+			if (i!=DIMENSION)
+			System.out.print(" ");
+		}
+		System.out.println();
 		System.out.println("Totals: ");
-		totals.print(4, 2);
+		//totals.print(4, 2);
 		for (int ii = 0; ii < DIMENSION; ++ii) {
-			System.out.println("Avg" + ii + ": " + avg(ii));
+			System.out.println("Avg " + names[ii] + " " + avg(ii));
 		}
 		System.out.println("Vertices Counted: " + vertexCtr);
 	}

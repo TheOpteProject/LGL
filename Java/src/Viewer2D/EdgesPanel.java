@@ -28,6 +28,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -51,8 +53,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -144,7 +148,11 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	private BufferedImage bufferedImage;
 	private boolean paintImage;
 
+	private double defaultScale;
+
 	ModeChanged modeChange;
+
+	private JPopupMenu menu;
 
 	protected BufferedImage getBufferedImage() {
 		if (bufferedImage == null) {
@@ -220,13 +228,137 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		mins = new Matrix(2, 1);
 		maxs = new Matrix(2, 1);
 		mode = modes.nomode;
+		Image image = null;
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		String sep = System.getProperty("file.separator");
 		String workingdir = System.getProperty("user.dir");
 		//System.out.println("Working Directory = " + System.getProperty("user.dir"));
-		Image image = toolkit.getImage(workingdir+sep+"Java/src/Viewer2D"+sep+"icons8-magnifier-67_32x32.png");
-	
+		
+		java.net.URL imgURL = getClass().getResource("icons8-magnifier-67_32x32.png");
+		if(null != imgURL) {
+			System.out.println("Icon URL = " + imgURL.getFile());
+			//Image image = toolkit.getImage(workingdir+sep+"Java/src/Viewer2D"+sep+"icons8-magnifier-67_32x32.png");
+			image = toolkit.getImage(imgURL);
+		}
 		cursorMagnifier = toolkit.createCustomCursor(image , new Point(0,0), "magnifier");
+		setPopup() ;
+		defaultScale = 1;
+	}
+
+	
+
+	private void setPopup() 
+	{
+
+		menu = new JPopupMenu();
+
+		
+
+		JMenuItem fos = new JMenuItem("Fit on Screen");  
+		JMenuItem n100 = new JMenuItem("100%");  
+		JMenuItem n200 = new JMenuItem("200%");  
+		JMenuItem zoomIn = new JMenuItem("Zoom In"); 
+		JMenuItem zoomOut = new JMenuItem("Zoom Out");  
+		menu.add(fos);
+		menu.add(n100);
+		menu.add(n200);
+		menu.addSeparator();
+		menu.add(zoomIn);
+		menu.add(zoomOut);
+
+		fos.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e) {              
+				Dimension r = getBounds().getSize();
+				xWindowSize = r.width;
+				yWindowSize  = r.height;
+				//bufferedImage = null;
+				//getBufferedImage();
+				formatter.setWindowSizeX(xWindowSize);
+				formatter.setWindowSizeY(yWindowSize);
+				fitData();
+			
+				setPaintImage(); // TODO: move inside panel.xxxx()?
+				repaint();
+			}  
+		   });  
+
+	    n100.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e) {    
+				double scale = formatter.getScale();       
+				if (scale!=defaultScale)   
+				{
+					Point p = getMousePosition();
+					int	x1 = (int)p.getX();
+					int y1 = (int)p.getY();
+					double targetScale;
+				
+					targetScale = defaultScale/scale;
+					
+					zoom2PointBy(x1, y1,targetScale);
+					setPaintImage();
+					repaint();
+
+				}
+				
+			}  
+		   });  
+
+	    n200.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e) {     
+				double scale = formatter.getScale();       
+				if (scale!=defaultScale*2)   
+				{
+					Point p = getMousePosition();
+					int	x1 = (int)p.getX();
+					int y1 = (int)p.getY();
+					double targetScale;
+				
+					targetScale = defaultScale*2/scale;
+					
+					zoom2PointBy(x1, y1,targetScale);
+					setPaintImage();
+					repaint();
+
+				}         
+				
+			}  
+		   });  
+
+		zoomIn.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e) {   
+				
+				Point p = getMousePosition();
+				int	x1 = (int)p.getX();
+				int y1 = (int)p.getY();
+				
+		
+				zoom2Point(x1, y1);
+				setPaintImage();
+				repaint();           
+				
+			}  
+		   });  
+
+		zoomOut.addActionListener(new ActionListener(){  
+			public void actionPerformed(ActionEvent e) {       
+				Point p = getMousePosition();
+				int	x1 = (int)p.getX();
+				int y1 = (int)p.getY();
+				
+		
+				zoomOutFromPoint(x1, y1);
+				setPaintImage();
+				repaint();         
+				
+			}  
+		   });  
+
+
+        //setComponentPopupMenu(menu);
+		
+		
+		//panel.re
+		
 	}
 
 	// -------------------------------------------------------
@@ -398,9 +530,12 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void applyFit(VertexFitter f) {
-		for (int ii = 0; ii < vertices.length; ++ii) {
+		/*for (int ii = 0; ii < vertices.length; ++ii) {
 			f.fitVertex(vertices[ii]);
-		}
+		
+		}*/
+		formatter.getFitter().setManipulationMatrix(f.getManipulationMatrix());
+		formatter.applyTransformation();
 		fitter = f;
 		inverted = fitter.getManipulationMatrix().inverse();
 		fitter.setManipulationMatrix(inverted);
@@ -408,6 +543,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 
 	public void fitData() {
 		formatter.fitDataToWindow();
+		defaultScale = formatter.getScale();
 	}
 
 	public void setEdges(Edge[] e) {
@@ -854,7 +990,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 			}
 			if (!l.toptext.isEmpty())
 			{
-				g.setFont(getFont(l.toptextttf,l.toptextsize));
+				g.setFont(getFont(l.toptextttf,(float)l.toptextsize));
 				drawStringWithBackground(g,l.toptext, (int)xend, (int)yend, l.topbgfillcolor, l.toptextcolor);
 			}
 			if (!l.bottomtext.isEmpty())
@@ -871,7 +1007,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 				{
 					
 				}
-				g.setFont(getFont(l.bottomtextttf,l.bottomtextsize));
+				g.setFont(getFont(l.bottomtextttf,(float)l.bottomtextsize));
 				drawStringWithBackground(g,l.bottomtext, (int)xend, (int)yend2, l.bottombgfillcolor, l.bottomtextcolor);
 			}
 		
@@ -1121,24 +1257,23 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	}
 
 	public void zoomIn2(VertexFitter f) {
+		zoom(f,1/zoomStepSize);
+	}
+
+	public void zoom(VertexFitter f, double scale)
+	{
 		if (edges == null) {
 			return;
 		}
 		Transformer trans = new Transformer();
-		trans.scale(1/zoomStepSize);
+		trans.scale(scale);
 		f.addManipulation(trans);
 		setPaintImage();
+
 	}
 
 	public void zoomOut2(VertexFitter f) {
-		if (edges == null) {
-			return;
-		}
-
-		Transformer trans = new Transformer();
-		trans.scale(zoomStepSize);
-		f.addManipulation(trans);
-		setPaintImage();
+		zoom(f,zoomStepSize);
 	}
 
 	public void zoomOut(VertexFitter f) {
@@ -1163,6 +1298,8 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	{
        mode = modes.handmode;
 	   setCursor(new Cursor(Cursor.HAND_CURSOR));
+	   setComponentPopupMenu(null);
+	   //menu.setVisible(false);
 	   
 	}
 
@@ -1176,6 +1313,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	{
 		mode = modes.magnifiermode;
 	   setCursor(cursorMagnifier);
+	   setComponentPopupMenu(menu);
 	  
 
 	}
@@ -1184,6 +1322,8 @@ public class EdgesPanel extends JPanel implements MouseListener,
 	{
        mode = modes.nomode;
 	   setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+	   setComponentPopupMenu(null);
+	   //menu.setVisible(false);
 	}
 
 	public void zoom2Point(double x, double y) {
@@ -1193,6 +1333,21 @@ public class EdgesPanel extends JPanel implements MouseListener,
 		VertexFitter f = new VertexFitter();
 		move2Point(-x, -y, f);
 		zoomIn2(f);
+		move2Point(x, y, f);
+		
+
+		//move2Point(-x, -y, f);
+		//move2Point(-2*x/zoomStepSize, -2*y/zoomStepSize, f);
+		applyFit(f);
+	}
+
+	public void zoom2PointBy(double x, double y, double scale) {
+		if (edges == null) {
+			return;
+		}
+		VertexFitter f = new VertexFitter();
+		move2Point(-x, -y, f);
+		zoom(f,scale);
 		move2Point(x, y, f);
 		
 

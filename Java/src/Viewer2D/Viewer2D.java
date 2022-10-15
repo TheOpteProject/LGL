@@ -21,8 +21,14 @@ package Viewer2D;
 
 import java.io.File;
 
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+
+import ImageMaker.GenerateImages;
+
+import java.awt.Insets;
 
 /**
  * <b>SESS - 2014.05.11:</b>
@@ -49,6 +55,9 @@ public class Viewer2D {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			String OS = System.getProperty("os.name").toLowerCase();
+			//if (OS.contains("win"))
+			//	UIManager.put("MenuItem.margin", new Insets(2, -15, 2, 2));
 		} else {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				if (laf.equals(info.getName())) {
@@ -62,22 +71,31 @@ public class Viewer2D {
 			}
 		}
 
+		InputMap im = (InputMap)UIManager.get("Button.focusInputMap");
+		im.put(KeyStroke.getKeyStroke("pressed SPACE"), "none");
+		im.put(KeyStroke.getKeyStroke("released SPACE"), "none");
+
 		// create a new frame object
 		EdgesFrame frame = new EdgesFrame("lglview", IMAGE_SIZE, IMAGE_SIZE);
+
+		GenerateImages.ParseArguments pa = new GenerateImages.ParseArguments(true);
+		pa.parse(args);
 
 		// Deal with possible command line args
 		// The first entry is a possible edges file (.ls) and the next
 		// file is a possible coord file
-		if (args.length > 0) {
-			System.out.println("Loading edges file " + args[0]);
-			frame.loadSHORTFile(new File(args[0]));
-			if (args.length > 1) {
-				System.out.println("Loading coords file " + args[1]);
+		if (args.length > 0) 
+		{
+			System.out.println("Loading edges file " + pa.edgeFile);
+			frame.loadSHORTFile(new File(pa.edgeFile));
+			//if (args.length > 1) 
+			{
+				System.out.println("Loading coords file " + pa.coordFiles.get(0));
 				frame.loadCoordsFile(new File(args[1]));
 			}
-			if (args.length > 2) {
-				System.out.println("Loading color file " + args[2]);
-				File colorfile = new File(args[2]);
+			if (!pa.edgeColorFile.isEmpty()) {
+				System.out.println("Loading color file " + pa.edgeColorFile);
+				File colorfile = new File(pa.edgeColorFile);
 				frame.loadEdgeColorFile(colorfile);
 			}
 		}

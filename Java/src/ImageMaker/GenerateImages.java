@@ -73,41 +73,89 @@ public class GenerateImages {
 
 	}
 
-	public static void main(String[] args) {
-		boolean loadedEdgeColors = false;
-		if (args.length == 0) {
-			message();
+	static public class ParseArguments 
+	{
+		
+		public String edgeFile;
+		public String edgeColorFile;
+		public String labelFile;
+		public double scaling;
+		public double minX;
+		public double maxX;
+		public double minY;
+		public double maxY;
+		int[] windowSizes;
+		boolean alignmentCenter;
+		public List<String> coordFiles;
+		private boolean viewer2d;
+
+		public ParseArguments (boolean viewer2d)
+		{
+			this.viewer2d = viewer2d;
+
+
 		}
 
-		int[] windowSizes = new int[2];
-		windowSizes[0] = new Integer(args[0]).intValue();
-		windowSizes[1] = new Integer(args[1]).intValue();
-		System.out.println("Loading flindeberg mod 2");
-		System.out.println("Image size is " + windowSizes[0] + " x "
-				+ windowSizes[1]);
+		void usage()
+		{
+			if (viewer2d)
+				message2();
+			else
+				message();
+
+
+		}
+
+		public void parse(String[] args)
+		{
+		int minArguments = 3;	
+
+		if (viewer2d)
+		{
+			minArguments = 1;
+			if (args.length==0)
+				return;
+		}	
+			
+		if (args.length < minArguments) {
+			usage();
+		}
+		int argno = 0;
+		if (!viewer2d)
+		{
+			windowSizes = new int[2];
+			windowSizes[0] = new Integer(args[0]).intValue();
+			windowSizes[1] = new Integer(args[1]).intValue();
+			argno+=2;
+			System.out.println("Loading flindeberg mod 2");
+			System.out.println("Image size is " + windowSizes[0] + " x "
+					+ windowSizes[1]);
+		}
+	
 
 		// Check params
-		String edgeFile = args[2];
-		String edgeColorFile = EDGE_COLOR_FILE;
-		List<String> coordFiles = new ArrayList<String>();
-		String labelFile = "";
+		edgeFile = args[argno++];
+		edgeColorFile = "";
+		coordFiles = new ArrayList<String>();
+		labelFile = "";
 		boolean colorFileSwitch = false;
 		boolean labelFileSwitch = false;
 		boolean scaleSwitch = false;
-		double scaling = 1;
-		boolean wasLabel = false;
+		scaling = 1;
+	
+	
 		boolean wasMin = false;
 		boolean wasMax = false;
 		boolean minSwitch = false;
 		boolean maxSwitch = false;
-		double minX = 0;
-		double maxX = 0;
-		double minY = 0;
-		double maxY = 0;
+		minX = 0;
+		maxX = 0;
+		minY = 0;
+		maxY = 0;
 
-		boolean alignmentCenter = false;
+		alignmentCenter = false;
 		boolean alignSwitch = false;
-		for (int i = 3; i < args.length; i++) {
+		for (int i = argno; i < args.length; i++) {
 			String arg = args[i];
 			if ("-c".equals(arg)) {
 				colorFileSwitch = true;
@@ -121,15 +169,15 @@ public class GenerateImages {
 				scaleSwitch = true;
 				continue;
 			}
-			if ("-m".equals(arg)) {
+			if ("-m".equals(arg)  && !viewer2d) {
 				minSwitch = true;
 				continue;
 			}
-			if ("-a".equals(arg)) {
+			if ("-a".equals(arg) && !viewer2d) {
 				alignSwitch  = true;
 				continue;
 			}
-			if ("-M".equals(arg)) {
+			if ("-M".equals(arg)  && !viewer2d) {
 				maxSwitch = true;
 				continue;
 			}
@@ -174,7 +222,7 @@ public class GenerateImages {
 			if (labelFileSwitch) {
 				labelFile = arg;
 				labelFileSwitch = false;
-				wasLabel = true;
+			
 				continue;
 			}
 			if (colorFileSwitch) {
@@ -185,29 +233,41 @@ public class GenerateImages {
 			coordFiles.add(arg);
 		}
 		if (coordFiles.isEmpty()) {
-			message();
+			usage();
 		}
 
-		System.out.println("Loading edge file: " + edgeFile + "...");
-		ViewerIO verterIO = null;
-		try {
-			verterIO = new ViewerIO(new File(edgeFile));
-			verterIO.loadSHORTFile();
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			System.exit(1);
-		}
-		verterIO.setLabelScale(scaling);
 		if (wasMax ^ wasMin)
 		{
 			System.out.println("Error:Both -m and -M need to be used at the same time, one of them is missing");
 			System.exit(1);
 		}
-		verterIO.setMinMaxXY(minX,minY,maxX,maxY);
-		System.out.println("Trying to load edge color file: " + edgeColorFile
+
+
+		}
+
+
+	}
+
+	public static void main(String[] args) {
+		boolean loadedEdgeColors = false;
+		ParseArguments pa = new ParseArguments(false);
+		pa.parse(args);
+		System.out.println("Loading edge file: " + pa.edgeFile + "...");
+		ViewerIO verterIO = null;
+		try {
+			verterIO = new ViewerIO(new File(pa.edgeFile));
+			verterIO.loadSHORTFile();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
+		verterIO.setLabelScale(pa.scaling);
+		
+		verterIO.setMinMaxXY(pa.minX,pa.minY,pa.maxX,pa.maxY);
+		System.out.println("Trying to load edge color file: " + pa.edgeColorFile
 				+ "...");
 		try {
-			verterIO.loadEdgeColorFile(new File(edgeColorFile));
+			verterIO.loadEdgeColorFile(new File(pa.edgeColorFile));
 			loadedEdgeColors = true;
 		} catch (java.io.FileNotFoundException e) {
 			loadedEdgeColors = false;
@@ -218,14 +278,14 @@ public class GenerateImages {
 		}
 		System.out.println("Edges loading complete.");
 
-		generate("dark with labels","dark_withlabels",true,Color.BLACK,loadedEdgeColors, windowSizes, coordFiles, labelFile, alignmentCenter,verterIO); 
+		generate("dark with labels","dark_withlabels",true,Color.BLACK,loadedEdgeColors, pa.windowSizes, pa.coordFiles, pa.labelFile, pa.alignmentCenter,verterIO); 
 
 
-		generate("dark without labels","dark_nolabels",false,Color.BLACK,loadedEdgeColors, windowSizes, coordFiles, "", alignmentCenter,verterIO); 
+		generate("dark without labels","dark_nolabels",false,Color.BLACK,loadedEdgeColors, pa.windowSizes, pa.coordFiles, "", pa.alignmentCenter,verterIO); 
 
-		generate("light","light",false,Color.white,loadedEdgeColors, windowSizes, coordFiles, labelFile, alignmentCenter,verterIO);
+		generate("light","light",false,Color.white,loadedEdgeColors, pa.windowSizes, pa.coordFiles, pa.labelFile, pa.alignmentCenter,verterIO);
 		
-		generate("transparent","transparent",false,new Color(0f,0f,0f,0f),loadedEdgeColors, windowSizes, coordFiles, labelFile, alignmentCenter,verterIO);
+		generate("transparent","transparent",false,new Color(0f,0f,0f,0f),loadedEdgeColors, pa.windowSizes, pa.coordFiles, pa.labelFile, pa.alignmentCenter,verterIO);
 
 
 		//generateDark(loadedEdgeColors, windowSizes, coordFiles, labelFile, alignmentCenter,verterIO);
@@ -363,6 +423,15 @@ public class GenerateImages {
 						+ "If no colors file specified program will try to load file named \""
 						+ EDGE_COLOR_FILE + "\".\n"
 						+ "By default edges are white. flindeberg mod");
+		System.exit(1);
+	}
+	public static void message2() {
+		System.out
+				.println("Arguments:\n\n"
+						+ "\t<edges file> <coords file1> [-c <colors file> ] [-l <labels file>]\n\n"
+						+ "If no colors file specified program will try to load file named \""
+						+ EDGE_COLOR_FILE + "\".\n"
+						);
 		System.exit(1);
 	}
 

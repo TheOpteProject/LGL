@@ -34,7 +34,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyListener;
+import java.awt.event.ComponentListener;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -51,6 +54,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
@@ -77,7 +81,7 @@ import Viewer2D.EdgesPanel.modes;
 // TODO: SESS - Also show "working, please wait..."
 // TODO: SESS - When edges panel should repaint is repainting this frame
 // should be only the edges panel
-public class EdgesFrame extends JFrame implements KeyListener {
+public class EdgesFrame extends JFrame implements KeyListener,ComponentListener {
 	private static final long serialVersionUID = 1099866981814538683L;
 
 	static final int FRAME_WIDTH = 1024;
@@ -167,14 +171,15 @@ public class EdgesFrame extends JFrame implements KeyListener {
 		container.setLayout(layout);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		panel = new EdgesPanel(edges, vertices, new HashMap(),windowSizes[0], windowSizes[1]);
+		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+		panel = new EdgesPanel(edges, vertices, new HashMap(),screen.width,screen.height);//windowSizes[0], windowSizes[1]);
 		panel.setBackground(backgroundColor);
 
 		setMenuBars();
 		hand = new JToggleButton("Hand");
 		magnifier = new JToggleButton("Magnifier");
 		setButtons();
+		
 		addKeyListener(this);
 
 		JScrollPane scrollPane = new JScrollPane(panel);
@@ -186,7 +191,7 @@ public class EdgesFrame extends JFrame implements KeyListener {
 		panel.setStatusBar(statusBar);
 
 		// Let's start with the screen size
-		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+		
 		int width = Math.min(screen.width, FRAME_WIDTH);
 		int height = Math.min(screen.height, FRAME_HEIGHT);
 		setSize(width, height);
@@ -195,6 +200,7 @@ public class EdgesFrame extends JFrame implements KeyListener {
 		setVisible(true);
 		labels = new HashMap<>();
 		labelScale = 1;
+		addComponentListener(this);
 		/*ActionListener okListener = new ActionListener() {
 
             @Override
@@ -221,6 +227,45 @@ public class EdgesFrame extends JFrame implements KeyListener {
 				}
 				else
 					setMode(modes.nomode);
+			}
+		});
+
+
+		panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke( KeyEvent.VK_ADD, InputEvent.CTRL_MASK ), "ZOOMIN");
+
+		panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, KeyEvent.CTRL_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK),"ZOOMIN");
+
+	
+		panel.getActionMap().put("ZOOMIN", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+			Point p = panel.getMousePosition();
+			int	x1 = (int)p.getX();
+			int y1 = (int)p.getY();
+			
+			panel.zoom2Point(x1, y1);
+			panel.setPaintImage();
+			panel.repaint();
+			}
+		});
+      
+
+	
+		panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK ), "ZOOMOUT");
+
+		//panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.CTRL_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK),"ZOOMOUT");
+
+		panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.CTRL_DOWN_MASK),"ZOOMOUT");
+
+	
+		panel.getActionMap().put("ZOOMOUT", new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				Point p = panel.getMousePosition();
+				int	x1 = (int)p.getX();
+				int y1 = (int)p.getY();
+				
+				panel.zoomOutFromPoint(x1, y1);
+				panel.setPaintImage();
+				panel.repaint();
 			}
 		});
 		
@@ -265,10 +310,39 @@ public class EdgesFrame extends JFrame implements KeyListener {
 		JMenu fileMenu = new JMenu("File");
 		fileMenu.setMnemonic('F');
 
-		// LOAD THE EDGES FILE ( SOMETHING.lgl )
-		JMenuItem openFile = new JMenuItem("Open .lgl file");
-		openFile.setMnemonic('O');
+
+		// load all
+
+		JMenuItem openFile = new JMenuItem("Load all files");
+		
 		openFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = getFileChooser("lgl");
+				int returnVal = chooser.showOpenDialog(EdgesFrame.this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					edgesFile = chooser.getSelectedFile();
+					loadSHORTFile(edgesFile);
+					File coordsFile = new File(edgesFile.getPath().replace(".lgl", ".coords")); 
+					if (coordsFile.isFile())
+						loadCoordsFile(coordsFile);
+					File colorsFile = new File(edgesFile.getPath().replace(".lgl", ".colors")); 
+
+					if (colorsFile.isFile())
+						loadEdgeColorFile(colorsFile);
+
+					File labelsFile = new File(edgesFile.getPath().replace(".lgl", ".labels")); 
+
+						if (labelsFile.isFile())
+							loadLabelFile(labelsFile);
+				}
+			}
+		});
+		fileMenu.add(openFile);
+
+		// LOAD THE EDGES FILE ( SOMETHING.lgl )
+		JMenuItem openAllFile = new JMenuItem("Open .lgl file");
+		openAllFile.setMnemonic('O');
+		openAllFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser = getFileChooser("lgl");
 				int returnVal = chooser.showOpenDialog(EdgesFrame.this);
@@ -278,7 +352,7 @@ public class EdgesFrame extends JFrame implements KeyListener {
 				}
 			}
 		});
-		fileMenu.add(openFile);
+		fileMenu.add(openAllFile);
 
 		// LOAD THE 2D COORDS
 		JMenuItem cFile = new JMenuItem("Open 2D Coords file");
@@ -467,12 +541,41 @@ public class EdgesFrame extends JFrame implements KeyListener {
 								"Error", JOptionPane.ERROR_MESSAGE);
 					} else {
 						zoomStepSize = newZoomStepSize;
-						panel.setZoomStepSize(zoomStepSize);
+						formatter.setLabelScale(newZoomStepSize);
+
+						
 					}
 				}
 			}
 		});
 		edit.add(zoomsize);
+
+		// change label scale
+
+		JMenuItem labelscalesize = new JMenuItem("Change scale for Labels");
+	
+		labelscalesize.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String newSize = JOptionPane.showInputDialog(EdgesFrame.this,
+						"Enter the new label scale",
+						Double.toString(labelScale));
+				if (newSize != null) {
+					double newLabelScale = Double.parseDouble(newSize);
+					if (newLabelScale <= 0 ) {
+						JOptionPane.showMessageDialog(null, "Illegal Value",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					} else {
+						labelScale = newLabelScale;
+					
+						formatter.setLabelScale(labelScale);
+						panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+						panel.repaint();
+					}
+				}
+			}
+		});
+		edit.add(labelscalesize);
+
 
 		// BUTTON TO REMOVE TRANSIENT EDGES
 		blockers = new JRadioButton("Remove Transient Edges");
@@ -919,7 +1022,7 @@ public class EdgesFrame extends JFrame implements KeyListener {
 			panel.setFont(font);
 			panel.setMoveStepSize(moveStepSize);
 			panel.setZoomStepSize(zoomStepSize);
-			formatter = new FormatVertex(vertices, labels,labelScale,0,0,0,0,false,edgesio.getStats(),
+			formatter = new FormatVertex(vertices, edgesio.getLabels(),labelScale,0,0,0,0,false,edgesio.getStats(),
 					windowSizes, threads);
 			panel.setFormatter(formatter);
 			panel.fitData();
@@ -960,7 +1063,7 @@ public class EdgesFrame extends JFrame implements KeyListener {
 
 	private void inactiveButton(JToggleButton b)
 	{
-		b.setContentAreaFilled(true);
+		//b.setContentAreaFilled(true);
 		b.setForeground(new JButton().getForeground());
 		b.setSelected(false);
 
@@ -974,8 +1077,8 @@ public class EdgesFrame extends JFrame implements KeyListener {
 			resetZooms();
 			magnifier.setSelected(false);
 			inactiveButton(magnifier);
-			hand.setContentAreaFilled(false);
-			hand.setOpaque(true);
+			//hand.setContentAreaFilled(false);
+			//hand.setOpaque(true);
 			hand.setForeground(Color.green);
 
 		}
@@ -988,8 +1091,8 @@ public class EdgesFrame extends JFrame implements KeyListener {
 			resetZooms();
 			hand.setSelected(false);
 			inactiveButton(hand);
-			magnifier.setContentAreaFilled(false);
-			magnifier.setOpaque(true);
+			//magnifier.setContentAreaFilled(false);
+			//magnifier.setOpaque(true);
 			magnifier.setForeground(Color.green);
 		}
 
@@ -1004,20 +1107,14 @@ public class EdgesFrame extends JFrame implements KeyListener {
 		
 	}
 
+	
+
 	private void setButtons() {
 		buttonsPanel = new JPanel();
 		((FlowLayout) buttonsPanel.getLayout()).setAlignment(FlowLayout.LEFT);
 		container.add(buttonsPanel, BorderLayout.NORTH);
 
-		JButton undo = new JButton("Undo");
-		undo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				panel.undo();
-				panel.setPaintImage(); // TODO: move inside panel.xxxx()?
-				panel.repaint();
-			}
-		});
-		buttonsPanel.add(undo);
+		
 
 		/*JButton zoomIn = new JButton("In");
 		zoomIn.addActionListener(new ActionListener() {
@@ -1045,10 +1142,10 @@ public class EdgesFrame extends JFrame implements KeyListener {
 
 
 		
-		hand.setContentAreaFilled(false);
-		hand.setOpaque(true);
-		hand.setBackground(Color.black);
-		
+		//hand.setContentAreaFilled(false);
+		//hand.setOpaque(true);
+		//hand.setBackground(Color.black);
+		hand.setFocusable(false);
 		
 		//hand.setContentAreaFilled(false);
 		hand.addActionListener(new ActionListener() {
@@ -1071,9 +1168,10 @@ public class EdgesFrame extends JFrame implements KeyListener {
 
 
 		
-		magnifier.setContentAreaFilled(false);
-		magnifier.setOpaque(true);
-		magnifier.setBackground(Color.black);
+		//magnifier.setContentAreaFilled(false);
+		//magnifier.setOpaque(true);
+		//magnifier.setBackground(Color.black);
+		magnifier.setFocusable(false);
 			
 		
 		//magnifier.setContentAreaFilled(false);
@@ -1139,7 +1237,7 @@ public class EdgesFrame extends JFrame implements KeyListener {
 			public void actionPerformed(ActionEvent e) {
 				// TODO: SESS - twice?
 				panel.fitData();
-				panel.fitData();
+				//panel.fitData();
 				System.out.println("Fit data still buggy.");
 				panel.setPaintImage(); // TODO: move inside panel.xxxx()?
 				panel.repaint();
@@ -1197,6 +1295,16 @@ public class EdgesFrame extends JFrame implements KeyListener {
 		panel.showVertices(false);
 		showVertices.setSelected(false);
 		buttonsPanel.add(showVertices);
+
+		JButton undo = new JButton("Undo");
+		undo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panel.undo();
+				panel.setPaintImage(); // TODO: move inside panel.xxxx()?
+				panel.repaint();
+			}
+		});
+		buttonsPanel.add(undo);
 	}
 
 	public void keyTyped(KeyEvent e) {
@@ -1255,6 +1363,15 @@ public class EdgesFrame extends JFrame implements KeyListener {
 		return true;
 	}
 
+	public void componentHidden(ComponentEvent e) {}
+	public void componentMoved(ComponentEvent e) {}
+	public void componentShown(ComponentEvent e) {}
+
+	public void componentResized(ComponentEvent e) {
+		Dimension newSize = e.getComponent().getBounds().getSize();          
+		System.out.println("size:"+newSize.width+" "+newSize.height);
+	}   
+
 }
 
 // ////////////////////////////////////////////////////////////////
@@ -1312,6 +1429,8 @@ class FileSuffixFilter extends javax.swing.filechooser.FileFilter {
 
 		return ext;
 	}
+
+
 
 }
 

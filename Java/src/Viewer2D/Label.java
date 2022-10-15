@@ -8,8 +8,8 @@ public class Label {
     
     
     //private Vertex id;
+    public double shapesize ;
     public  String shape ;
-    public int shapesize ;
     public int shapeborderwidth ;
     public Color shapebordercolor;
 
@@ -17,17 +17,17 @@ public class Label {
 
     public double shapefillopacity ;
     public int linesize ;
-    public int linelength ;
+    public double linelength ;
     public double lineangle; 
     public Color linecolor;
     
     public String toptextttf;
-    public int toptextsize ;
+    public double toptextsize ;
     public Color toptextcolor ;
     public Color topbgfillcolor ;
 
     public String bottomtextttf ;
-    public int bottomtextsize ;
+    public double bottomtextsize ;
     public Color bottomtextcolor ;
     public Color bottombgfillcolor ;
 

@@ -21,6 +21,8 @@ package Viewer2D;
 
 import java.util.HashMap;
 
+import Jama.Matrix;
+
 public class FormatVertex {
 	private Vertex[] vertices;
 	private VertexStats stats;
@@ -31,6 +33,8 @@ public class FormatVertex {
 	private HashMap<Vertex,Label> labels;
 	private double scaleBy;
 	private double scaleCorrectionLabels;
+	private double scaleCorrectionLabelsOriginal;
+	private boolean scaleLabelUsed;
 	private double minX, maxX;
 	private double minY, maxY;
 	boolean aligncenter;
@@ -52,6 +56,9 @@ public class FormatVertex {
 		this.minY = minY;
 		this.maxY = maxY;
 		this.aligncenter = aligncenter;
+		scaleBy = 1;
+		scaleLabelUsed = false;
+	
 	}
 
 	// MUTATORS
@@ -89,6 +96,16 @@ public class FormatVertex {
 		windowSizes[1] = y;
 	}
 
+	public void setLabelScale(double scale)
+	{
+
+		scaleCorrectionLabels = scale/(scaleLabelUsed? scaleCorrectionLabelsOriginal: scaleCorrectionLabels);
+		scaleLabelUsed = false;
+		scaleLabels(1);
+
+	}
+
+
 	public void threads(int t) {
 		threadCount = t;
 	}
@@ -108,6 +125,11 @@ public class FormatVertex {
 
 	public int threads() {
 		return threadCount;
+	}
+	
+	public double getScale()
+	{
+		return scaleBy;
 	}
 
 	public VertexFitter getFitter() {
@@ -164,30 +186,78 @@ public class FormatVertex {
 		}
 		Transformer transformer = new Transformer();
 		transformer.scale(.99 * scale);
-		scaleBy = .99 * scale;
+	//	scaleBy = .99 * scale;
 		fitter.addManipulation(transformer);
 	}
 
-	private void applyTransformation() {
+	private double calculateScale()
+	{
+		Matrix m = fitter.getManipulationMatrix();
+		double sum = 0;
+		for (int i = 0; i < Vertex.DIMENSION;i++)
+			sum += m.get(0, i)*m.get(0, i); 
+
+		double scale = Math.sqrt(sum);
+
+		return scale;
+
+	}
+
+	private void scaleLabels(double currentScale)
+	{
+		labels.forEach((k,v) -> {
+			Label l = (Label)v;
+			Vertex vertex = (Vertex) k;
+			l.linelength =(l.linelength * currentScale * scaleCorrectionLabels);
+			//l.linesize =(int) (l.linesize *  scaleBy * scaleCorrectionLabels);
+			l.bottomtextsize =  (l.bottomtextsize *  currentScale * scaleCorrectionLabels);
+			l.toptextsize =  (l.toptextsize *  currentScale * scaleCorrectionLabels);
+			l.shapesize =  (l.shapesize *  currentScale * scaleCorrectionLabels);
+
+			});
+			if (!scaleLabelUsed)
+			{
+				scaleCorrectionLabelsOriginal = scaleCorrectionLabels;
+
+			}
+			scaleLabelUsed = true;
+			scaleCorrectionLabels = 1;
+
+
+	}
+
+	public void applyTransformation() {
+		double currentScale = calculateScale();
+		scaleBy = scaleBy * currentScale;
 		// Now to do the work to each vertex
+		long start = System.nanoTime();
+		ManipVertexArray manipa[] = new ManipVertexArray[threadCount];
+	//	VertexStats statsa[] = new VertexStats[threadCount];
+
 		for (int t = 0; t < threadCount; ++t) {
-			ManipVertexArray manip = new ManipVertexArray(vertices);
+			ManipVertexArray manip = new ManipVertexArray(vertices,"vertexrecalc"+t);
+			manipa[t] = manip;
+		//	statsa[t] = new VertexStats();
 			manip.setFitter(fitter);
 			manip.setStride(threadCount);
 			manip.setOffset(t);
 			manip.setVertexStats(stats); // Fix this if threading (race cond.)
-			manip.run();
+			manip.start();
 		}
-		labels.forEach((k,v) -> {
-			Label l = (Label)v;
-			Vertex vertex = (Vertex) k;
-			l.linelength =(int) (l.linelength * scaleBy * scaleCorrectionLabels);
-			//l.linesize =(int) (l.linesize *  scaleBy * scaleCorrectionLabels);
-			l.bottomtextsize = (int) (l.bottomtextsize *  scaleBy * scaleCorrectionLabels);
-			l.toptextsize = (int) (l.toptextsize *  scaleBy * scaleCorrectionLabels);
-			l.shapesize =  (int) (l.shapesize *  scaleBy * scaleCorrectionLabels);
+		for (int t = 0; t < threadCount;t++)
+		{
+			try {
+				manipa[t].getThread().join();
+			} catch (InterruptedException e) {
+				
+				e.printStackTrace();
+			}
 
-			});
+		}
+		long end = System.nanoTime();
+		System.out.println("Time to recalculate vertices "+(end-start)/1000000000.0+"s");
+		scaleLabels(currentScale);
+		
 	}
 
 }

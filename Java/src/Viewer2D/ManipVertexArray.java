@@ -22,33 +22,51 @@ package Viewer2D;
 import Jama.*;
 import Jama.Matrix.*;
 
-public class ManipVertexArray {
+public class ManipVertexArray implements Runnable{
 
     private int off;     // Array offset to start
     private int stride;  // Steps to skip each time
     private VertexFitter fitter;
     private Vertex[] vertices;
     private VertexStats stats;
+    private Thread t;
+    private String threadName;
+    static final Object object = new Object();
 
     // CONSTRUCTORS
 
-    public ManipVertexArray( Vertex[] verticesO )
+    public ManipVertexArray( Vertex[] verticesO ,String threadName)
     {
 	// This is setup for 1 thread by default
 	off = 0;
 	stride = 1;
 	vertices = verticesO;
+    this.threadName = threadName;
     }
-
+    Thread getThread()
+    {
+        return t;
+    }
 
     public void run()
     {
-	stats.clear();
+
 	for ( int e = off; e < vertices.length; e += stride ) {
 	    fitter.fitVertex( vertices[e] );
-	    stats.addStatsOfVertex( vertices[e] );
+       // synchronized(object)
+        {
+	        stats.addStatsOfVertex( vertices[e] );
+        }
 	}
     }
+
+    public void start () {
+        System.out.println("Starting " +  threadName );
+        if (t == null) {
+           t = new Thread (this, threadName);
+           t.start ();
+        }
+     }
 
     // ACCESSORS
     
