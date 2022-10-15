@@ -1,0 +1,2 @@
+#!/bin/sh
+java -Xmx10G -Xms10G -cp ./Java/jar/LGLLib.jar Viewer2D.Viewer2D
