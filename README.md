@@ -250,6 +250,9 @@ coordinates use LGLLib.jar
 
     java -Xmx2G -Xms2G -cp ./LGL-master/Java/jar/LGLLib.jar Viewer2D.Viewer2D
 
+Shortcuts 
+![Holding Space](https://github.com/TheOpteProject/LGL/blob/master/LGLviewshortcuts.png)
+
 
 ## LGLView.jar
 ### The full package that combines LGLView and ImageMaker.
