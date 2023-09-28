@@ -240,7 +240,7 @@ public class EdgesPanel extends JPanel implements MouseListener,
 			//Image image = toolkit.getImage(workingdir+sep+"Java/src/Viewer2D"+sep+"icons8-magnifier-67_32x32.png");
 			image = toolkit.getImage(imgURL);
 		}
-		cursorMagnifier = toolkit.createCustomCursor(image , new Point(0,0), "magnifier");
+		cursorMagnifier = null; // toolkit.createCustomCursor(image , new Point(0,0), "magnifier"); 
 		setPopup() ;
 		defaultScale = 1;
 	}
