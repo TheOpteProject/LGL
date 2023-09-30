@@ -281,7 +281,7 @@ public class GenerateImages {
 		generate("dark with labels","dark_withlabels",true,Color.BLACK,loadedEdgeColors, pa.windowSizes, pa.coordFiles, pa.labelFile, pa.alignmentCenter,verterIO); 
 
 
-		generate("dark without labels","dark_nolabels",false,Color.BLACK,loadedEdgeColors, pa.windowSizes, pa.coordFiles, "", pa.alignmentCenter,verterIO); 
+		generate("dark without labels","dark",false,Color.BLACK,loadedEdgeColors, pa.windowSizes, pa.coordFiles, "", pa.alignmentCenter,verterIO); 
 
 		generate("light","light",false,Color.white,loadedEdgeColors, pa.windowSizes, pa.coordFiles, pa.labelFile, pa.alignmentCenter,verterIO);
 		
