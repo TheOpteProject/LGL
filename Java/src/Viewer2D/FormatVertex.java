@@ -68,10 +68,10 @@ public class FormatVertex {
 		// Here the appropriate translation/scaling matrices
 		// must be generated and applied to the originalVertices.
 		// Stretch the vertices to fit the window
-		scalingIssues();
-
+		double scale = scalingIssues();
+		
 		// Recenter the vertices based on the avg of max and min values
-		translationIssues();
+		translationIssues(scale);
 
 		applyTransformation();
 	}
@@ -145,49 +145,48 @@ public class FormatVertex {
 	// PRIVATE METHOD CALLS
 	// /////////////////////////////////////////////////////////////////////
 
-	private void translationIssues() {
+	private void translationIssues(double scale) {
 		double[] offsets = new double[DIMENSION];
-		if (aligncenter)
-		{
-			for (int d = 0; d < DIMENSION; ++d) {
-				offsets[d]  =windowSizes[d]/2/scaleBy- stats.avg(d) ; 
-			}
-
+		
+		if (aligncenter) {
+	        for (int d = 0; d < DIMENSION; ++d) {
+	            offsets[d] = ((double) windowSizes[d]) / (2 * scale) - stats.avg(d);
+	        }
 		}
-		else
-
-			for (int d = 0; d < DIMENSION; ++d) {
-				if (d==0 && minX!=0 && maxX!=0)
-					offsets[d] -= minX;
-				else if (d==1 && minY!=0 && maxY!=0)
-					offsets[d] -= minY;
-				else
-					offsets[d] -= stats.min(d);
-			}
+		else {
+	        for (int d = 0; d < DIMENSION; ++d) {
+	            offsets[d] -= stats.min(d);
+	        }
+		}
+		
 		Transformer transformer = new Transformer();
 		transformer.move(offsets);
 		// Add this job to the list
 		fitter.addManipulation(transformer);
 	}
 
-	private void scalingIssues() {
+	private double scalingIssues() {
 		double scale;
-		if (minX!=0 && maxX!=0)
-			scale = windowSizes[0] / ( maxX-minX);
-		else
-			scale = windowSizes[0] / stats.span(0);
+		
+        if (minX!=0 && maxX!=0)
+            scale = windowSizes[0] / ( maxX-minX);
+        else
+            scale = windowSizes[0] / stats.span(0);
 
 
-		for (int d = 1; d < DIMENSION; ++d) {
-			double newScale = windowSizes[d] / stats.span(d);
-			if (newScale < scale) {
-				scale = newScale;
-			}
-		}
+        for (int d = 1; d < DIMENSION; ++d) {
+            double newScale = windowSizes[d] / stats.span(d);
+            if (newScale < scale) {
+                scale = newScale;
+            }
+        }
+		
 		Transformer transformer = new Transformer();
 		transformer.scale(.99 * scale);
 	//	scaleBy = .99 * scale;
 		fitter.addManipulation(transformer);
+		
+		return .99 * scale;
 	}
 
 	private double calculateScale()
