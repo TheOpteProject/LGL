@@ -279,13 +279,7 @@ public class GenerateImages {
 		System.out.println("Edges loading complete.");
 
 		generate("dark with labels","dark_withlabels",true,Color.BLACK,loadedEdgeColors, pa.windowSizes, pa.coordFiles, pa.labelFile, pa.alignmentCenter,verterIO); 
-
-
-		generate("dark without labels","dark",false,Color.BLACK,loadedEdgeColors, pa.windowSizes, pa.coordFiles, "", pa.alignmentCenter,verterIO); 
-
-		generate("light","light",false,Color.white,loadedEdgeColors, pa.windowSizes, pa.coordFiles, pa.labelFile, pa.alignmentCenter,verterIO);
-		
-		generate("transparent","transparent",false,new Color(0f,0f,0f,0f),loadedEdgeColors, pa.windowSizes, pa.coordFiles, pa.labelFile, pa.alignmentCenter,verterIO);
+		generate("dark without labels","dark_nolabels",false,Color.BLACK,loadedEdgeColors, pa.windowSizes, pa.coordFiles, "", pa.alignmentCenter,verterIO); 
 
 
 		//generateDark(loadedEdgeColors, windowSizes, coordFiles, labelFile, alignmentCenter,verterIO);
@@ -293,6 +287,16 @@ public class GenerateImages {
 		//generateLight(loadedEdgeColors, windowSizes, coordFiles, labelFile,alignmentCenter,verterIO);
 
 		//generateTransparent(loadedEdgeColors, windowSizes, coordFiles, labelFile,alignmentCenter,verterIO);
+		
+		// Following generated picture ignores parameters -a -M -m 
+        verterIO.setMinMaxXY(0,0,0,0);
+        
+        generate("dark without scale without labels","dark_withoutscale_withoutlabels",false,Color.BLACK,loadedEdgeColors, pa.windowSizes, pa.coordFiles, "" /**/, false /*pa.alignmentCenter*/,verterIO); 
+        generate("dark without scale with labels","dark_withoutscale_withlabels",false,Color.BLACK,loadedEdgeColors, pa.windowSizes, pa.coordFiles, pa.labelFile, false /*pa.alignmentCenter*/,verterIO);
+        
+        generate("light without scale without labels","light_withoutscale_withoutlabels",false,Color.white,loadedEdgeColors, pa.windowSizes, pa.coordFiles, "" /**/, false /*pa.alignmentCenter*/,verterIO);
+        generate("transparent without scale without labels","transparent_withoutscale_withoutlabels",false,new Color(0f,0f,0f,0f),loadedEdgeColors, pa.windowSizes, pa.coordFiles, "" /**/, false /*pa.alignmentCenter*/,verterIO);
+		
 		
 		// System.out.println("Going for vector graphics (currently broken)");
 		// // Lets process coords files
